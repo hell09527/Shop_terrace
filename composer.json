@@ -1,0 +1,18 @@
+{
+    "name": "shopal/niushop-prod",
+    "autoload": {
+        "psr-4" : {
+            "Qiniu\\": "data/extend/path_to_sdk/src/Qiniu/"
+        },
+        "files": [ "data/extend/path_to_sdk/src/Qiniu/functions.php" ]
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "ssh://git@dev03.ushopal.com:10022/ChenChuanFeng/oms-sdk.git"
+        }
+    ],
+    "require": {
+        "shopal/oms-sdk": "^1.0"
+    }
+}

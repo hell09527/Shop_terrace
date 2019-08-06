@@ -1,0 +1,702 @@
+<style>
+	.table-div table tr td {border: 1px solid #e5e5e5;padding: 10px;}
+	.goodlist-table tr td {border: 1px solid #e5e5e5;padding: 10px;}
+	.help-inline {height: 30px;line-height: 30px;}
+	input[type="radio"] {vertical-align: middle;margin-top: -2px;}
+	.controls table tr td input[type="radio"] {margin: 0px;}
+	.ump-select-search select {margin-bottom: 0px}
+	.ump-select-tab {min-width: 750px;margin-bottom: -1px;background: #f2f2f2;border: 1px solid #ddd;border-bottom:0;}
+	.ui-nav-tab {margin: 0;overflow: hidden;}
+	.ui-nav-tab>li {position: relative;display: block;float: left;text-align: center;margin-bottom: -1px;}
+	.ui-nav-tab:after {content: "";display: table;}
+	.ump-select-tab .ui-nav-tab li.active a, .ump-select-tab .ui-nav-tab li.active a:hover{height: 24px;line-height: 24px;/*border-bottom: 2px solid #f60;*/}
+	.ump-select-tab .ui-nav-tab li:first-child a {border-left: 0;}
+	.ump-select-tab .ui-nav-tab li a {width: 120px;border-top: 0;height: 25px;line-height: 25px;padding: 8px 20px;}
+	.ui-nav-tab>li.active>a, .ui-nav-tab>li.active>a:hover, .ui-nav-tab>li.active>a:focus{color: #333;background-color: #fff;border-bottom-color: transparent;cursor: default;}
+	.ui-nav-tab>li>a {position: relative;display: block;padding: 9px 15px;margin-right: -1px;line-height: 1.42857143;border: 1px solid #ddd;background-color: #f8f8f8;color: #333;}
+	.ump-select-box {width: 100%;border: 1px solid #ddd;overflow: hidden;}
+	.ump-select-search {padding: 10px 20px 10px;border-bottom: 1px solid #ddd;position: relative;}
+	.ump-select-goods .ui-table {background: #fff;}
+	.ui-table.ui-table-list {border: none;}
+	.ui-table {width: 100%;font-size: 12px;text-align: left;margin-bottom: 0;border: 1px solid #e5e5e5;}
+	.ui-table th.checkbox, .ui-table td.checkbox {width: 18px;padding: 10px 0 10px 10px;}
+	.ui-table th, .ui-table td {padding: 10px;border-bottom: 1px solid #e5e5e5;vertical-align: top;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+	.ui-table th {background: #f8f8f8;}
+	.ui-table .cell-20 {width: 20%;}
+	.center, .text-center {text-align: center;}
+	.ump-select-goods .ui-table tr td {padding: 6px 4px;border-bottom: 1px dashed #ddd;vertical-align: middle;}
+	.ump-select-goods .goods-image-td, .ump-select-goods .goods-image-td .goods-image,.ump-select-goods .goods-image-td img {width: 30px;}
+	.ui-box {margin-bottom: 15px;}
+	.ump-select-footer {padding: 0 20px 0 10px;}
+	.ump-select-footer .pull-left {padding-bottom: 20px;}
+	.pull-left {float: left;}
+	.pagenavi {font-size: 12px;line-height: 16px;text-align: right;}
+	.ui-btn {display: inline-block;border-radius: 2px;height: 26px;line-height: 26px;padding: 0 12px;cursor: pointer;color: #333;background: #f8f8f8;border: 1px solid #ddd;text-align: center;font-size: 12px;-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
+	.ui-toolt {position: relative;}
+	.pagenavi .total, .pagenavi .prev, .pagenavi .next, .pagenavi .num,.pagenavi .goto-input, .pagenavi .goto-btn {display: inline-block;color: #333;}
+	.pagenavi .total {padding: 6px 0;font-weight: normal !important;}
+	.ui-table tr td {line-height: normal;}
+	input[type=number] {-moz-appearance:textfield;}
+	input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button {-webkit-appearance: none;margin: 0;}
+	button{outline:none;}
+	.selectGoodsCategory {
+		width: 158px;
+		height: 45px;
+		border: 1px solid #CCCCCC;
+		position: absolute;
+		z-index: 100;
+		left: 64px;
+		top:300px;
+		border-collapse: collapse;
+		background: #fff;
+		display: none;
+	}
+
+	.selectGoodsCategory a {
+		display: block;
+		height: 30px;
+		width: 100px;
+		text-align: center;
+		color: #fff;
+		line-height: 30px;
+		margin: 8px auto;
+		background: #0072D2;
+		text-decoration: none;
+	}
+	.goodsCategory {
+		width: 158px;
+		height: 300px;
+		border: 1px solid #CCCCCC;
+		position: absolute;
+		z-index: 100;
+		background: #fff;
+		display: none;
+		overflow-y: auto;
+		left:64px;
+	}
+
+
+	.goodsCategory::-webkit-scrollbar {
+		width: 3px;
+	}
+
+	.goodsCategory::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+		border-radius: 10px;
+		background-color: #fff;
+	}
+
+	.goodsCategory::-webkit-scrollbar-thumb {
+		height: 20px;
+		border-radius: 10px;
+		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+		background-color: #ccc;
+	}
+
+	.goodsCategory ul {
+		height: 280px;
+		margin-top: -2px;
+		margin-left: 0;
+	}
+
+	.goodsCategory ul li {
+		text-align: left;
+		padding: 0 10px;
+		line-height: 30px;
+	}
+
+	.goodsCategory ul li i {
+		float: right;
+		line-height: 30px;
+	}
+
+	.goodsCategory ul li:hover {
+		cursor: pointer;
+	}
+
+	.goodsCategory ul li:hover, .goodsCategory ul li.selected {
+		background: #1C8FEF;
+		color: #fff;
+	}
+
+	.goodsCategory ul li span {
+		width: 120px;
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		vertical-align: middle;
+		font-size: 12px;
+	}
+
+	.one {
+	}
+
+	.two {
+		left: 222px;
+		border-left: 0;
+	}
+
+	.three {
+		width: 150px;
+		border-left: 0;
+	}
+
+</style>
+<div class="set-style">
+	<dl>
+		<!-- <dt>选择商品:</dt> -->
+		<dt><span class="error" id="notSelect">请至少选择一件商品</span></dt>
+		<dd>
+			<label style="vertical-align: middle; font-weight: normal; display: inline-block;margin-right:5px;">
+				<input type="radio" value="1" name="range_type" onclick="ShopRadio(1)" checked="checked" />
+				<span onclick="ShopRadio(1)" style="font-size: 12px; cursor: pointer;">所有商品</span>
+			</label>
+			<label style="vertical-align: middle; font-weight: normal; display: inline-block;margin-left: 10%">
+				<input type="radio" name="range_type" value="0" onclick="ShopRadio(0)">
+				<span onclick="ShopRadio(0)" style="cursor: pointer; font-size: 12px;">部分商品</span>
+			</label>
+		</dd>
+	</dl>
+</div>
+<dl>
+	<dd id="some_pro" style="width: 99%; display: none;">
+		<div class="js-goods-box">
+			<div class="ump-select-tab">
+				<ul class="ui-nav-tab">
+					<li class="js-tab active"><a href="javascript:void(0);" onclick="select_goods(this)">选择商品</a></li>
+					<li class="js-tab"><a href="javascript:void(0);" onclick="selected_goods(this)">已选商品</a></li>
+				</ul>
+			</div>
+			<div class="goods-list-wrap">
+				<div class="js-goods-list-region js-goods-list-tab select-one" style="display: block;">
+					<div class="widget-list">
+						<div class="ump-select-box js-select-goods-list" id="js-select-goods-list-id">
+							<div class="ump-goods-wrap">
+								<div class="ump-waitting-select ump-goods-list">
+									<div class="js-list-filter-region clearfix">
+										<div class="widget-list-filter">
+											<div class="ump-select-search" style="text-align: right">
+												<!-- <select name="tag" id="group_id" class="js-goods-group">
+													<option value="0">所有分组</option>
+												</select>
+												<select name="keyword_type" class="js-search-type">
+													<option value="goods_title">商品标题</option>
+													<option value="goods_no">商品编码</option>
+												</select> -->
+												<span style="position: relative; z-index: 10">
+													<p style="display: inline-block;">商品分类：</p>
+													<input type="text" placeholder="请选择商品分类" onfocus=this.blur() id="goodsCategoryOne" is_show="false" class="input-common" style="width: 150px;">
+													<div class="goodsCategory one" id="goodsCategory-one">
+														<ul>
+															<li class="js-category-one" id="js-category-one-quan" category_id = "">
+																<span>全部商品</span>
+															</li>
+															{volist name="oneGoodsCategory" id="vo"}
+															<li class="js-category-one" category_id="{$vo.category_id}">
+																<span>{$vo.category_name}</span>
+																{if condition="$vo.is_parent eq 1"}
+																<i class="fa fa-angle-right fa-lg"></i>
+																{/if}
+															</li>
+															{/volist}
+														</ul>
+													</div>
+													<div class="goodsCategory two" style="border-left:0;">
+														<ul id="goodsCategoryTwo"></ul>
+													</div>
+													<div class="goodsCategory three">
+														<ul id="goodsCategoryThree"></ul>
+													</div>
+													<div class="selectGoodsCategory">
+														<a href="javascript:;" id="confirmSelect">确认选择</a>
+													</div>
+													<input type="hidden" id="category_id_1">
+													<input type="hidden" id="category_id_2">
+													<input type="hidden" id="category_id_3">
+												</span>
+												<span>商品名称：<input class="js-input" autocomplete="off" type="text" name="keyword" placeholder="请输入商品名称" data-goods-title="请输入商品名称" data-goods-no="请输入商品名称" style="width: 200px" id="search_text" /></span>
+												物料编码：<input class="js-input" type="text" name="search_sku" placeholder="请输入商品编码" data-goods-title="请输入商品编码" data-goods-no="请输入商品编码" style="width: 200px" id="search_sku" />
+												<span><a href="javascript:;" onclick="LoadingInfo(1)"
+														 class="btn btn-primary js-search" style="display: inline-block;">搜索</a></span>
+											</div>
+										</div>
+									</div>
+									<div class="ump-select-goods">
+										<table class="ui-table ui-table-list" style="padding: 0px;" border="1">
+											<thead
+													class="js-list-header-region tableFloatingHeaderOriginal">
+											<tr>
+												<th colspan="2">商品信息</th>
+												<th class="text-center cell-10">商品分类</th>
+												<th class="text-center cell-10">商品类型</th>
+												<th class="text-center cell-10">规格名称</th>
+												<th class="text-center cell-10">物料编码</th>
+												<th class="text-center cell-10 kucun">库存</th>
+												<th class="text-center cell-10">价格</th>
+												<th class="text-center cell-10">操作</th>
+											</tr>
+											</thead>
+											<tbody class="js-list-body-region goods-list"></tbody>
+										</table>
+										<div class="js-list-empty-region"></div>
+									</div>
+									<div class="js-list-footer-region ui-box">
+										<div class="widget-list-footer"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="js-selected-goods-list-region js-goods-list-tab select-two" style="display: none;">
+					<div>
+						<div class="widget-list-item">
+							<div class="ump-select-box js-select-goods-list">
+								<div class="ump-goods-wrap">
+									<div class="ump-already-select ump-goods-list">
+										<div class="ump-select-goods">
+											<table class="ui-table ui-table-list js-table" border="1">
+												<thead class="js-list-header-region">
+												<tr>
+													<th colspan="2">商品信息</th>
+													<th class="text-center cell-10">商品分类</th>
+													<th class="text-center cell-10">商品类型</th>
+													<th class="text-center cell-10">规格名称</th>
+													<th class="text-center cell-10">物料编码</th>
+													<th class="text-center cell-10 kucun">库存</th>
+													<th class="text-center cell-10">价格</th>
+													<th class="text-center cell-10">操作</th>
+												</tr>
+												</thead>
+												<tbody class="js-list-body-region"></tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</dd>
+</dl>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="motai-div" aria-labelledby="myLargeModalLabel"></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel">
+	<input type="hidden" id="goods_id_array">
+	<script>
+		var $goods_selected_array 	 = new Array();
+		var $goods_id_selected_array = new Array();
+		var $sku_selected_array 	 = new Array();
+		var $sku_id_selected_array 	 = new Array();
+		var $data_array;
+		var $sku_data_array;
+		$(function(){
+			loadGoodsGroup();
+		});
+
+		$(".js-batch-add").click(function(){
+			var obj = $(".select-one").find("input[name='sub']:checked");
+			var html = '';
+			obj.each(function(i){
+				html += '<tr>'+$(".select-one table tbody tr").eq(i).html()+'</tr>';
+			});
+			$(".select-two tbody").append(html);
+		});
+
+		//参加活动
+		function join(sku_id, goods_id){
+			var sku_result = new Array();
+			var goods_result = new Array();
+			$sku_id_selected_array.push(sku_id);
+			for(var i=0; i < $data_array.length; i++){
+				if($data_array[i].goods_id == goods_id){
+					goods_result   = $data_array[i];
+					sku_arr   	   = $data_array[i].sku_arr;
+					for(var j = 0; j < sku_arr.length; j++) {
+						if (sku_arr[j].sku_id == sku_id) {
+							sku_result = sku_arr[j];
+							break;
+						}
+					}
+				}
+			}
+			$flag = 0;
+			for(var k=0; k < $goods_selected_array.length; k++){
+				if($goods_selected_array[k].goods_id == goods_id){
+					$goods_selected_array[k].select_sku_arr.push(sku_result);
+					$flag = 1
+				}
+			}
+			if($flag === 0){
+				$num = $goods_selected_array.push(goods_result);
+				var last_select_sku_arr = $goods_selected_array[$num-1].select_sku_arr;
+				last_select_sku_arr.splice(0,last_select_sku_arr.length);
+				last_select_sku_arr.push(sku_result)
+			}
+			refresh_data();
+			var a = '<a href="javascript:;" class="btn btn-default js-remove-reward" onclick="cancel_join('+sku_id+','+goods_id+')">取消参加</a>';
+			$("#select_one_"+sku_id+"").html(a);
+			$("#select_two_"+sku_id+"").html(a);
+		}
+
+		//取消参加
+		function cancel_join(sku_id, goods_id){
+			var sku_arr = new Array();
+			for(var i=0; i<$goods_selected_array.length; i++){
+				if($goods_selected_array[i].goods_id == goods_id){
+					for(var j=0;j<$goods_selected_array[i].select_sku_arr.length;j++){
+						if($goods_selected_array[i].select_sku_arr[j]['sku_id'] == sku_id){
+							sku_arr = $goods_selected_array[i].select_sku_arr[j];
+							$goods_selected_array[i].select_sku_arr.splice(j,1);
+							break;
+						}
+					}
+				}
+			}
+			for(var k = 0; k<$sku_id_selected_array.length; k++){
+				if ($sku_id_selected_array[k] == sku_id){
+					$sku_id_selected_array.splice(k,1)
+				}
+			}
+			refresh_data();
+			var a = '<a href="javascript:;" class="btn btn-primary js-add-reward" onclick="join('+sku_id+','+goods_id+')">参加活动</a>';
+			if($("#select_one_"+sku_id+"").length>0){
+				$("#select_one_"+sku_id+"").html(a);
+			}
+		}
+
+
+		function select_goods(e){
+			$(e).parents("ul.ui-nav-tab").find(".js-tab").removeClass("active");
+			$(e).parent("li").addClass("active");
+			$(".select-one").show();
+			$(".select-two").hide();
+			$("#turn-ul").show();
+		}
+
+		//刷新 已选商品
+		function refresh_data(){
+			var html = "";
+			for (var i = 0; i < $goods_selected_array.length; i++) {
+				var goods_select_arr = $goods_selected_array[i];
+				var row = goods_select_arr.select_sku_arr.length;
+				if(row > 0){
+					html +='<tr>';
+					html +='<td class="goods-image-td text-center" rowspan="'+row+'"><div class="goods-image js-goods-image">';
+					if(goods_select_arr["picture_info"] != null){
+						html +='<img src="'+__IMG(goods_select_arr["picture_info"]['pic_cover_micro'])+'"></div></td>';
+					}else{
+						html +='<img src="__ROOT__/"></div></td>';
+					}
+					html +='<td class="goods-meta" rowspan="'+row+'"><p class="goods-title">';
+					html +='<a href="'+__URL('SHOP_MAIN/goods/goodsinfo?goodsid='+goods_select_arr['goods_id'])+'" target="_blank" class="new-window" title="'+goods_select_arr["goods_name"]+'">'+goods_select_arr["goods_name"]+'</a></p>';
+					html +='<p class="goods-price">'+goods_select_arr["price"]+'</p></td>';
+					html +='<td rowspan="'+row+'"><p class="text-center">'+goods_select_arr["category_id_name"]+'</p></td>';
+					html +='<td rowspan="'+row+'"><p class="text-center">'+goods_select_arr["goods_type"]+'</p></td>';
+
+					for (var j = 0; j < goods_select_arr.select_sku_arr.length ; j ++){
+						if(j > 0){
+							html +='<tr>';
+						}
+						html +='<td class="text-center">'+goods_select_arr.select_sku_arr[j]["sku_name"]+'</td>';
+						html +='<td class="text-center">'+goods_select_arr.select_sku_arr[j]["material_code"]+'</td>';
+						html +='<td class="text-center">'+goods_select_arr.select_sku_arr[j]["stock"]+'</td>';
+						html +='<td class="text-center">'+goods_select_arr.select_sku_arr[j]["price"]+'</td>';
+						html +='<td id="select_two_'+goods_select_arr.select_sku_arr[j]["sku_id"]+'" class="text-center"><button type="button" class="btn btn-default js-remove-reward"   onclick="cancel_join('+goods_select_arr.select_sku_arr[j]["sku_id"]+','+goods_select_arr["goods_id"]+')">取消参加</button></td>';
+						html +='</tr>';
+					}
+				}
+			}
+			$(".select-two tbody tr").remove();
+			$(".select-two tbody").append(html);
+		}
+
+		function selected_goods(e){
+			$(e).parents("ul.ui-nav-tab").find(".js-tab").removeClass("active");
+			$(e).parents("li").addClass("active");
+			$(".select-two").show();
+			$(".select-one").hide();
+			$("#turn-ul").hide();
+		}
+
+		function LoadingInfo(page_index) {
+			var group_id      = $("#group_id").val();
+			var search_text   = $("#search_text").val();
+			var search_sku    = $("#search_sku").val();
+			var category_id_1 = $("#category_id_1").val();
+			var category_id_2 = $("#category_id_2").val();
+			var category_id_3 = $("#category_id_3").val();
+
+			if($("input[name='range_type']").val() == 0){
+				$("#turn-ul").show();
+			}else{
+				$("#turn-ul").hide();
+			}
+
+			$.ajax({
+				type : "post",
+				url : "{:__URL('ADMIN_MAIN/goods/getsearchgoodslist')}",
+				data : {
+					"page_index"    : page_index,
+					"page_size" 	: $("#showNumber").val(),
+					"search_text" 	: search_text,
+					"search_sku" 	: search_sku,
+					"group_id"		: group_id,
+					"category_id_1" : category_id_1,
+					"category_id_2"	: category_id_2,
+					"category_id_3"	: category_id_3,
+				},
+				success : function(data) {
+					var html = '';
+					if (data['data'].length > 0) {
+						$data_array = data['data'];
+						$("#DiscountList").show();
+						for (var k = 0; k < $data_array.length; k++) {
+							var curr = $data_array[k];
+							//获取行数
+							var row = curr.sku_arr.length;
+							html +='<tr class="widget-list-item">';
+							html +='<td rowspan="'+row+'" class="goods-image-td text-center"><div class="goods-image js-goods-image">';
+							if(curr["picture_info"] != null){
+								html +='<img src="'+__IMG(curr["picture_info"]['pic_cover_micro'])+'"></div></td>';
+							}else{
+								html +='<img src="__ROOT__/"></div></td>';
+							}
+							html +='<td rowspan="'+row+'" class="goods-meta"><p class="goods-title">';
+							html +='<a href="'+__URL('SHOP_MAIN/goods/goodsinfo?goodsid='+curr["goods_id"])+'" target="_blank" class="new-window" title="'+curr["goods_name"]+'">'+curr["goods_name"]+'</a></p>';
+							html +='<p class="goods-price">'+ curr["price"] +'</p></td>';
+							html +='<td rowspan="'+row+'"><p class="text-center">'+curr["category_id_name"]+'</p></td>';
+							html +='<td rowspan="'+row+'"><p class="text-center">'+curr["goods_type"]+'</p></td>';
+
+							for(var l = 0; l < curr.sku_arr.length; l++){
+								if(l > 0){
+									html +='<tr class="widget-list-item">';
+								}
+								html +='<td class="text-center">'+curr.sku_arr[l]["sku_name"]+'</td>';
+								html +='<td class="text-center">'+curr.sku_arr[l]["material_code"]+'</td>';
+								html +='<td class="text-center">'+curr.sku_arr[l]["stock"]+'</td>';
+								html +='<td class="text-center">'+curr.sku_arr[l]["price"]+'</td>';
+								if($.inArray(curr.sku_arr[l]['sku_id'], $sku_id_selected_array) >= 0){
+									html +='<td id="select_one_'+curr.sku_arr[l]['sku_id']+'" class="text-center"><button type="button" class="btn btn-default js-remove-reward"  onclick="cancel_join('+curr.sku_arr[l]['sku_id']+','+curr["goods_id"]+')">取消参加</button></td>';
+								}else{
+									html +='<td id="select_one_'+curr.sku_arr[l]['sku_id']+'"  class="text-center"><button type="button" class="btn btn-primary js-add-reward"  onclick="join('+curr.sku_arr[l]['sku_id']+','+curr["goods_id"]+')">参加活动</button></td>';
+								}
+								html +='</tr>';
+							}
+						}
+					} else {
+						html += '<tr align="center"><td colspan="6">暂无符合条件的数据</td></tr>';
+					}
+					$("tbody.goods-list").html(html);
+					initPageData(data["page_count"],data['data'].length,data['total_count']);
+					$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+				}
+			});
+		}
+
+		function loadGoodsGroup(){
+			$.ajax({
+				type : "post",
+				url : "{:__URL('ADMIN_MAIN/Goods/getGoodsGroupFristLevel')}",
+				success : function(data) {
+					var html = '';
+					if(data.length > 0){
+						for(var i=0; i < data.length; i++){
+							html += '<option value="'+data[i]['group_id']+'">'+data[i]['group_name']+'</option>';
+						}
+					}
+					$("#group_id").append(html);
+				}
+			});
+		}
+		$("#pageNumber a").live("click",function(){
+			$("#turn-ul").show();
+		})
+		//控制商品列表显示数据
+		function ShopRadio(num){
+			if(num == 0){
+				$("#some_pro").show();
+				$("#turn-ul").show();
+				$("ul.ui-nav-tab li.js-tab").eq(1).click();
+			}else{
+				$("#some_pro").hide();
+				$("#turn-ul").hide();
+			}
+		}
+
+		//	分类
+		$("#goodsCategoryOne").click(function () {
+			var isShow = $("#goodsCategoryOne").attr('is_show');
+			if (isShow == "false") {
+				$(".one").show();
+				$(".selectGoodsCategory").css({
+					'width': 158,
+				});
+				$(".selectGoodsCategory").show();
+				$("#goodsCategoryOne").attr('is_show', 'true');
+				$(".js-mask-category").show();
+			} else {
+				$(".one").hide();
+				$(".two").hide();
+				$(".three").hide();
+				$(".selectGoodsCategory").css({
+					'width': 158,
+					'right': 580
+				});
+				$(".selectGoodsCategory").hide();
+				$("#goodsCategoryOne").attr('is_show', 'false');
+			}
+		});
+
+		$(".js-mask-category").click(function () {
+			$(".one").hide();
+			$(".selectGoodsCategory").hide();
+			$(".two").hide();
+			$(".three").hide();
+			$("#goodsCategoryOne").attr('is_show', 'false');
+			$(this).hide();
+		});
+
+		$(".js-category-one").click(function () {
+			parentId = $(this).attr("category_id");
+			category_name = $(this).text();
+			$(".one ul li").not($(this)).removeClass("selected");
+			$(this).addClass("selected");
+			$("#goodsCategoryOne").val($.trim(category_name) + ">");
+			$("#category_id_1").val(parentId);
+			$("#category_id_2").val('');
+			$("#category_id_3").val('');
+			$.ajax({
+				type: 'post',
+				url: "{:__URL('ADMIN_MAIN/goods/getcategorybyparentajax')}",
+				data: {"parentId": parentId},
+				success: function (data) {
+					if (data.length > 0) {
+						var html = '';
+						for (var i = 0; i < data.length; i++) {
+							html += '<li class="js-category-two" category_id="' + data[i]['category_id'] + '">' + data[i]['category_name'];
+							if (data[i]['is_parent'] == 1) {
+								html += '<i class="fa fa-angle-right fa-lg"></i>';
+							}
+							html += '</li>';
+						}
+						$("#goodsCategoryTwo").html(html);
+						$(".two").show();
+						$(".selectGoodsCategory").css({
+							'width': 315,
+							'right': 361
+						});
+					} else {
+						$(".one").hide();
+						$(".two").hide();
+						$(".js-mask-category").hide();
+						$(".selectGoodsCategory").hide();
+						$("#goodsCategoryOne").attr('is_show', 'false');
+					}
+					$(".three").hide();
+				}
+			});
+			return false;
+		});
+
+		$(".js-category-two").live("click", function (event) {
+			var parentId = $(this).attr("category_id");
+			var category_name = $(this).text();
+			$(".two ul li").not($(this)).removeClass("selected");
+			$(this).addClass("selected");
+			var goodsCategoryOne = $("#goodsCategoryOne").val();
+			$("#goodsCategoryOne").val(goodsCategoryOne + '' + category_name + '>');
+			$("#category_id_2").val(parentId);
+			$("#category_id_3").val('');
+			$.ajax({
+				type: 'post',
+				url: "{:__URL('ADMIN_MAIN/goods/getcategorybyparentajax')}",
+				data: {"parentId": parentId},
+				success: function (data) {
+					if (data.length > 0) {
+						var html = '';
+						for (var i = 0; i < data.length; i++) {
+							html += '<li onclick="goodsCategoryThree(this);" category_id="' + data[i]['category_id'] + '">' + data[i]['category_name'] + '<i class="fa fa-angle-right fa-lg"></i></li>';
+						}
+						$("#goodsCategoryThree").html(html);
+						$(".three").show();
+						$(".selectGoodsCategory").css({
+							'width': 480,
+							'right': 162
+						});
+					} else {
+						$(".one").hide();
+						$(".two").hide();
+						$(".three").hide();
+						$(".selectGoodsCategory").hide();
+						$(".js-mask-category").hide();
+						$("#goodsCategoryOne").attr('is_show', 'false');
+					}
+				}
+			})
+			event.stopPropagation();
+		});
+
+		function goodsCategoryThree(obj) {
+			var parentId = $(obj).attr("category_id");
+			var category_name = $(obj).text();
+			$(".three ul li").not($(obj)).removeClass("selected");
+			$(obj).addClass("selected");
+			var goodsCategoryOne = $("#goodsCategoryOne").val();
+			$("#goodsCategoryOne").val(goodsCategoryOne + '' + category_name);
+			$("#category_id_3").val(parentId);
+			$(".one").hide();
+			$(".two").hide();
+			$(".three").hide();
+			$(".selectGoodsCategory").hide();
+			$(".js-mask-category").hide();
+
+			$(".selectGoodsCategory").css({
+				'width': 218,
+				'right': 580
+			});
+			$("#goodsCategoryOne").attr('is_show', 'false');
+		}
+
+		$("#confirmSelect").click(function () {
+			$(".one").hide();
+			$(".two").hide();
+			$(".three").hide();
+			$(".selectGoodsCategory").hide();
+			$(".selectGoodsCategory").css({
+				'width': 218,
+				'right': 580
+			});
+		})
+
+
+		$("#goodsCategoryOne").click(function(){
+			$("#js-select-goods-list-id").css("height","500px");
+		});
+
+
+		$(".js-search").click(function(){
+			$("#js-select-goods-list-id").css("height","");
+			$("#goodsCategory-one").css("display","none");
+			$(".selectGoodsCategory").css("display","none");
+		});
+
+		$("#js-category-one-quan").click(function(){
+			$("#goodsCategory-one").css("display","none");
+			$(".selectGoodsCategory").css("display","none");
+		});
+
+		//全选
+		function CheckAll(event){
+			var checked = event.checked;
+			$(".table-class tbody input[type = 'checkbox']").prop("checked",checked);
+		}
+
+		//全选
+		function CheckAllS(event){
+			var checked = event.checked;
+			$(".table-class-s tbody input[type = 'checkbox']").prop("checked",checked);
+		}
+	</script>

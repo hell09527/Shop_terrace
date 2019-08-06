@@ -1,0 +1,214 @@
+{extend name="adminblue/base" /}
+
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/member_list.css" />
+{/block}
+
+{block name="main"}
+<table class="mytable">
+    <tr>
+        <th width="20%" style="text-align: left;">
+            <button class="btn-common btn-small" onclick="add_store_group()" style="margin:0 5px 0 0 !important;">添加门店组</button>
+        </th>
+    </tr>
+</table>
+
+<table class="table-class">
+    <thead>
+    <tr align="center">
+        <th>门店组编码</th>
+        <th>门店组名称</th>
+        <th style="width: 15%;">操作</th>
+    </tr>
+    </thead>
+    <tbody id="productTbody"></tbody>
+</table>
+
+<!-- 添加门店组 -->
+<div class="modal fade hide" id="add_store_group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>添加门店组</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-infp-style">
+                    <table class="modal-tab">
+                        <tr>
+                            <td style="width:25%;"><span class="required">*</span>门店组编码</td>
+                            <td colspan='3'>
+                                <input type="text" id="store_group_code" class="input-common" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="required">*</span>门店组名称</td>
+                            <td colspan='3'>
+                                <input type="text" id="store_group_name" class="input-common"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="addStoreGroup()">保存</button>
+                <button class="btn" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="group_id"/>
+<!-- 修改门店组 -->
+<div class="modal fade hide" id="update_store_group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑</h4>
+            </div>
+            <div class="modal-body">
+                <div class="modal-infp-style">
+                    <table class="modal-tab">
+                        <tr style="height: 32px;">
+                            <td style="width:25%"><span class="required">*</span>门店组编码</td>
+                            <td colspan='3'>
+                                <input type="text" id="group_code" class="input-common" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%"><span class="required">*</span>门店组名称</td>
+                            <td colspan='3'><input type="text" id="group_name"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" onclick="updateStoreGroup()" id="butSubmit"  style="display:inline-block;">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    //修改门店组弹出
+    function update_store_group(store_group_id){
+        var store_group_id = parseInt(store_group_id);
+        $("#update_store_group").modal("show");
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/store/getStoreGroupDetail')}",
+            data : { 'store_group_id':store_group_id},
+            success : function(data) {
+                $("#group_id").val(data.store_group_id);
+                $("#group_code").val(data.store_group_code);
+                $("#group_name").val(data.store_group_name);
+            }
+        });
+    }
+
+    //修改门店组
+    function updateStoreGroup(){
+        var group_id = $("#group_id").val();
+        var group_code = $("#group_code").val();
+        var group_name = $("#group_name").val();
+
+        if (group_code == '') {
+            showTip('门店组编码不能为空','warning');
+            return;
+        }
+        if (group_name == '') {
+            showTip('门店组名称不能为空','warning');
+            return;
+        }
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/store/updateStoreGroup')}",
+            data : {
+                'group_id':group_id,
+                'group_code' :group_code,
+                'group_name' : group_name
+            },
+            success : function(data) {
+                if (data['code'] > 0) {
+                    showTip(data['message'],'success');
+                    LoadingInfo(getCurrentIndex(group_id,'#productTbody'));
+                    $("#update_store_group").modal("hide");
+                } else {
+                    showTip(data['message'],'error');
+                    flag = false;
+                }
+            }
+        });
+    }
+
+    //添加门店组弹出
+    function add_store_group(){
+        $("#add_store_group").modal("show");
+    }
+
+    //添加门店组
+    function addStoreGroup(){
+        var store_group_code = $("#store_group_code").val();
+        var store_group_name = $("#store_group_name").val();
+
+        if (store_group_code == '') {
+            showTip('门店组编码不能为空','warning');
+            return;
+        }
+
+        if (store_group_name == '') {
+            showTip('门店组名称不能为空','warning');
+            return;
+        }
+        $.ajax({
+            type : "post",
+            url : __URL("ADMIN_MAIN/store/addStoreGroup"),
+            data : {
+                'store_group_code' : store_group_code,
+                'store_group_name' :store_group_name
+            },
+            success : function(data) {
+                if (data['code'] > 0) {
+                    showTip(data['message'],'success');
+                    $("#add_store_group").modal("hide");
+                    LoadingInfo(getCurrentIndex(1,'#productTbody'));
+                } else {
+                    showTip(data['message'],'error');
+                    flag = false;
+                }
+            }
+        });
+    }
+
+    //门店组列表
+    function LoadingInfo(page_index) {
+        $.ajax({
+            type : "post",
+            url : __URL("ADMIN_MAIN/Store/storeGroupList"),
+            data : { "page_index" : page_index, "page_size" :  $("#showNumber").val() },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr align="center">';
+                        html += '<td>'+ data["data"][i]["store_group_code"]+'</td>';
+                        html += '<td>' + data['data'][i]['store_group_name'] + '</td>';
+                        html += '<td><a onclick="update_store_group('+ data["data"][i]["store_group_id"]+')">修改</a></td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="5">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".table-class tbody").html(html);
+                initPageData(data["page_count"],data['data'].length,data['total_count']);
+                $("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+            }
+        });
+    }
+</script>
+{/block}

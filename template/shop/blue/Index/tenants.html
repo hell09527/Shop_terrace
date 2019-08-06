@@ -1,0 +1,553 @@
+{extend name="shop/blue/base" /}
+{block name="resources"}
+    <style>
+        .registerform{
+            width:960px;
+            margin:0 auto;
+        }
+        .ucmcBot{
+            padding:20px;
+        }
+        .ucmcMaininfo{
+            display: flex;
+            border-bottom: 1px solid #e5e5e5;
+            padding:20px 0;
+        }
+        .ucmcLeft{
+            width:16%;
+            font-size: 16px;
+            padding-top:10px;
+            text-align: left;
+        }
+        .ucmcRight table{
+            width:100%;
+        }
+        .ucmcRight table tr td div.inptext{
+            text-align: right;
+            float: right;
+            padding-right: 30px;
+            color: #6c6c6c;
+            font-size: 16px;
+        }
+        .ucmcRight select{
+            height: 25px;
+            line-height: 25px;
+            width:312px;
+        }
+        .ucmcRight table tr td{
+            height: 45px;
+        }
+        .ucmcRight{
+            width:84%;
+        }
+        .textInput{
+            width:80%;
+        }
+        .info{
+            color:#f4453c;
+        }
+    </style>
+{/block}
+{block name="main"}
+<div class="w1210">
+    <form class="registerform" method="post" action="">
+        <div class="ucmcBot">
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft">公司信息：</div>
+                <div class="ucmcRight">
+
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td width="25%"><div class="inptext">商家类型：</div></td>
+                            <td width="45%">
+                                产品企业                                        </td>
+                            <td width="30%"></td>
+                        </tr>
+
+
+
+                        <tr>
+                            <td><div class="inptext">行业：</div></td>
+                            <td>
+                                <select  id="bindId" name="bindId" data-placeholder="请选择从事行业"  style="width: 312px;" >
+                                    <option value=""></option>
+                                    <option  value="4" >健康食品</option>
+                                    <option  value="5" >营养保健</option>
+                                    <option  value="6" >美容护肤</option>
+                                    <option  value="36" >理疗仪器</option>
+                                    <option  value="66" >生活用品</option>
+                                    <!--<option  value="67" >减肥产品</option>-->
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="inptext">经营范围：</div></td>
+                            <td>
+
+                                <select name="indus[]"  datatype="*" nullmsg="请选择所在经营范围！" errormsg="请选择所经营范围！"  id="scopeBusiness" multiple  data-placeholder="请选择经营范围" style="width: 312px;">
+                                    <option value=""></option>
+                                </select>
+
+                            </td>
+                            <td><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        <tr id="storeType">
+                            <td><div class="inptext">店铺类型：</div></td>
+                            <td>
+                                <select  id="store_type" name="store_type" data-placeholder="请选择店铺类型" style="width: 312px;" >
+                                    <option value=""></option>
+                                    <option  value="1" >单店</option>
+                                    <option  value="2" >连锁店</option>
+                                </select>
+                            </td>
+                        </tr>
+
+
+
+
+
+                        <tr>
+                            <td><div class="inptext">公司名称：</div></td>
+                            <td>
+                                <input name="companyName"  datatype="*6-25" nullmsg="请输入公司全称！" errormsg="公司名称格式不正确!" class="textInput" id="companyName" type="text" value="">
+                            </td>
+                            <td>
+                                <div class="Validform_checktip"></div>
+                                <div class="info">全称至少6个字符,最多25个字符
+                                                <span class="dec">
+                                                    <s class="dec1">&#9670;</s>
+                                                    <s class="dec2">&#9670;</s>
+                                                </span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="inptext" id="shopname" >
+                                店铺名称：
+                            </div></td>
+                            <td>
+                                <input name="shopName"  datatype="*" nullmsg="请输入店铺名称！" errormsg="店铺名称格式不正确!" class="textInput" id="shopName" type="text" value="">
+                            </td>
+                            <td>
+                                <div class="Validform_checktip"></div>
+                                <div class="info">必填
+                                                <span class="dec">
+                                                    <s class="dec1">&#9670;</s>
+                                                    <s class="dec2">&#9670;</s>
+                                                </span>
+                                </div>
+                            </td>
+                        </tr>
+
+
+
+                        <!--<tr>
+                            <td><div class="inptext">公司所在地：</div></td>
+                            <td>
+                                &lt;!&ndash;<select name="pid" id="province"  data-placeholder="请选择省份"   style="width:100px;">
+                                    <option value="">请选择</option>
+                                    <option  value="2">北京</option>
+                                    <option  value="3">安徽</option>
+                                    <option  value="4">福建</option>
+                                    <option  value="5">甘肃</option>
+                                    <option  value="6">广东</option>
+                                    <option  value="7">广西</option>
+                                    <option  value="8">贵州</option>
+                                    <option  value="9">海南</option>
+                                    <option  value="10">河北</option>
+                                    <option  value="11">河南</option>
+                                    <option  value="12">黑龙江</option>
+                                    <option  value="13">湖北</option>
+                                    <option  value="14">湖南</option>
+                                    <option  value="15">吉林</option>
+                                    <option  value="16">江苏</option>
+                                    <option  value="17">江西</option>
+                                    <option  value="18">辽宁</option>
+                                    <option  value="19">内蒙古</option>
+                                    <option  value="20">宁夏</option>
+                                    <option  value="21">青海</option>
+                                    <option  value="22">山东</option>
+                                    <option  value="23">山西</option>
+                                    <option  value="24">陕西</option>
+                                    <option  value="25">上海</option>
+                                    <option  value="26">四川</option>
+                                    <option  value="27">天津</option>
+                                    <option  value="28">西藏</option>
+                                    <option  value="29">新疆</option>
+                                    <option  value="30">云南</option>
+                                    <option  value="31">浙江</option>
+                                    <option  value="32">重庆</option>
+                                    <option  value="33">香港</option>
+                                    <option  value="34">澳门</option>
+                                    <option  value="35">台湾</option>
+                                </select>
+                                <select name="cid" id="city" data-placeholder="请选择城市" style="width:100px;">
+                                    <option value=""></option>
+                                </select>
+                                <select  name="did" datatype="*" nullmsg="请选择所公司所在地！" errormsg="请选择公司所在地！" id="region" data-placeholder="请选择县区" style="width:103px;">
+                                    <option value=""></option>
+
+                                </select>&ndash;&gt;
+                                <input name="address"  datatype="*1-255" nullmsg="请填写您所在的城市！" class="textInput" type="text" value="">
+                            </td>
+                            <td>
+                                <div class="Validform_checktip"></div>
+                                <div class="info">请填写您所在的城市<span class="dec"><s class="dec1">&#9670;</s><s class="dec2">&#9670;</s></span></div>
+                            </td>
+                        </tr>-->
+                        <tr>
+                            <td><div class="inptext">公司地址：</div></td>
+                            <td><input name="address"  datatype="*1-255" nullmsg="请填写公司地址！" errormsg="公司地址最多255个字符！" class="textInput" id="address" type="text" value=""></td>
+                            <td><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="inptext">企业人数：</div></td>
+                            <td>
+                                <select name="people" id="people" datatype="*" nullmsg="请选择所在城市！" errormsg="请选择所在城市！" style="width: 312px;"  >
+                                    <option  value="1">0-50人</option>
+                                    <option  value="2">50-100人</option>
+                                    <option  value="3">100-200人</option>
+                                    <option  value="4">200-500人</option>
+                                    <option  value="5">500人以上</option>
+                                </select>
+                            </td>
+                            <td>
+
+                                <div class="Validform_checktip"></div>
+                                <div class="info">昵称至少6个字符,最多18个字符
+                                            <span class="dec">
+                                                <s class="dec1">&#9670;</s>
+                                                <s class="dec2">&#9670;</s>
+                                            </span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="inptext">公司企业性质：</div></td>
+                            <td>
+                                <select name="natureId" id="natureId" data-placeholder="请选择企业性质" style="width: 312px;">
+                                    <option value="-1"></option>
+
+                                    <option  value="1" >国有企业</option>
+
+                                    <option  value="2" >集体企业</option>
+
+                                    <option  value="3" >联营企业</option>
+
+                                    <option  value="4" >股份合作制企业</option>
+
+                                    <option  value="5" >私营企业</option>
+
+                                    <option  value="6" >个体户</option>
+
+                                    <option  value="7" >合伙企业</option>
+
+                                    <option  value="8" >有限责任公司</option>
+
+                                    <option  value="9" >股份有限公司</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft">法人代表联系信息：</div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td width="25%"><div class="inptext">联系人名称：</div></td>
+                            <td width="45%">
+                                <input name="realName" datatype="s1-20" nullmsg="请填写联系人姓名！" errormsg="格式不对" class="textInput" id="realName" type="text" value="">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        <tr>
+                            <td width="25%"><div class="inptext">身份证号码：</div></td>
+                            <td width="45%">
+                                <input name="cardNo" datatype="s16-21" nullmsg="请填写身份证号码！" errormsg="格式不对" class="textInput" id="cardNo" type="text" value="">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="inptext">电话：</div></td>
+                            <td><input name="phone" datatype="m" nullmsg="请填写手机号！" errormsg="请输入您的手机号码！"  class="textInput" id="phone" type="text" value=""></td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="inptext">邮箱：</div></td>
+                            <td><input name="email" datatype="e" nullmsg="请填写邮箱！" errormsg="邮箱格式不对！" class="textInput" id="email" type="text" value=""></td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="inptext">居住地址：</div></td>
+                            <td><input name="uaddress" datatype="*1-150" nullmsg="请填写居住地址！" errormsg="地址至少1个字符,最多150个字符" class="textInput"  id="uaddress" type="text" value=""></td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="ucmcMaininfo" style="border-bottom: none;padding:0;">
+                <div class="ucmcLeft">银行卡类型：</div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td width="25%"><div class="inptext">选择卡类型：</div></td>
+                            <td width="45%">
+                                <input  type='radio' name='bankType' onclick="checkBankUrl(this)" value='1' checked />个人账户&nbsp;
+                                <input  type='radio' name='bankType' onclick="checkBankUrl(this)" value='2' />企业账户
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft">绑定银行卡：</div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td width="25%"><div class="inptext">添加银行卡：</div></td>
+                            <td width="45%">
+                                <div id="image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="image" src="" />
+                                <input id="input" type="file" accept="image/*" onchange="selectImage(this);" style="display: block;margin-top: 10px;">
+
+                                <!--<select name="ubc_id" id="ubcId"   style="width: 100%;" >
+                                    <option value="">选择银行卡</option>
+                                </select>
+                                <br/><br/>
+                                <a target="_blank" id='addbankCard' href="http://user.900sui.com/Bank-bindBank-step-1.html">添加银行卡</a>
+                                <a href="javascript:getBanks();" >[刷新]</a>-->
+
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft"></div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td width="25%" style="width:105px;">
+                                <div class="inptext">营业执照注册号：</div>
+                            </td>
+                            <td width="45%">
+                                <input name="organNo"  datatype="*" nullmsg="请填写营业执照注册号后九位" errormsg="营业执照注册号后九位格式不正确!" class="textInput" id="organNo" type="text" value="">
+                            </td>
+                            <td width="30%">
+                                <div class="Validform_checktip"></div>
+                                <div class="info">营业执照注册号后九位必填
+                                <span class="dec">
+                                    <s class="dec1">&#9670;</s>
+                                    <s class="dec2">&#9670;</s>
+                                </span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft">企业资质：</div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+
+                        <tr>
+                            <td width="25%">
+                                <div class="inptext"><font color='red'>*</font>营业执照：</div>
+                            </td>
+                            <td width="45%">
+                                <div id="buslic-image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="buslic-image" src="" />
+                                <input id="buslic" type="file" accept="image/*" onchange="selectBuslicImage(this);" style="display: block;margin-top: 10px;">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        <tr>
+                            <td width="25%">
+                                <div class="inptext">
+                                    食品经营许可证：
+                                </div>
+                            </td>
+
+                            <td width="45%">
+                                <div id="currency-image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="currency-image" src="" />
+                                <input id="currency" type="file" accept="image/*" onchange="selectCurrencyImage(this);" style="display: block;margin-top: 10px;">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        <tr>
+                            <td width="25%">
+                                <div class="inptext">
+                                    教育部门审批证：
+                                </div>
+                            </td>
+                            <td width="45%">
+                                <div id="education-image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="education-image" src="" />
+                                <input id="education" type="file" accept="image/*" onchange="selectEducationImage(this);" style="display: block;margin-top: 10px;">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="ucmcMaininfo">
+                <div class="ucmcLeft">法人代表信息：</div>
+                <div class="ucmcRight">
+                    <table>
+                        <tbody>
+
+                        <tr>
+                            <td width="25%">
+                                <div class="inptext">
+                                    <font color='red'>*</font>身份证正面：
+                                </div>
+                            </td>
+                            <td width="45%">
+                                <div id="cardY-image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="cardY-image" src="" />
+                                <input id="cardY" type="file" accept="image/*" onchange="selectCardYImage(this);" style="display: block;margin-top: 10px;">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+                        <tr>
+                            <td width="25%">
+                                <div class="inptext">
+                                    <font color='red'>*</font>身份证反面：
+                                </div>
+                            </td>
+                            <td width="45%">
+                                <div id="cardN-image-box" style="width:100px;height:100px;background: #ddd;line-height: 100px;text-align: center">请上传图片</div>
+                                <img id="cardN-image" src="" />
+                                <input id="cardN" type="file" accept="image/*" onchange="selectCardNImage(this);" style="display: block;margin-top: 10px;">
+                            </td>
+                            <td width="30%"><div class="Validform_checktip"></div></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #e5e5e5">
+                <div style="font-size: 14px;display: block;width:100% ;text-align: center; padding-top:30px ;">
+                    <label>
+                        <input id="agr" type="checkbox" checked="checked" />   	阅读并接受《 <a href="javascript:;" class="regAgr">商户入驻合作协议</a> 》
+
+                    </label>
+                </div>
+                <div style="width:100% ;text-align: center;">
+                    <input class="btnInput cl subava" type="button"   value="提 交"   id="subInfo" style="margin: 20px; width:100px;line-height: 30px;color:#fff;background: #333;border-radius: 5px;font-size: 14px;" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+    function selectImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('image').src = evt.target.result;
+            document.getElementById('image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    function selectBuslicImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('buslic-image').src = evt.target.result;
+            document.getElementById('buslic-image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    function selectCurrencyImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('currency-image').src = evt.target.result;
+            document.getElementById('currency-image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    function selectEducationImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('education-image').src = evt.target.result;
+            document.getElementById('education-image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    function selectCardYImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('cardY-image').src = evt.target.result;
+            document.getElementById('cardY-image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    function selectCardNImage(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            document.getElementById('cardN-image').src = evt.target.result;
+            document.getElementById('cardN-image-box').style='display:none';
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+</script>
+{/block}

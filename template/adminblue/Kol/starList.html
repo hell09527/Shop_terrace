@@ -1,0 +1,297 @@
+{extend name="adminblue/base" /}
+
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/member_list.css" />
+{/block}
+
+{block name="main"}
+<table class="mytable">
+	<tr>
+		<th width="20%" style="text-align: left;">
+			<button class="btn-common btn-small" onclick="add_star()" style="margin:0 5px 0 0 !important;">添加星级</button>
+		</th>
+	</tr>
+</table>
+
+<div></div>
+<table class="table-class">
+	<colgroup>
+		<col width="15%">
+		<col width="15%">
+		<col width="15%">
+		<col width="15%">
+		<col width="15%">
+		<col width="15%">
+		<col width="10%">
+	</colgroup>
+	<thead>
+	<tr align="center">
+		<th>星级模式</th>
+		<th>星级等级</th>
+		<th>星级名称</th>
+		<th>升星标准(元)</th>
+		<th>星级奖励(%)</th>
+		<th>星级描述</th>
+		<th>操作</th>
+	</tr>
+	</thead>
+	<tbody id="productTbody"></tbody>
+</table>
+
+<!-- 添加星级 -->
+<div class="modal fade hide" id="add_star" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>添加星级</h3>
+			</div>
+			<div class="modal-body">
+				<div class="modal-infp-style">
+					<table class="modal-tab">
+						<tr>
+							<td style="width:20%"><span class="required">*</span>星级模式</td>
+							<td id="star_type">
+								<label><input type="radio" name="star_type" value="1" />店员&nbsp;&nbsp;</label>
+								<label><input type="radio" name="star_type" value="2" />签约&nbsp;&nbsp;</label>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级等级</td>
+							<td>
+								<input type="number" id="star_grade" class="input-common" />
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级名称</td>
+							<td>
+								<input type="text" id="star_name" class="input-common" />
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>升星标准</td>
+							<td>
+								<input type="text" id="star_standard" class="input-common"/>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级奖励</td>
+							<td>
+								<input type="text" id="star_reward" class="input-common"/>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级描述</td>
+							<td>
+								<textarea id="star_description" class="input-common"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addStar()">保存</button>
+				<button class="btn" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<input type="hidden" id="star_id"/>
+<!-- 修改星级 -->
+<div class="modal fade hide" id="update_star" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" >
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">编辑</h4>
+			</div>
+			<div class="modal-body">
+				<div class="modal-infp-style">
+					<table class="modal-tab">
+						<tr>
+							<td style="width:20%"><span class="required">*</span>星级模式</td>
+							<td id="type">
+								<label><input type="radio" name="star_type" value="1" />店员&nbsp;&nbsp;</label>
+								<label><input type="radio" name="star_type" value="2" />签约&nbsp;&nbsp;</label>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级等级</td>
+							<td>
+								<input type="number" id="grade" class="input-common" />
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级名称</td>
+							<td>
+								<input type="text" id="name" class="input-common" />
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>升星标准</td>
+							<td>
+								<input type="text" id="standard" class="input-common"/>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级奖励</td>
+							<td>
+								<input type="text" id="reward" class="input-common"/>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="required">*</span>星级描述</td>
+							<td>
+								<textarea id="description" class="input-common"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-info" onclick="updateStar()" id="butSubmit"  style="display:inline-block;">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+	//修改星级弹出
+	function update_star(star_id){
+		var star_id = parseInt(star_id);
+		$("#update_star").modal("show");
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/Distributor/getStarDetail')}",
+			data : { 'star_id':star_id},
+			success : function(data) {
+				$("#star_id").val(data.star_id);
+				$("#type").find("input[value="+data.star_type+"]").attr("checked",true);
+				$("#grade").val(data.star_grade);
+				$("#name").val(data.star_name);
+				$("#standard").val(data.star_standard);
+				$("#reward").val(data.star_reward*100);
+				$("#description").val(data.star_description);
+			}
+		});
+	}
+
+	//修改星级
+	function updateStar(){
+		var star_id = $("#star_id").val();
+		var star_type = $("input[name='star_type']:checked").val();
+		var star_grade = $("#grade").val();
+		var star_name = $("#name").val();
+		var star_reward = $("#reward").val();
+		var star_standard = $("#standard").val();
+		var star_description = $("#description").val();
+		if (!star_type || !star_grade || !star_name || !star_reward || !star_standard) {
+			showTip('请完善信息','warning');
+			return;
+		}
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/Distributor/updateStar')}",
+			data : {
+				'star_id' : star_id,
+				'star_type' : star_type,
+				'star_grade' : star_grade,
+				'star_name' : star_name,
+				'star_reward' : star_reward,
+				'star_standard' : star_standard,
+				'star_description' : star_description
+			},
+			success : function(data) {
+				if (data['code'] > 0) {
+					showTip(data['message'],'success');
+					LoadingInfo(getCurrentIndex(star_id,'#productTbody'));
+					$("#update_star").modal("hide");
+				} else {
+					showTip(data['message'],'error');
+					flag = false;
+				}
+			}
+		});
+	}
+
+	//添加星级弹出
+	function add_star(){
+		$("#add_star").modal("show");
+	}
+
+	//添加星级
+	function addStar(){
+		var star_type = $("input[name='star_type']:checked").val();
+		var star_grade = $("#star_grade").val();
+		var star_name = $("#star_name").val();
+		var star_reward = $("#star_reward").val();
+		var star_standard = $("#star_standard").val();
+		var star_description = $("#star_description").val();
+		if (!star_type || !star_grade || !star_name || !star_reward || !star_standard) {
+			showTip('请完善信息','warning');
+			return;
+		}
+		$.ajax({
+			type : "post",
+			url : __URL("ADMIN_MAIN/Distributor/addStar"),
+			data : {
+				'star_type' : star_type,
+				'star_grade' : star_grade,
+				'star_name' : star_name,
+				'star_reward' : star_reward,
+				'star_standard' : star_standard,
+				'star_description' : star_description
+			},
+			success : function(data) {
+				if (data['code'] > 0) {
+					showTip(data['message'],'success');
+					$("#add_star").modal("hide");
+					LoadingInfo(getCurrentIndex(1,'#productTbody'));
+				} else {
+					showTip(data['message'],'error');
+					flag = false;
+				}
+			}
+		});
+	}
+
+	//星级列表
+	function LoadingInfo(page_index) {
+		$.ajax({
+			type : "post",
+			url : __URL("ADMIN_MAIN/Distributor/starList"),
+			data : { "page_index" : page_index, "page_size" :  $("#showNumber").val() },
+			success : function(data) {
+				var html = '';
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+						html += '<tr align="center">';
+						if( data["data"][i]["star_type"] == 1){
+							html += '<td>店员</td>';
+						}else{
+							html += '<td>签约</td>';
+						}
+						html += '<td>'+ data["data"][i]["star_grade"]+'</td>';
+						html += '<td>'+ data["data"][i]["star_name"]+'</td>';
+						html += '<td>' + data['data'][i]['star_standard'] + '</td>';
+						html += '<td>' + Math.round(data['data'][i]['star_reward']*100) + '</td>';
+						html += '<td>' + data['data'][i]['star_description'] + '</td>';
+						html += '<td><a onclick="update_star('+ data["data"][i]["star_id"]+')">修改</a></td>';
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr align="center"><td colspan="5">暂无符合条件的数据记录</td></tr>';
+				}
+				$(".table-class tbody").html(html);
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+			}
+		});
+	}
+</script>
+{/block}

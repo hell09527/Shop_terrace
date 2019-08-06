@@ -1,0 +1,73 @@
+{extend name="wap/default_new/base" /}
+<!--css 模块-->
+{block name="resources"}
+<style>
+    *{
+        margin:0;
+        padding: 0;
+    }
+   .shu{
+       margin-top: 38%;
+       margin-left: 10%;
+       width: 80%;
+       height: 40px;
+       text-align: center;
+       font-size: 25px;
+       /*color: lightcyan;*/
+   }
+    .ids{
+        margin-top: 40%;
+        margin-left: 10%;
+        width: 80%;
+        height: 40px;
+
+        font-size: 25px;
+    }
+
+    .sub{
+        margin-top: 50%;
+
+        width: 100%;
+        height: 40px;
+        background-color: orangered;
+        font-size: 20px;
+        color: #fff;
+    }
+    .title{
+        line-height: 40px;
+        text-align: center;
+
+    }
+</style>
+{/block}
+<!--头部-->
+{block name="goodsHead"}
+<section class="head">
+    <a class="head_back" id="head_back" href="javascript:window.history.go(-1)"><i class="icon-back"></i></a>
+    <div class="head-title"><span style="margin-left: 40px;">{:lang('goods_cart')}</span>{include file="wap/default_new/controGroup" /}</div>
+</section>
+{/block}
+<!--中间-->
+{block name="main"}
+<div class="main">
+
+
+
+    <input type="text"  class="shu" value="请输入有效身份证件号" disabled>
+    <input type="text" class="ids">
+    <div class="sub">
+        <div class="title">提交</div>
+
+    </div>
+
+
+</div>
+{/block}
+<!--尾部-->
+{block name="bottom"}
+<script type="text/javascript">
+    $(".sub").on("click",function () {
+        window.location.href = __URL(APPMAIN+"/order/paymentorder");
+    })
+</script>
+{/block}

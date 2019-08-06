@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="{$platform_shopname}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="keywords" content="{$seoconfig.seo_meta}"/>
+    <meta name="description" content="{$seoconfig.seo_desc}"/>
+    <meta name="author" content="{$platform_shopname}"/>
+    <title>女人，需要不怕你发光的男人</title>
+    <link rel="shortcut icon" type="image/x-icon" href="__TEMP__/{$style}/public/images/logoNav.png" media="screen"/>
+    <link href="__TEMP__/{$style}/public/css/member_login.css" rel="stylesheet" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="__TEMP__/{$style}/public/css/ns_default.css"/>
+    <script src="__STATIC__/js/jquery-1.8.1.min.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.js"></script>
+    <link type="text/css" rel="stylesheet" href="__TEMP__/{$style}/public/css/login.css"/>
+    <script src="__STATIC__/js/load_bottom.js" type="text/javascript"></script>
+    <!-- logo样式 -->
+    <link type="text/css" rel="stylesheet" href="__STATIC__/shop_css_logo/shop_logo.css"/>
+    <script type="text/javascript">
+        var SHOPMAIN = 'SHOP_MAIN';//外置JS调用
+        var APPMAIN = 'APP_MAIN';//外置JS调用
+        var STATIC = "__STATIC__";
+    </script>
+    <style>
+        img{
+            display: block;
+            margin:0 auto;
+        }
+        .radius_avatar {
+            display: inline-block;
+            background-color: #fff;
+            padding: 3px;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            overflow: hidden;
+            vertical-align: middle
+        }
+
+        .radius_avatar img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            background-color: #eee
+        }
+
+        .rich_media_inner {
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto
+        }
+
+        .rich_media_area_primary {
+            padding: 20px 16px 12px;
+            background-color: #fff;
+        }
+
+        .rich_media_area_primary.voice {
+            padding-top: 66px
+        }
+
+        .rich_media_area_primary .weui-loadmore_line .weui-loadmore__tips {
+            color: rgba(0, 0, 0, 0.3);
+            background-color: #fafafa
+        }
+
+        .rich_media_area_extra {
+            padding: 0 16px 24px
+        }
+
+        .rich_media_extra {
+            padding-top: 30px
+        }
+
+        .mpda_bottom_container .rich_media_extra {
+            padding-top: 24px
+        }
+
+        html {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            line-height: 1.6
+        }
+
+        body {
+            -webkit-touch-callout: none;
+            font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+            color: #333;
+            background-color: #f2f2f2;
+            letter-spacing: .034em
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 400;
+            font-size: 16px
+        }
+
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        a {
+            color: #666;
+            text-decoration: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+        }
+
+        .rich_media_title {
+            font-size: 22px;
+            line-height: 1.4;
+            margin-bottom: 14px
+        }
+
+        @supports (-webkit-overflow-scrolling:touch) {
+            .rich_media_title {
+                font-weight: 700
+            }
+        }
+
+        .rich_media_meta_list {
+            margin-bottom: 22px;
+            line-height: 20px;
+            font-size: 0;
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .rich_media_meta_list em {
+            font-style: normal
+        }
+
+        .rich_media_meta {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px 10px 0;
+            font-size: 15px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+        }
+
+        .rich_media_meta.icon_appmsg_tag {
+            margin-right: 4px
+        }
+
+        .rich_media_meta.meta_tag_text {
+            margin-right: 0
+        }
+
+        .rich_media_meta_primary {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px
+        }
+
+        .meta_original_tag {
+            padding: 0 .5em;
+            font-size: 12px;
+            line-height: 1.4;
+            background-color: #f2f2f2;
+            color: #888
+        }
+
+        .meta_enterprise_tag img {
+            width: 30px;
+            height: 30px !important;
+            display: block;
+            position: relative;
+            margin-top: -3px;
+            border: 0
+        }
+
+        .rich_media_meta_link {
+            color: #576b95
+        }
+
+        .rich_media_meta_text {
+            color: rgba(0, 0, 0, 0.3)
+        }
+
+        .rich_media_meta_text.rich_media_meta_split {
+            padding-left: 10px
+        }
+
+        .rich_media_meta_text.rich_media_meta_split:before {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -6px;
+            content: ' ';
+            display: block;
+            border-left: 1px solid #888;
+            width: 200%;
+            height: 130%;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0
+        }
+
+        .rich_media_meta_text.article_modify_tag {
+            position: relative
+        }
+
+        .rich_media_meta_nickname {
+            position: relative
+        }
+
+        .rich_media_thumb_wrp {
+            margin-bottom: 6px
+        }
+
+        .rich_media_thumb_wrp .original_img_wrp {
+            display: block
+        }
+
+        .rich_media_thumb {
+            display: block;
+            width: 100%
+        }
+
+        .rich_media_content {
+            overflow: hidden;
+            color: #333;
+            font-size: 17px;
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
+            text-align: justify
+        }
+
+        .rich_media_content * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            -webkit-box-sizing: border-box !important;
+            word-wrap: break-word !important
+        }
+
+        .rich_media_content p {
+            clear: both;
+            min-height: 1em
+        }
+
+        .rich_media_content em {
+            font-style: italic
+        }
+
+        .rich_media_content fieldset {
+            min-width: 0
+        }
+
+        .rich_media_content .list-paddingleft-2 {
+            padding-left: 2.2em
+        }
+
+        .rich_media_content .list-paddingleft-2 .list-paddingleft-2 {
+            padding-left: 30px
+        }
+
+        .rich_media_content blockquote {
+            margin: 0;
+            padding-left: 10px;
+            border-left: 3px solid #dbdbdb
+        }
+
+        .weui-mask {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6)
+        }
+
+        .weui-dialog {
+            position: fixed;
+            z-index: 5000;
+            width: 80%;
+            max-width: 300px;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            text-align: center;
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .weui-dialog__hd {
+            padding: 1.3em 1.6em .5em
+        }
+
+        .weui-dialog__title {
+            font-weight: 400;
+            font-size: 18px
+        }
+
+        .weui-dialog__bd {
+            padding: 0 1.6em .8em;
+            min-height: 40px;
+            font-size: 15px;
+            line-height: 1.3;
+            word-wrap: break-word;
+            word-break: break-all;
+            color: #999
+        }
+
+        .weui-dialog__bd:first-child {
+            padding: 2.7em 20px 1.7em;
+            color: #353535
+        }
+
+        .weui-dialog__ft {
+            position: relative;
+            line-height: 48px;
+            font-size: 18px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex
+        }
+
+        .weui-dialog__ft:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px solid #d5d5d6;
+            color: #d5d5d6;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .weui-dialog__btn {
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            color: #3cc51f;
+            text-decoration: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            position: relative
+        }
+
+        .weui-dialog__btn:active {
+            background-color: #eee
+        }
+
+        .weui-dialog__btn:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            bottom: 0;
+            border-left: 1px solid #d5d5d6;
+            color: #d5d5d6;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleX(0.5);
+            transform: scaleX(0.5)
+        }
+
+        .weui-dialog__btn:first-child:after {
+            display: none
+        }
+
+        .weui-dialog__btn_default {
+            color: #353535
+        }
+
+        .weui-dialog__btn_primary {
+            color: #0bb20c
+        }
+
+        img {
+            height: auto !important
+        }
+
+        @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) {
+            .rich_media_area_extra {
+                padding-bottom: 34px
+            }
+        }
+
+        @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) {
+            .rich_media_area_primary {
+                padding: 20px 60px 15px 60px
+            }
+
+            .rich_media_area_extra {
+                padding: 0 60px 21px 60px
+            }
+        }
+
+        @media screen and (min-width: 1024px) {
+            .rich_media_area_primary_inner, .rich_media_area_extra_inner {
+                max-width: 677px;
+                margin-left: auto;
+                margin-right: auto
+            }
+
+            .rich_media_area_primary {
+                padding-top: 32px
+            }
+        }
+
+        .appmsg_share_notice {
+            font-size: 16px;
+            color: #888;
+            position: relative;
+            padding: 1.25em 0;
+            margin-bottom: 1.75em
+        }
+
+        .appmsg_share_notice:before {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px solid #dfdfdf;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .appmsg_share_notice:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 1px;
+            border-bottom: 1px solid #dfdfdf;
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .appmsg_share_notice_hd {
+            font-weight: 700;
+            padding-bottom: .2em
+        }
+
+        .cell {
+            padding: .8em 0;
+            display: block;
+            position: relative
+        }
+
+        .cell_hd, .cell_bd, .cell_ft {
+            display: table-cell;
+            vertical-align: middle;
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: nowrap
+        }
+
+        .cell_primary {
+            width: 2000px;
+            white-space: normal
+        }
+
+        .flex_cell {
+            padding: 10px 0;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center
+        }
+
+        .flex_cell_primary {
+            width: 100%;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            box-flex: 1;
+            flex: 1
+        }
+
+        .original_tool_area {
+            display: block;
+            padding: .75em 1em 0;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            color: #333;
+            border: 1px solid #eaeaea;
+            margin: 20px 0
+        }
+
+        .original_tool_area .tips_global {
+            position: relative;
+            padding-bottom: .5em;
+            font-size: 15px
+        }
+
+        .original_tool_area .tips_global:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 1px;
+            border-bottom: 1px solid #dbdbdb;
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .original_tool_area .radius_avatar {
+            width: 27px;
+            height: 27px;
+            padding: 0;
+            margin-right: .5em
+        }
+
+        .original_tool_area .radius_avatar img {
+            height: 100% !important
+        }
+
+        .original_tool_area .flex_cell_bd {
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal
+        }
+
+        .original_tool_area .flex_cell_ft {
+            font-size: 14px;
+            color: #888;
+            padding-left: 1em;
+            white-space: nowrap
+        }
+
+        .original_tool_area .icon_access:after {
+            content: " ";
+            display: inline-block;
+            height: 8px;
+            width: 8px;
+            border-width: 1px 1px 0 0;
+            border-color: #cbcad0;
+            border-style: solid;
+            transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+            -ms-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+            -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+            position: relative;
+            top: -2px;
+            top: -1px
+        }
+
+        .rich_media_global_msg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: .85em 35px .85em 15px;
+            z-index: 2;
+            background-color: #c6e0f8;
+            color: #888;
+            font-size: 12px
+        }
+
+        .rich_media_global_msg .icon_closed {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            margin-top: -5px;
+            line-height: 300px;
+            overflow: hidden;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            background: transparent url(//res.wx.qq.com/mmbizwap/zh_CN/htmledition/images/icon/appmsg/icon_appmsg_msg_closed_sprite.2x2eb52b.png) no-repeat 0 0;
+            width: 11px;
+            height: 11px;
+            vertical-align: middle;
+            display: inline-block;
+            -webkit-background-size: 100% auto;
+            background-size: 100% auto
+        }
+
+        .rich_media_global_msg .icon_closed:active {
+            background-position: 0 -17px
+        }
+
+        .rich_media_global_msg.voice {
+            color: #1aad19;
+            background-color: #e8f6e8;
+            padding-left: 43.3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .rich_media_global_msg.voice .ic_voice {
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            left: 15px;
+            display: inline-block;
+            width: 13.3px;
+            height: 18.3px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAA3CAYAAAB+fggjAAAAAXNSR0IArs4c6QAACb9JREFUaAW9WX9wVMUd3917d5cf/Agp1OTuQgIlQqUoI1JI1Noojg2I+VU7hVrtDDpadRypgzKjU52x09KOdsS20ypSO/WPWttcAqhTOlSoU4FIoRUn0wEZIMndBUkwGEhyv97bfvaS97L77t3lHYUuc+z3935397vf/e4LJZfQnuPPsW0d25ZQzr9mELKSUnIVzHxB/Dh+lBOKf4OEk0FOyQAl/CyltIt5tL29d/V2FzIkLUQ4FA7dwon+KCF0Fee8rBBdS5aSs/D+PUrYbyKtkb9b9BzAlA7CERrqDN1DOH8C8HU57FwSGat6kBGypbcluhMwFj+75XWwemf1vHQqtZ0T3pCtelkp73uJ79s9bT39dqs5HQyFK79jcPIKFErtSgLHjPvQHQB0EFt2hDE2QHU6RMvpkODrw3o50Uk5p3w2N/SlUKhHTNZjskHBz2pi6ylbH22J/k3mOToYCAceIYT/AgYVPhxJQTkMQ792Ez/yQCY8d0fgRl0nj8J2G5z1mvSJ3qCMrYOTb5l0xQFBDIUDjxmcbzUFJnu621/kf/DUmlM9k7RLh4LtwRChxquck0bFCqWjxENuijXF/iXoioNVnZU36wZ5D7PTTCWsWhyp4uFYa+x1k3Y5ezj6oNgtdTVpL0Lo+mhr9BwO0Xib+/bcWYZB35Sdg/sXsOSNV8o5MXK0LfoKYXQDxpJOMZ8L1g8E33JQT6aeQRoJCOJEMxjxfCvSEtlnEq5Uj5h7Ayv2I8U+5w9du/va0oyD896ZV004RQKebIzQ53EQ/jJJubJQhUa2YBXPmqNgy8vPjZ67N+NgMh6/HwSfyURgniwqLvmJif8/+sNrY6O4XV5WxjKMuvHDQOl9uCksHmX0xydWn0hYBJfAgncXzBhNjjZSnX8Fq3ENdmWWUMUhS2Ebv5HrtjDNg/+B5IY4wos0cVukUskqUwj9xfKS2W9GSEwi5QdxFS5BMn54dGzkHkhOy0x18j9COY1O5VxmhGJylIxMjgUTC7WUkfrqJAkQpfuP3nFUElO4WUgwHHza0HU1wG1SGOi0jeSI+kf92hgZlXg0yajBV0gUwri4vqZud/O7PbhxkGiNvM5NWHKV3NN8LGQbuVdDsYIVzOzHOI+ygzYhR/RAxwdbELcPZDEp+Q+2YQcS2L+Zwc4gdSUQS7Oz5BwIKUqWyq5ApEdDsVmhBKaHnHDQVUg1uwKLkkm+USEScsbjId/ra+7fbaMThMHVdpoTjuyxXloqcUg+Eqe4WBb26/5hGXeCkynyfdA9Fo/SQeZlN/StjUQtmgQUFxVnKhyJlAUGOgP13OC3ygxGWZhhSYtkYqIicUHGnWCUluoFz8mzkRzOCf14Wfyikx2ThvQ0B6XZdvhi1QaoAfZHmiMf40xMJmih4BvxWQnbNCD3i/cunoYab4FMQwr5o4zb4Uh9ZMxOM3Fsf91YfPQfOAeLTJrouYc8K3rEII0ikBcKRLTEhUQNuo8E7NSGh4dnyDOFzIioOpxkZdqyXYGSAV2rMYjhIUamkL2ZcANvG+MWWS4DU/parDm2R8AiBj/Bz3IQe14DPKeDRho1hNyonFplhgp/mmaNhpH6s0VVToNFxR7TPcVFJVZdgMG4cNBq0LvRQhyA2vLaMyDrFouTL169KzBlGkEofdnScQYMXBI/raiuXC1fs4wz2iXLI+U0y7gd3tewL41IVhLvmM6X2eWycM7nZ9EEAXWgWDWPpjWg7tx8+IbD4llhNTadTn8XcWgVBphprbhbLQkngJK/ymTdoE/IuDPME5jYSYx1HLn3EH6/B77Rq/m+FG2L3d7X1Pe+kx5kCBJp4G0clDWmAJTD0db+NhO398GO4G3cMDJBbPIY9bShfgyb+OXqMwGPV9rrskFsc6t4fck0GRZPQ5GnZBpO4x/wvrAmKfP+FzjjYF9zn5i58s0ET8MX8hnGc+BxOGnFi8innBg7UUBsFaV6Pt1CeBMrKD73qG8CbPnKUHvg/lzG+tr6DlGWufJkEWQp/tjgyMBJPF+fWrhj4XSZeSlwJgaFIhyioY7gHvS3moYyK6TRO6JN0b0mzd6HOgIbEBK/gp7fzsOBGMLUX2Z+bWvvnb1T3sd2fYFbDgoET8/56UTqKEBrizDIeY1463tae1BGObeq9qrlBtXb4aRcmVvCmOjneFq+UFZW9lJ3Q3fee9lSmgAUBwUNd+N9CPjfTfDHO0pO+z1FK081nfpUoUuIuKPPD322Gav5OMjWBCURRBGN4GH0QCGvxSwHhcFguPLnGEip97AKXd5y39dPN5yOy4PaYXGrjKToRsTMIzg4M+38cZz+LNYWe8qZp1Izh0QlEVLfctMmzNb6gCP4GGxFcij5W7usHT++NjaI4uHpadr0KkbpZvAH7DKw9iRi98lsejbFcQWF2LJ/LvOe6Yl14m5eLavhU8gqkQdlWj5YnOSL+sXNWNFNmKT1NQsLkGAez3zcIHmfj44rKAYUd2Jxcek6HCP1cHD+Ig5DzonZnT3WdOyCWFGukRUIwkGTL069kdYz319MmlOf00EhjKpiWKPku7IiDF9X3RHMecvIsjIsPqdh1ewO3SXLOMF5HRQKvS39h5GNOmVlnZP1Mu4W9pZ5/4TDZh0ybHkt3iKOqcm0OaWDQpB52DZTQfQo+Vtl3C08kQGO2OStYtlGz6CuHJxZO3MPYnHYMsDJVSKpW3ghAOXKsxaPoup86q4c7F7cncSyHZANGen0Shl3C+PSPy/L4qmZ97525aAwiMLgQ8Uwp8tl3C2MASff00KJMRW3GXLtIFbwY1kXp/kaGXcL42AoDqHit6p5JxuuHfQwj1IvIhFO9QhyGk/QpskM/C3Gyo0y3YRdOzgnNOcTHJS0qYgVrBIfLE28gF75ToN3bySfrmsHM68tTo7JxuKJ+PUyPhWcqbQ5XarI+TRlZxQeENcOjitS5dMc5/oqu8F8+ODI4FrEoPVpBTfL8akK2YIc9DCiFAkoyTbUdNSU5XPK5Im/MQPeZOKZnpNdCu6AFOTgrJLZO2FDrogrUjyxPbQ/VOxgWyG9Fn71h6hoJkMC8exlvl8qQg6I66rE1A22Vz6PEuwZExe92CrQtmmU72U+fzQ9K/15XV1dsuudrhlc50t0XX8Izq1TdAh5I9rWf69Mc4ILdlCU9kNDn32ICvZS0wySAY2W+shSUdw6OSXTCtpioSgePZrPeydWTUncstF8MPRw1dFvunFO2CnYQaGEk3cSn8iWYyVeBGoImqtG6RHxQsQfEJVskE+34C22GxOfb8fiY40owtaAJ0qnciTxcvSlE7VfBPX3IQ8lb/U2R3dgBRGu7tt/AYJkZEGv/oaXAAAAAElFTkSuQmCC) no-repeat center;
+            background-size: contain
+        }
+
+        .rich_media_global_msg.voice .icon_more {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            margin-top: -6.5px;
+            width: 8px;
+            height: 13px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAAAAXNSR0IArs4c6QAAA49JREFUSA2tVk1IVFEUPveOmhQk1ibfvLFZSJtACqJIIpCIoB+imcFV2Z9ZUVnRomgRGFn2i6mFf5XVotCZMYmgIMhlq6BFENFiwjfPAosgFzXOvNu5o3fmeue98Y16F3PP+c453/fu/xCQmvZSWwwJaC0G6P8WND9IoTmbVFRycpqAdgBWkwRo94V960RsPn1aoPpN9RI6CR0WsDWcjAErtUiqTR/S18+HnNcSTv5zYrwDSatVMgLkH6aciwfj79WYW5+OT4xfsyPnBIgvwt872qBW45ZQzaMlJXCfMPJbDQgfRUoIhduVUW2TwArpaWyX+bnYU9JAAH44FaJIccqCW76Ib7NTjhOOvFPN/8q/IvE3cR+npFJgao9rkiSUXjD2GCNqzMnPbNPYjth3mqINlJAvTsk4kiJmWa3eQe8WpxwVzwjwgFFn/CorL29EkY9qovC5CFDrKq7JVoHl6zNTJCf53/lLk78SN/FcbJRx2cZCixC4ZATGXsu4as8YgQjGamN/q5atOotn4K3A1J4BUMbgsh7Wt6sx2bcV4AkjtSPJxkDjRQL0hVwg21zEglSzN+rdKeOybTtFcgK39ajWZDFWr+IZHxfGQ8mV0YA5nMGmDVcCPNcb8R5gYJ1UCWQfp6PFCI4NyZhrAV6EIiHGrPOAB0ImkW2c0la8u8ICc0wUCWrvC1dsw+3TnN6uanDaJ4zeiIfiA9wtWIAX8XspxeA6iuBlaN88hNzCNXk+JwFOuXJYW5tMQmc+EcqgzXGb2n9XFk1NstX5yKczl89JAF+6vRaBM1m5XAu//qkRGrtb8BThTtqH2/V0LmUWwbvsiREw8X0vcJHxxNbjNm3KUuVaMjmPFuWm2CPesHc/kp+yj06hFMhj/PIOOcfVFLk6xZT0G3vMTpmc27MusityZk/OBfKOwA05MPLIDJn3OJldcxTQotpBYOyEXVEWIw/NoInvuHOznSJfVDs0GzneNw9mI+eyOSPQI9phfCqPO38TFhHaFw/Eu/LliNiMESB5w6zkzD05F8mMYJr8mFC263Fa+vAadvXloj4toEcrjlgMjgrQrseHpBcfkm67WD6M6MN6lTWZeoZjyYxGLcB57MGnsEfF3fjU2G189QBpcUqmBLrnSs4504s8GjLxrwm5qYrg3dKFf6x6VbwQ3yOS/wz8+bS0ruwfELaBY2nyoNkn4gvW65GKRn4WForwP+dONHDaOHeZAAAAAElFTkSuQmCC) no-repeat center;
+            background-size: contain
+        }
+
+        .preview_appmsg .rich_media_title {
+            margin-top: 2.3em
+        }
+
+        @media screen and (min-width: 1024px) {
+            .rich_media_global_msg {
+                position: relative;
+                margin-bottom: 32px
+            }
+
+            .preview_appmsg .rich_media_title.rich_media_title {
+                margin-top: 0
+            }
+        }
+
+        .pages_reset {
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            font-weight: 400;
+            font-style: normal;
+            text-indent: 0;
+            letter-spacing: normal;
+            text-align: left;
+            text-decoration: none;
+            white-space: normal
+        }
+
+        .weapp_element, .weapp_display_element, .mp-miniprogram {
+            display: block;
+            margin: 1em 0
+        }
+
+        .share_audio_context {
+            margin: 16px 0
+        }
+
+        .weapp_text_link {
+            font-size: 17px
+        }
+
+        .weapp_text_link:before {
+            content: '';
+            display: inline-block;
+            line-height: 1;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('data:image/png;base64,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');
+            vertical-align: middle;
+            font-size: 11px;
+            color: #888;
+            margin-right: 6px;
+            margin-top: -3px;
+            background-position: center;
+            height: 20px;
+            width: 20px
+        }
+
+        .flex_context {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center
+        }
+
+        .flex_bd {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .original_page {
+            background-color: #fff;
+            font-size: 16px
+        }
+
+        .account_info {
+            padding: 0 0 20px
+        }
+
+        .account_info .flex_bd {
+            padding-left: .85em
+        }
+
+        .radius_avatar.account_avatar {
+            width: 40px;
+            height: 40px;
+            padding: 0
+        }
+
+        .account_nickname {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            line-height: 1.2;
+            color: #576b95;
+            font-size: 14px
+        }
+
+        .account_nickname_inner {
+            font-weight: 400;
+            vertical-align: top
+        }
+
+        .account_desc {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            color: #b2b2b2;
+            font-size: 13px;
+            line-height: 1.2;
+            padding-top: .3em
+        }
+
+        .account_desc_inner {
+            display: inline;
+            vertical-align: top
+        }
+
+        .share_notice {
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto
+        }
+
+        .share_media {
+            padding-bottom: 18px
+        }
+
+        .original_panel {
+            padding: 20px;
+            background-color: #fcfcfc;
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
+            overflow: hidden;
+            position: relative
+        }
+
+        .original_panel:after {
+            content: " ";
+            border: 1px solid #d8d8d8;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box
+        }
+
+        .original_panel .original_account {
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1
+        }
+
+        .original_panel .original_account_avatar {
+            width: 28px;
+            height: 28px;
+            padding: 0
+        }
+
+        .original_panel .original_account_nickname {
+            padding-left: .85em;
+            font-size: 15px;
+            color: #576b95
+        }
+
+        .original_panel_title {
+            font-size: 23px;
+            color: #000;
+            margin: 0 0 16px
+        }
+
+        .original_panel_content {
+            color: #333
+        }
+
+        .original_panel_tool {
+            padding-top: 20px;
+            position: relative;
+            z-index: 1
+        }
+
+        .original_cell_nickname {
+            display: inline-block;
+            vertical-align: middle;
+            font-weight: 400;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            max-width: 8em;
+            color: #000
+        }
+
+        .original_tool_area {
+            padding: 1.17em 0;
+            border-width: 0;
+            position: relative
+        }
+
+        .original_tool_area:before {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px solid #dfdfdf;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .original_tool_area:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 1px;
+            border-bottom: 1px solid #dfdfdf;
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+
+        .original_tool_area .radius_avatar {
+            width: 20px;
+            height: 20px;
+            margin-right: .2em
+        }
+
+        .original_tool_area .flex_cell {
+            padding: 0;
+            font-size: 14px
+        }
+
+        .original_tool_area .icon_access:after {
+            margin-right: 4px;
+            top: 0
+        }
+
+        .preview_appmsg .rich_media_title {
+            margin-top: 1.5em
+        }
+
+        .preview_appmsg .account_info {
+            padding-top: 3em
+        }
+
+        .original_page {
+            background-color: transparent
+        }
+
+        .account_info {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            outline: 0;
+            padding-bottom: 20px;
+            font-size: 14px
+        }
+
+        .account_info.appmsg_account_info {
+            padding-bottom: 32px
+        }
+
+        .account_info .radius_avatar img {
+            background-color: transparent
+        }
+
+        .share_notice {
+            font-size: 16px;
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto
+        }
+
+        .original_panel {
+            background-color: #fafafa
+        }
+
+        .original_panel:after {
+            border-color: #e6e6e6
+        }
+
+        .original_panel .original_account_avatar {
+            width: 30px;
+            height: 30px
+        }
+
+        .original_panel_tool {
+            font-size: 14px
+        }
+
+        .original_panel_tool a {
+            color: #576b95
+        }
+
+        .original_panel_content {
+            font-size: 17px
+        }
+
+        .share_media {
+            padding-bottom: 30px
+        }
+
+        .icon_appmsg_tag {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0 .5em;
+            font-size: 12px;
+            line-height: 1.5;
+            background-color: #c3c3c3;
+            color: #fff;
+            border-radius: 2px;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            max-width: 70%
+        }
+
+        .icon_appmsg_tag.primary {
+            color: #3bb638;
+            padding: 4px .78em;
+            background-color: rgba(9, 187, 7, 0.08);
+            font-size: 12px;
+            border-top-left-radius: .95em 50%;
+            -moz-border-radius-topleft: .95em 50%;
+            -webkit-border-top-left-radius: .95em 50%;
+            border-top-right-radius: .95em 50%;
+            -moz-border-radius-topright: .95em 50%;
+            -webkit-border-top-right-radius: .95em 50%;
+            border-bottom-left-radius: .95em 50%;
+            -moz-border-radius-bottomleft: .95em 50%;
+            -webkit-border-bottom-left-radius: .95em 50%;
+            border-bottom-right-radius: .95em 50%;
+            -moz-border-radius-bottomright: .95em 50%;
+            -webkit-border-bottom-right-radius: .95em 50%
+        }
+
+        .icon_appmsg_tag.default {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: rgba(0, 0, 0, 0.3);
+            background-color: transparent;
+            padding: 0 .54em;
+            font-size: 15px;
+            line-height: 1.3;
+            border-top-left-radius: .67em 50%;
+            -moz-border-radius-topleft: .67em 50%;
+            -webkit-border-top-left-radius: .67em 50%;
+            border-top-right-radius: .67em 50%;
+            -moz-border-radius-topright: .67em 50%;
+            -webkit-border-top-right-radius: .67em 50%;
+            border-bottom-left-radius: .67em 50%;
+            -moz-border-radius-bottomleft: .67em 50%;
+            -webkit-border-bottom-left-radius: .67em 50%;
+            border-bottom-right-radius: .67em 50%;
+            -moz-border-radius-bottomright: .67em 50%;
+            -webkit-border-bottom-right-radius: .67em 50%
+        }
+
+        .rich_media_meta_list .icon_appmsg_tag.default {
+            margin-top: -1px
+        }
+
+        .icon_appmsg_tag.title_tag {
+            background-color: #d04b4e
+        }
+
+        .icon_global_tag_wrp {
+            text-align: right;
+            padding-bottom: 12px
+        }
+
+        .icon_global_tag {
+            background-color: rgba(118, 118, 118, 0.16);
+            color: rgba(0, 0, 0, 0.41);
+            line-height: 2.2;
+            border-top-left-radius: 1em 50%;
+            -moz-border-radius-topleft: 1em 50%;
+            -webkit-border-top-left-radius: 1em 50%;
+            border-bottom-left-radius: 1em 50%;
+            -moz-border-radius-bottomleft: 1em 50%;
+            -webkit-border-bottom-left-radius: 1em 50%;
+            padding: 0 1.8em 0 1.34em;
+            font-size: 12px;
+            margin-right: -24px;
+            display: inline-block;
+            vertical-align: top
+        }
+
+        .global_plain_btn {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0 1em;
+            line-height: 2;
+            font-size: 14px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px
+        }
+
+        .global_plain_btn.primary {
+            color: #1aad19;
+            border: 1px solid currentColor
+        }
+
+        .global_plain_btn.primary:active {
+            color: rgba(26, 173, 25, 0.6)
+        }
+
+        .wx_video_context {
+            color: #fefefe;
+            position: relative;
+            background-color: #000
+        }
+
+        .wx_video_thumb, .wx_video_thumb_primary {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100% !important;
+            top: 0
+        }
+
+        .wx_video_thumb_primary {
+            -webkit-background-size: cover;
+            background-size: cover;
+            background-position: 50% 50%;
+            background-repeat: no-repeat
+        }
+
+        .wx_video_play_btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            margin-top: -2px;
+            font-size: 0;
+            border-width: 0;
+            background-color: transparent;
+            padding: 0;
+            outline: 0;
+            z-index: 2
+        }
+
+        .wx_video_play_btn:before {
+            content: " ";
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-width: 14px 0 14px 25px;
+            border-color: transparent transparent transparent #fff;
+            border-style: dotted dotted dotted solid
+        }
+
+        .wx_video_mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.5)
+        }
+
+        .place_audio_area {
+            min-height: 100px;
+            background-color: #fdfdfd;
+            display: block;
+            margin: 16px 0
+        }
+
+        .place_music_area {
+            min-height: 68px;
+            background-color: #fdfdfd;
+            display: block;
+            margin: 17px 0 16px
+        }
+
+        .rich_media_empty_extra {
+            background-color: #fafafa
+        }
+
+        .appmsg_skin_default.rich_media_empty_extra {
+            background-color: #fff
+        }
+
+        .appmsg_skin_default .rich_media_area_primary {
+            background-color: #fff
+        }
+
+        .appmsg_skin_default .rich_media_area_primary .weui-loadmore_line .weui-loadmore__tips {
+            background-color: #fff
+        }
+
+        .appmsg_style_default .rich_media_tool {
+            padding-top: 15px
+        }
+
+        .rich_media_title_ios {
+            font-weight: 700
+        }
+    </style>
+</head>
+<body>
+<div id="js_article" class="rich_media">
+
+    <div id="js_top_ad_area" class="top_banner"></div>
+
+    <div class="rich_media_inner">
+
+
+        <div id="page-content" class="rich_media_area_primary">
+            <div class="rich_media_area_primary_inner">
+
+
+                <div id="img-content">
+
+
+                    <h2 class="rich_media_title" id="activity-name">
+
+
+                        女人，需要不怕你发光的男人
+
+                    </h2>
+
+                    <div id="meta_content" class="rich_media_meta_list">
+                                                                                <span class="rich_media_meta rich_media_meta_text">
+                                                Lu
+                                            </span>
+
+                                        <span class="rich_media_meta rich_media_meta_nickname" id="profileBt">
+                      <a href="javascript:void(0);" id="js_name">
+                          BonnieClyde极选 </a>
+                      <div id="js_profile_qrcode" class="profile_container" style="display:none;">
+                          <div class="profile_inner">
+                              <strong class="profile_nickname">BonnieClyde极选</strong>
+                              <img class="profile_avatar" id="js_profile_qrcode_img" src="" alt="">
+
+                              <p class="profile_meta">
+                                  <label class="profile_meta_label">微信号</label>
+                                  <span class="profile_meta_value">BonnieClydeBC</span>
+                              </p>
+
+                              <p class="profile_meta">
+                                  <label class="profile_meta_label">功能介绍</label>
+                                  <span class="profile_meta_value">雌雄同体 极致臻选</span>
+                              </p>
+
+                          </div>
+                          <span class="profile_arrow_wrp" id="js_profile_arrow_wrp">
+                              <i class="profile_arrow arrow_out"></i>
+                              <i class="profile_arrow arrow_in"></i>
+                          </span>
+                      </div>
+                    </span>
+
+
+                        <em id="publish_time" class="rich_media_meta rich_media_meta_text"></em>
+
+
+                    </div>
+
+
+                    <div class="rich_media_content " id="js_content">
+
+
+                        <p  style="margin:0 auto"><img class="" src="__TEMP__/{$style}/public/images/columnSelect3/select1.jpeg"
+                                                                            style="width: 543px;height: 200px;"/></p>
+
+                        <p><br/></p>
+
+                        <p  style="margin:0 auto"><img style="width: 542px;height: 87px;" src="__TEMP__/{$style}/public/images/columnSelect3/select2.jpeg"/><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="text-align: center;margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">沃顿 MBA</span></p>
+
+                        <p style="text-align: center;margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">BCG 咨询</span></p>
+
+                        <p style="text-align: center;margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">世界 500 强 VP</span>
+                        </p>
+
+                        <p style="text-align: center;margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">Shopal CEO</span></p>
+
+                        <p style="text-align: center;margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+                        <hr/>
+                        <p><br/></p>
+
+                        <p  style="margin:0 auto"><img style="width: 558px;height: 692px;" src="__TEMP__/{$style}/public/images/columnSelect3/select3.jpeg"/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">强大，不是他赚钱比我多，职位比我高，而是他的爱</span><span
+                                style="font-family: 宋体;font-size: 15px;"><strong>可以无视六界生物对他的眼光而存在</strong></span><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">。在别人眼里，我有一些光环，我自己知道，如果我和他换位，作为男人我的这些光环，会让他在别人眼中转化为压力，我做不到他如此的从容。尤其，是那种，让我感觉不到一丝他在承受的从容。<br/></span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p  style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select4.jpeg"/></p>
+
+                        <p><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">后来，我慢慢了解，我缺少</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">“猫性”</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">。我一开始不是很能体会这是什么，但渐渐的，我开始理解。在国外，就连好莱坞大片里，你也会发现被打造成 sexy 和活得长的女主，都是勇敢，智慧，独立的。就连变形金刚里的女主 Barbie，也是得能够独立思考并且会修车。可在中国，完全不是那么回事儿。<br/><br/></span>
+                        </p>
+
+                        <p  style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select5.jpeg"/></p>
+
+                        <p><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><strong><span
+                                style="font-family: 宋体;font-size: 15px;">性感是表层的猫性</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">。最好，是有智慧的点都不是显性的，而是能增加男性存在感的润物细无声。这说白了，是文化差异，说俗了，是女人的悲哀。但近年的女权维护，有多把女性的咆哮，无理由要求男性宠爱这种另一个极端推到面前，和把任何聪明的女人都打造成女汉子和女强人。这个我一直有种感觉是男人的阴谋论（笑）。</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">女人，其实是最容易也最需要平衡阴阳，玩转于刚柔之间的美丽生物</span></strong><span
+                                style="font-family: 宋体;font-size: 15px;">。<span style="color: rgb(136, 136, 136);"><br/></span></span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">&nbsp;</span></p>
+
+                        <p  style="margin:0 auto"><img style="width: 100%;" src="__TEMP__/{$style}/public/images/columnSelect3/select6.jpeg"/><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">我很理解中国的男性：需要作为物质的提供者，竞争厮杀的不断满血复活者，还得无条件被要求永远浪漫，心疼，体贴，爱护，忠诚于一，承载女性因为把青春赌给你，世界只有你而必然会有的极端，无理取闹，小心翼翼，和旁无责贷的防小三之战。换位思考，若是如此，我也不会快乐，我</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">需要懂我的女人，不止是爱我陪我过日子的女人</span></strong><span
+                                style="font-family: 宋体;font-size: 15px;">。</span><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">可是那个小三是真的懂你吗？还是也是爱恋夺位之中的短暂轮回，这要男人睁着眼睛看看这个女人到底是谁，不是在她和你一起的时候，而是当她独处的时候。<br/><br/></span>
+                        </p>
+
+                        <p style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select7.jpeg"/><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">我们很快，觉得无限的把自己的外表变美，达到外界给美女标准里的每一个苛刻的要求，是一个终生的目标。这个，我同意，但是这是和岁月打逆向仗的事，我们尽力就好，不要以永远打赢为目的。关键打着打着，忽略了岁月中性格，处事，见证新事物，修强自我的责任，开始变得极端。有好多次，我看到一个无比美丽健康和 radiate 阳光的女性的照片感到惊为天人，却需要屏蔽低下“腿好粗呀，好老呀，帅哥怎么娶这个丑女呀等等”的评论，这是什么？这是世界已经狭小得容不下任何了。我觉得这个看了突然感觉世界会小一些，所以我一般直接关了。<br/></span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">与此同时，我们在不停的花费，追求未来的稳定，从婚姻中寻找物质，从感情中寻找一世真爱的影子。可那，是不是真的先不提，但在过程中，需要男人来帮助我们圆满，而越圆满，就又给了我们肆无忌惮的要求男人的勇气。而这给男人带来的却是：</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">压力和灵魂上的孤独</span></strong><span
+                                style="font-family: 宋体;font-size: 15px;">。</span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p  style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select8.jpeg"/></p>
+
+                        <p><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">第一，男人不像表面那么不在乎压力。相反，</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">男人其实非常需要内心的共鸣。</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">历史上有能力的男人，多有了不起的女性为伴。请注意，为伴并不是为唯一爱过的人。她们不都是美艳的，但她们知道如何经营自己的感知，性格，和为人相处的方式。她们的男人，也一定走的最远，而她们自己，也不会只是在过程中衡量自己为男人付出后取舍男人回报的种子。<br/></span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">&nbsp;</span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">第二，</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">灵魂独立的女人，如果加上经济独立，和一个强大的男人一起，才叫做纯粹</span></strong><span
+                                style="font-family: 宋体;font-size: 15px;">。</span><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">我后面会探讨一下什么是男人的强大。这种纯粹说白了，就是追求幸福的权利。他与她之间，没有物质和精神世界的寄托与占有，付出与被付出的关系。相反，两个同样独立的灵魂，独立存在和一起的个体，独立有彼此的人，物，环境的圈子。若真爱，若幸福，便彼此变得更好。若彼此消磨，就算有了岁月，有了孩子，也还是要在几十年的岁月里有越来越高的修行，我想那才是人一生的宿命。</span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">&nbsp;</span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">第三，Plato的共和国里，提到过，人过一生，本就只能是在洞中，靠外面世界通过洞口火焰投射到洞墙壁上的影子来感知世界。所以人，一直都不断的在折腾着自己来寻求答案或者一种感觉。所以，人都是多情的，男女一样。那么女人，就更需要在短短几十年中，把自己填满，过好过足，</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">选好有原则的男人，这一路上，多看不同的风景，彼此提升</span></strong><span
+                                style="font-family: 宋体;font-size: 15px;">。</span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p  style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select9.jpeg"/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">今天的历史转角中，</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">有灵性女人更容易发光</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">。在过去的数千年里，中国女性服从和压抑到了极点。能真正做同等自由的灵魂对于女性不可能。而今天，能阻止女性自己的，只有自我认命和悟性缺失。但这过程中，中国男性，也在升级中。</span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">那想享受这几十年到丰富独立完整的女性，就必须寻找和懂得珍惜那些已经进化好，和他一起，滋养你的身心，</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">让你做到最好的自己的男人</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">。因为这种男性，他们不多说无谓给你压力的话，不会做出出格激进和非常浪漫的事情。和他一起，不会爱的死去活来翻云覆雨。相反，当你冷了暖会自来，当你难过，他会独坐陪伴，当你快乐众人前光彩照人，他不求同辉，而是在背后因为你快乐而快乐。而他，也有他自己的生活和想要修炼的东西。所以，他不会是那个让你歇斯底里的爱，却会是最容易让你忽略的男人。</span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">而与此同时，若你也同样，能够给他心灵和生活的陪伴。</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">他知道，路上再难有你的支持；路上乐了，有不浮夸的分享者；路上有苦了，有不自私的陪伴；路上很累，不需要为了对彼此不断的索求而无法喘息。<span
+                                style="color: rgb(136, 136, 136);"><strong><br/></strong></span></span></strong></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p  style="margin:0 auto"><img src="__TEMP__/{$style}/public/images/columnSelect3/select10.jpeg"/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><br/></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">这样的人，可遇不可求，我同意。可你真的没有遇到过吗？还是当时你没有成熟到可以爱一个人超越表象？</span><strong><span
+                                style="font-family: 宋体;font-size: 15px;">你生命中，肯定有过这么一个你不放在眼里，但是和他吵架他绝对不会为了争对错而选择让你流泪的男人。</span></strong><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">这种男人，无比强大。他眼中的好坏，不被别的男人或者女人的说法所左右。他的心里，世界是有光的。不来自攀比，却来自自己眼中世界的坚韧和原则。但是，他们真的，很容易被错过。所以女孩，要修行自己才能睁开眼睛看得到天外天。<br/></span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;">如果你已经找到了不怕你发光的男人，请珍惜。如果还没有找到，请进修自己。如果你已经错过，就让你的世界，因为你是谁，而快乐。</span>
+                        </p>
+
+                        <p style="margin-right: 8px;margin-left: 8px;"><span
+                                style="color: rgb(136, 136, 136);font-family: 宋体;font-size: 15px;"><br/></span></p>
+
+                        <p style="margin:0 auto"><img style="width: 558px;height: 303px;" src="__TEMP__/{$style}/public/images/columnSelect3/select11.jpeg"/>
+                        </p>
+                    </div>
+                    <script nonce="326258272" type="text/javascript">
+                        var first_sceen__time = (+new Date());
+
+                        if ("" == 1 && document.getElementById('js_content')) {
+                            document.getElementById('js_content').addEventListener("selectstart", function (e) {
+                                e.preventDefault();
+                            });
+                        }
+
+
+                        (function () {
+                            if (navigator.userAgent.indexOf("WindowsWechat") != -1) {
+                                var link = document.createElement('link');
+                                var head = document.getElementsByTagName('head')[0];
+                                link.rel = 'stylesheet';
+                                link.type = 'text/css';
+                                link.href = "//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/appmsg_new/winwx3ec991.css";
+                                head.appendChild(link);
+                            }
+                        })();
+                    </script>
+
+
+                    <div class="ct_mpda_wrp" id="js_sponsor_ad_area" style="display:none;"></div>
+
+
+                    <div class="reward_area tc reward_area_primary" id="js_preview_reward_author" style="display:none;">
+                        <div class="reward-avatar" style="display: none;" id="js_preview_reward_author_avatar">
+                            <img src="" alt="" id="js_preview_reward_author_head">
+                        </div>
+
+                        <div class="reward-author" id="js_preview_reward_author_name">Lu</div>
+                        <p class="reward_tips" id="js_preview_reward_author_wording" style="display:none;"></p>
+
+                        <p>
+                            <a class="reward_button" id='js_preview_reward_author_link' href="##"><span
+                                    id="js_preview_reward_link_text">赞赏</span></a>
+                        </p>
+                    </div>
+
+                    <div class="reward_qrcode_area reward_area tc" id="js_preview_reward_qrcode" style="display:none;">
+                        <p class="tips_global">长按二维码向我转账</p>
+
+                        <p id="js_preview_reward_ios_wording" class="reward_tips" style="display:none;"></p>
+                        <span class="reward_qrcode_img_wrp"><img class="reward_qrcode_img"
+                                                                 src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/images/pic/appmsg/pic_reward_qrcode.2x3534dd.png"></span>
+
+                        <p class="tips_global">受苹果公司新规定影响，微信 iOS 版的赞赏功能被关闭，可通过二维码转账支持公众号。</p>
+                    </div>
+
+
+                </div>
+
+
+                <ul id="js_hotspot_area" class="article_extend_area"></ul>
+
+
+                <div class="rich_media_tool" id="js_toobar3">
+
+                    <div id="js_read_area3" class="media_tool_meta tips_global_primary meta_primary"
+                         style="display:none;">阅读 <span id="readNum3"></span></div>
+
+                <span style="display:none;" class="media_tool_meta meta_extra meta_praise" id="like3">
+                    <i class="icon_praise_gray"></i><span class="praise_num" id="likeNum3"></span>
+                </span>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

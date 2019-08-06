@@ -1,0 +1,1458 @@
+{extend name="adminblue/base" /}
+{block name="resources"}
+<style>
+	#position_type label {float: left;margin-left: 150px}
+	#blank_type label {float: left;margin-left: 200px}
+	#bottom_div div {float: left;margin-left: 50px;cursor: pointer;padding: 5px 20px 5px 20px;border: 1px solid #000000}
+	.label-inline-block{display: inline-block;margin:0 15px 0 0;vertical-align: middle;}
+	.set-style dl dd.goods-list{margin:0;line-height: normal;width: 100%;}
+	.combo-package-mask-layer{position: fixed;width:100%;background: rgba(0,0,0,0.7);height:100%;left:0;z-index:3000;top:0;display: none;}
+	.goods-list-mask-layer{position: fixed;width: 800px;top: 20%;z-index: 3000;left: 50%;background: #ffffff;padding:10px;border-radius: 5px;margin-left:-410px;display: none;    overflow: auto;
+		height: 84%;
+		margin-bottom: 10%;}
+	.goods-list-mask-layer table{width:100%;}
+	.table-class tr th{padding:5px;}
+	.table-class tr td{text-align: center;}
+	.ns-main>#turn-ul{display:none !important;}
+	.ini{color: #777;margin-left: 10px;font-size: 12px;}
+	i.fa-times:hover{cursor: pointer;}
+	.delete_data span:hover{cursor: pointer;}
+</style>
+
+{/block}
+{block name="main"}
+<div class="set-style">
+	<dl>
+		<dt><span class="required">*</span>专题标题</dt>
+		<dd>
+			<input id="title" class="input-common" type="text" value="{$info.title}"/>
+			<span class="error">请输入专题标题</span>
+		</dd>
+	</dl>
+	<dl>
+		<dt>专题封面</dt>
+		<dd>
+			<div class="class-logo">
+				<p>
+					{if condition="$info.pic eq ''"}
+					<img id="imglogo">
+					{else/}
+					<img id="imglogo" src="{:__IMG($info.pic)}">
+					{/if}
+				</p>
+			</div>
+			<div class="upload-btn">
+				<span>
+					<input class="input-file" name="file_upload" id="uploadImg" type="file" onchange="imgUpload(this);">
+					<input type="hidden" id="logo" value="{$info.pic}"/>
+				</span>
+				<p><i class="fa fa-cloud-upload"></i>上传图片</p>
+			</div>
+		</dd>
+	</dl>
+	<dl>
+		<dt>转发图片</dt>
+		<dd>
+			<div class="class-logo">
+				<p>
+					{if condition="$info.icon_link eq ''"}
+					<img id="imglogo_icon">
+					{else/}
+					<img id="imglogo_icon" src="{:__IMG($info.icon_link)}">
+					{/if}
+				</p>
+			</div>
+			<div class="upload-btn">
+				<span>
+					<input class="input-file" name="file_upload" id="uploadImg_icon" type="file" onchange="imgUpload_icon(this);">
+					<input type="hidden" id="logo_icon" value="{$info.icon_link}"/>
+				</span>
+				<p><i class="fa fa-cloud-upload"></i>上传图片</p>
+			</div>
+		</dd>
+	</dl>
+	<dl style="border-bottom: none;">
+		<dt>首页显示</dt>
+		<dd>
+			<div id="blank_type">
+				{if condition="$info['is_show'] eq 1"}
+				<label for="is_blank1" class="line-label"><input type="radio" value="1" name="is_show" id="is_blank1" checked = "checked"/> 是</label>
+				<label for="is_blank2" class="line-label"><input type="radio" value="0" name="is_show" id="is_blank2" /> 否</label>
+				{else /}
+				<label for="is_blank1" class="line-label"><input type="radio" value="1" name="is_show" id="is_blank1" /> 是</label>
+				<label for="is_blank2" class="line-label"><input type="radio" value="0" name="is_show" id="is_blank2"checked = "checked" /> 否</label>
+				{/if}
+			</div>
+		</dd>
+	</dl>
+	<dl style="border-bottom: none;">
+		<dt>首页排序</dt>
+		<dd>
+			<div >
+				<input  type="number" name="master_sort" id="master_sort" value="{$info.sort}"/>
+			</div>
+		</dd>
+	</dl>
+	<dl>
+		<dt style="font-size: 18px;color: black;font-weight: bold;padding-top: 18px">添加内容</dt>
+		<dd id="bottom_div">
+			<div id="show_div0">商品</div>
+			<div id="show_div1">图片</div>
+			<div id="show_div2">标题</div>
+			<div id="show_div3">文本</div>
+			<div id="show_div4">视频</div>
+		</dd>
+	</dl>
+	<!--<div id="onload" style="text-align: center;margin-top: 5px;color: #0000ee">展开</div>-->
+	<div id="div_home"></div>
+	<div id="selecter"></div>
+	<div style="margin:auto;width:30%;">
+		<button class="btn-common" onclick="save(1)" style="float:left;margin-right:15px;">存为草稿</button>
+		<button class="btn-common" onclick="save(2)" style="float:left;">发布专题</button>
+	</div>
+</div>
+<script src="__STATIC__/js/ajax_file_upload.js" type="text/javascript"></script>
+<script src="__STATIC__/js/file_upload.js" type="text/javascript"></script>
+<script>
+	var allData = {$info};
+	var data = allData.items;
+	$(document).on('blur','#goods_name',function() {
+		goods_name = $($(this)).val();
+	});
+
+	$(document).on('blur','#material_code',function() {
+		material_code = $($(this)).val();
+	});
+
+	for (var i = 0; i < data.length; i ++) {
+		if (data[i].title_pro || data[i].content_pro || data[i].pid){
+			$("#div_home").append(
+					'<div id="div0" data-id='+i+'>'+
+					'<dl style="height: 50px;background-color: #F5F6F5;margin-top: 60px;">'+
+					'<dt style="font-size: 15px;color: black;font-weight: bold">'+'编辑商品'+'</dt>'+
+					'<dt class="delete_data" id="'+i+'"><span>'+'删除'+'</span></dt>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'标题'+'</dt>'+
+					'<dd>'+'<input name="title_pro" data-id='+i+' value="'+data[i].title_pro+'" class="title_pro" >'+'</dd>'+
+					'</dl>'+
+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'介绍'+'</dt>'+
+					'<dd>'+'<textarea name="content_pro" data-id='+i+'  placeholder="'+data[i].content_pro+'" class="content_pro" cols="30" rows="20" style="resize:none;">'+'</textarea>'+'</dd>'+
+					'</dl>'+
+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'icon图片'+'</dt>'+
+					'<dd>'+
+					'<div class="class-logo">'+
+					'<p>'+
+					{if condition="$data[i].pic_pro eq ''"}
+					'<img id="imglogo_icon">'+
+					{else/}
+					'<img id="imglogo_icon" src="'+data[i].pic_pro+'">'+
+					{/if}
+					'</p>'+
+					'</div>'+
+					'<div class="upload-btn">'+
+					'<span>'+
+					'<input class="input-file" name="file_upload" id="test'+i+'" data-id='+i+' type="file" onchange="imgUpload2(this)">'+
+					'<input type="hidden" id="'+i+'"/>'+
+					'</span>'+
+					'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+					'</div>'+
+					'<p class="hint">'+
+					'<br>'+'<span style="color: orange;">'+'建议使用宽1200像素-高300像素内的GIF或PNG透明图片;'+'</span>'+
+					'</p>'+
+					'</dd>'+
+					'</dl>'+
+
+					'<dl>'+
+					'<dt>'+'排序'+'</dt>'+
+					'<dd>'+'<input  type="number" name="sort" data-id='+i+' value="'+data[i].sort+'" min="0" class="input-common sort" />'+'</dd>'+
+					'</dl>'+
+
+					'<dl>'+
+					'<dt>'+'选择商品'+'</dt>'+
+					'<dd>'+
+					'<button class="btn-common js-select-goods" data-id='+i+' >'+'选择商品'+'</button>'+
+					'<button class="btn-common" data-id='+i+'  id="ceshi">'+'查看所选商品'+'</button>'+
+
+					'</dd>'+
+					'</dl>'+
+					'<dl>'+
+					'<dd class="goods-list">'+
+					'<table class="table-class">'+
+					'<colgroup>'+
+					'<col width="40%">'+
+					'<col width="30%">'+
+					'<col width="10%">'+
+					'<col width="10%">'+
+					'<col width="10%">'+
+					'</colgroup>'+
+					'<thead>'+
+					'<tr>'+
+					'<th>'+'商品名称'+'</th>'+
+					'<th>'+'SHOPAL编码'+'</th>'+
+					'<th>'+'价格'+'</th>'+
+					'<th>'+'库存'+'</th>'+
+					'<th>'+'操作'+'</th>'+
+					'</tr>'+
+					'</thead>'+
+					'<tbody>'+'</tbody>'+
+					'</table>'+
+					'</dd>'+
+					'</dl>'+
+					'<div class="combo-package-mask-layer">'+'</div>'+
+					'<div class="goods-list-mask-layer">'+
+					'<table class="mytable">'+
+					'<tr>'+
+					'<th>'+
+					'SHOPAL编码：'+'<input id="material_code" class="input-medium input-common input-common-goods" type="text" placeholder="要搜索的SHOPAL编码">'+
+					'<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common">'+
+					'</th>'+
+					'<th>'+
+					'商品名称：'+'<input id="goods_name" class="input-medium input-common input-common-goods" type="text" placeholder="要搜索的商品名称">'+
+					'<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common">'+
+					'</th>'+
+					'</tr>'+
+					'</table>'+
+					'<table class="table-class">'+
+					'<colgroup>'+
+					'<col width="5%">'+
+					'<col width="60%">'+
+					'<col width="15%">'+
+					'<col width="15%">'+
+
+					'</colgroup>'+
+					'<thead>'+
+					'<tr>'+
+					'<th>'+' '+'</th>'+
+					'<th style="text-align: left;">'+'商品名称'+'</th>'+
+					'<th style="text-align: left;">'+'SHOPAL编码'+'</th>'+
+					'<th>'+'价格'+'</th>'+
+					'<th>'+'库存'+'</th>'+
+					'</tr>'+
+					'</thead>'+
+					'<tbody>'+'</tbody>'+
+					'</table>'+
+					'<button class="btn-common" style="margin: 20px auto 10px auto !important;display: block;" data-id='+i+' id="determine">'+'确定'+'</button>'+
+					'</div>'+
+					'<input type="hidden" id="goods_id_array" value="+data[i].pid+">'+
+					'</div>'
+				);
+		}else if (data[i].pic){
+			$("#div_home").append(
+					'<div id="div1">'+
+					'<dl style="height: 50px;background-color: #F5F6F5;margin-top: 60px;">'+
+					'<dt style="font-size: 15px;color: black;font-weight: bold">'+'编辑图片'+'</dt>'+
+					'<dt class="delete_data" id="'+i+'"><span>'+'删除'+'</span></dt>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'详情图片'+'</dt>'+
+					'<dd>'+
+					'<div class="class-logo">'+
+					'<p>'+
+					'<img class="imglogo1" id="i'+i+'">'+
+					'</p>'+
+					'</div>'+
+					'<div class="upload-btn">'+
+					'<span>'+
+					'<input class="input-file" name="file_upload" id="test'+i+'" data-id='+i+' type="file" onchange="imgUpload1(this)">'+
+					'<input type="hidden" class="logo1" />'+
+					'</span>'+
+					'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+					'</div>'+
+					'<p class="hint">'+
+					'<br>'+'<span style="color: orange;">'+'建议使用宽1200像素-高300像素内的GIF或PNG透明图片；点击下方"提交"按钮后生效。'+'</span>'+
+					'</p>'+
+					'</dd>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'链接'+'</dt>'+
+					'<dd>'+
+					'<div style="float: left">'+
+					'<select  class="select-common pic_link" data-id='+i+' name="pic_link">'+
+					'<option id="1_a'+i+'">'+'无链接'+'</option>'+
+					'<option id="2_a'+i+'">'+'主页'+'</option>'+
+					'<option id="3_a'+i+'">'+'全部商品'+'</option>'+
+					'<option id="4_a'+i+'">'+'礼品专区'+'</option>'+
+					'<option id="5_a'+i+'">'+'会员专区'+'</option>'+
+					'<option id="6_a'+i+'">'+'商品详情页'+'</option>'+
+					'<option id="7_a'+i+'" value="options_value">'+'小程序路径'+'</option>'+
+					'</select>'+
+					'</div>'+
+					'<div style="float: left;margin-left: 20px">'+
+					'<div class="option4" style="display:none">'+
+					'<input type="text" class="pic_link" id="8_a'+i+'" name="pic_link" data-id='+i+' placeholder="请输入小程序路径,如/pages/index/index" >'+
+					'</div>'+
+					'<div class="option4" style="display:none">'+
+					'<input type="text" class="content_link" id="9_a'+i+'" name="content_link" placeholder="请输入详情页id,如12" >'+
+					'</div>'+
+					'</div>'+
+					'<dt>'+'排序'+'</dt>'+
+					'<dd>'+'<input  type="number" name="sort" data-id='+i+' value="'+data[i].sort+'" class="input-common sort" />'+'</dd>'+
+					'</dd>'+
+					'</dl>'+
+					'</div>'
+			);
+		} else if (data[i].title){
+			$("#div_home").append(
+					'<div id="div2">'+
+					'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+					'<dt style="font-size: 15px;color: black;font-weight: bold">'+'编辑标题'+'</dt>'+
+					'<dt class="delete_data" id="'+i+'"><span>'+'删除'+'</span></dt>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'主标题'+'</dt>'+
+					'<dd>'+'<input  type="text" name="title_master" value="'+data[i].title+'" data-id='+i+' class="input-common title_master" />'+'</dd>'+
+					'<dt>'+'副标题'+'</dt>'+
+					'<dd>'+'<input  type="text" name="title_slaver" data-id='+i+' value="'+data[i].title_slaver+'" class="input-common title_slaver" />'+'</dd>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'所在位置'+'</dt>'+
+					'<dd>'+
+					'<div id="position_type">'+
+					'<label for="d'+i+'" class="line-label"><input type="radio" value="1" data-id='+i+' class="title_type" name="title_type'+i+'" id="d'+i+'" />'+' 左对齐'+'</label>'+
+					'<label for="e'+i+'" class="line-label"><input type="radio" value="2" data-id='+i+' class="title_type" name="title_type'+i+'" id="e'+i+'"/>'+' 居中对齐'+'</label>'+
+					'<label for="f'+i+'" class="line-label"><input type="radio" value="3" data-id='+i+' class="title_type" name="title_type'+i+'" id="f'+i+'" />'+' 右对齐'+'</label>'+
+					'</div>'+
+					'</dd>'+
+					'</dl>'+
+					'<dl>'+
+					'<dt>'+'链接'+'</dt>'+
+					'<dd>'+
+					'<div style="float: left">'+
+					'<select  class="select-common title_link" name="title_link" data-id='+i+' >'+
+					'<option id="1_b'+i+'">'+'无链接'+'</option>'+
+					'<option id="2_b'+i+'">'+'主页'+'</option>'+
+					'<option id="3_b'+i+'">'+'全部商品'+'</option>'+
+					'<option id="4_b'+i+'">'+'礼品专区'+'</option>'+
+					'<option id="5_b'+i+'">'+'会员专区'+'</option>'+
+					'<option id="6_b'+i+'">'+'商品详情页'+'</option>'+
+					'<option id="7_b'+i+'" value="options_value">'+'小程序路径'+'</option>'+
+					'</select>'+
+					'</div>'+
+					'<div style="float: left;margin-left: 20px">'+
+					'<div class="option4" style="display: none;">'+
+					'<input type="text"  id="8_b'+i+'" class="title_link" data-id='+i+' name="title_link" placeholder="请输入小程序路径,如/pages/index/index" >'+
+					'</div>'+
+					'<div class="option4" style="display:none">'+
+					'<input type="text" class="content_link" id="9_b'+i+'" name="content_link" placeholder="请输入详情页id,如12" >'+
+					'</div>'+
+					'</div>'+
+					'<dt>'+'排序'+'</dt>'+
+					'<dd>'+'<input  type="number" name="sort" data-id='+i+' value="'+data[i].sort+'" class="input-common sort" />'+'</dd>'+
+					'</dd>'+
+					'</dl>'+
+					'</div>'
+			);
+		}else if (data[i].content){
+			$("#div_home").append(
+					'<div id="div3">'+
+					'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+					'<dt style="font-size: 15px;color: black;font-weight: bold">'+'编辑文本'+'</dt>'+
+					'<dt class="delete_data" id="'+i+'"><span>'+'删除'+'</span></dt>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'内容'+'</dt>'+
+					'<dd>'+'<textarea name="content" data-id='+i+' placeholder="'+data[i].content+'" class="content" cols="30" rows="20" style="resize:none;">'+'</textarea>'+'</dd>'+
+					'</dl>'+
+					'<dl style="border-bottom: none;">'+
+					'<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'所在位置'+'</dt>'+
+					'<dd>'+
+					'<div id="position_type">'+
+					'<label for="a'+i+'" class="line-label"><input type="radio" value="1" data-id='+i+' class="content_type" name="content_type'+i+'" id="a'+i+'"/>'+' 左对齐'+'</label>'+
+					'<label for="b'+i+'" class="line-label"><input type="radio" value="2" data-id='+i+' class="content_type" name="content_type'+i+'" id="b'+i+'"/>'+' 居中对齐'+'</label>'+
+					'<label for="c'+i+'" class="line-label"><input type="radio" value="3" data-id='+i+' class="content_type" name="content_type'+i+'" id="c'+i+'" />'+' 右对齐'+'</label>'+
+					'</div>'+
+					'</dd>'+
+					'</dl>'+
+					'<dl>'+
+					'<dt>'+'链接'+'</dt>'+
+					'<dd>'+
+					'<div style="float: left">'+
+					'<select class="select-common content_link" name="content_link" data-id='+i+'>'+
+					'<option value="option1" id="1_c'+i+'">'+'无链接'+'</option>'+
+					'<option value="option2" id="2_c'+i+'">'+'主页'+'</option>'+
+					'<option value="option3" id="3_c'+i+'">'+'全部商品'+'</option>'+
+					'<option value="option3" id="4_c'+i+'">'+'礼品专区'+'</option>'+
+					'<option value="option3" id="5_c'+i+'">'+'会员专区'+'</option>'+
+					'<option value="option4" id="6_c'+i+'">'+'商品详情页'+'</option>'+
+					'<option value="options_value" id="7_c'+i+'">'+'小程序路径'+'</option>'+
+					'</select>'+
+					'</div>'+
+					'<div style="float: left;margin-left: 20px">'+
+					'<div class="option4" style="display:none">'+
+					'<input type="text" class="content_link" id="8_c'+i+'" name="content_link" placeholder="请输入小程序路径,如/pages/index/index" >'+
+					'</div>'+
+					'<div class="option4" style="display:none">'+
+					'<input type="text" class="content_link" id="9_c'+i+'" name="content_link" placeholder="请输入详情页id,如12" >'+
+					'</div>'+
+					'</div>'+
+					'<dt>'+'排序'+'</dt>'+
+					'<dd>'+'<input  type="number" name="sort" data-id='+i+' value="'+data[i].sort+'" class="input-common sort" />'+'</dd>'+
+					'</dd>'+
+					'</dl>'+
+					'</div>'
+			);
+		}else if(data[i].movie_link){
+            $("#div_home").append(
+                '<div id="div4">'+
+                '<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+                '<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加视频'+'</dt>'+
+                '<dt class="delete_data" id="'+i+'"><span>'+'删除'+'</span></dt>'+
+                '</dl>'+
+
+                '<dl style="border-bottom: none;">'+
+                '<dl>'+
+                '<dd style="margin-left: 10%">'+
+                '<div class="controls" style="background-color:#FFF;border: 1px solid #E9E9E9;">'+
+                '<div class="ncsc-goods-default-pic">'+
+                '<div class="goodspic-uplaod" style="padding: 15px;">'+
+                '<div style="min-height:120px;">'+
+                '<div class="video-thumb" >'+
+                '<video id="my-video'+i+'" controls poster="" preload="auto"  style="max-width:50%;max-height:100%;width:auto;height:auto;">'+
+                '<source src="'+data[i].movie_link+'" type="video/mp4" id="video-source">'+
+                '</video>'+
+                '<span class="del-video" data-id='+i+' onclick="del_video(this)"></span>'+
+                '</div>'+
+                '</div>'+
+                '<div class="clear"></div>'+
+                '<div class="handle">'+
+                '<div class="ncsc-upload-btn">'+
+                '<a href="javascript:void(0);">'+
+                '<span>'+
+                '<input class="input-file" name="file_upload" id="test'+i+'" data-id='+i+' type="file" onchange="fileUpload_video(this);"  value="">'+
+                '</span>'+
+                '<p>视频上传</p>'+
+                '<input type="hidden" id="video_url'+i+'" value="'+data[i].movie_link+'">'+
+                '</a>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</dd>'+
+                '</dl>'+
+                '</dl>'+
+                '<dl style="border-bottom: none;">'+
+                '<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'是否显示'+'</dt>'+
+                '<dd>'+
+                '<div id="position_type">'+
+                '<label for="a'+i+'" class="line-label"><input type="radio" value="1" data-id='+i+' class="movie_show" name="movie_show'+i+'" id="a'+i+'" checked="checked"/>'+' 显示'+'</label>'+
+                '<label for="b'+i+'" class="line-label"><input type="radio" value="0" data-id='+i+' class="movie_show" name="movie_show'+i+'" id="b'+i+'"/>'+' 隐藏'+'</label>'+
+
+                '</div>'+
+                '</dd>'+
+                '</dl>'+
+                '<dl>'+
+                '<dt>'+'排序'+'</dt>'+
+                '<dd>'+'<input  type="number" name="sort" data-id='+i+' value="'+data[i].sort+'" class="input-common sort" />'+'</dd>'+
+                '<dd>'+
+
+                '</dl>'+
+                '</div>'
+            );
+        }
+	}
+
+	$(function(){
+		for (var i = 0; i < data.length;  i ++) {
+			$("#i" + i).attr("src", __IMG(data[i].pic));
+			if (data[i].pic_link == '' || data[i].pic_link == '无链接'){
+				$("#1_a" + i).attr("selected",'selected');
+			}else if(data[i].pic_link == '主页'){
+				$("#2_a" + i).attr("selected",'selected');
+			}else if (data[i].pic_link == '全部商品') {
+				$("#3_a" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '礼品专区') {
+				$("#4_a" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '会员专区'){
+				$("#5_a" + i).attr("selected",'selected');
+			}else if (data[i].pic_link == '商品详情页'){
+				$("#6_a" + i).attr("selected",'selected');
+				$("#9_a" + i).parent().show();
+				$("#9_a" + i).attr("value", data[i].pic_link);
+			}else{
+				$("#7_a" + i).attr("selected",'selected');
+				$("#8_a" + i).parent().show();
+				$("#8_a" + i).attr("value", data[i].pic_link);
+			}
+			//		title_link
+			if (data[i].title_link == '' || data[i].title_link == '无链接'){
+				$("#1_b" + i).attr("selected",'selected');
+			}else if(data[i].title_link == '主页'){
+				$("#2_b" + i).attr("selected",'selected');
+			}else if (data[i].title_link == '全部商品') {
+				$("#3_b" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '礼品专区') {
+				$("#4_b" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '会员专区'){
+				$("#5_b" + i).attr("selected",'selected');
+			}else if (data[i].pic_link == '商品详情页'){
+				$("#6_b" + i).attr("selected",'selected');
+				$("#9_a" + i).parent().show();
+				$("#9_a" + i).attr("value", data[i].pic_link);
+			}else {
+				$("#7_b" + i).attr("selected",'selected');
+				$("#8_b" + i).parent().show();
+				$("#8_b" + i).attr("value", data[i].title_link);
+			}
+			//		content_link
+			if (data[i].content_link == '' || data[i].content_link == '无链接'){
+				$("#1_c" + i).attr("selected",'selected');
+			}else if(data[i].content_link == '主页'){
+				$("#2_c" + i).attr("selected",'selected');
+			}else if (data[i].content_link == '全部商品') {
+				$("#3_c" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '礼品专区') {
+				$("#4_c" + i).attr("selected", 'selected');
+			}else if (data[i].pic_link == '会员专区'){
+				$("#5_c" + i).attr("selected",'selected');
+			}else if (data[i].pic_link == '商品详情页'){
+				$("#6_c" + i).attr("selected",'selected');
+				$("#9_a" + i).parent().show();
+				$("#9_a" + i).attr("value", data[i].pic_link);
+			}else {
+				$("#7_c" + i).attr("selected",'selected');
+				$("#8_c" + i).parent().show();
+				$("#8_c" + i).attr("value", data[i].content_link);
+			}
+			if (data[i].content_type == 1){
+				$("#a" + i).attr("checked",'checked');
+			}else if(data[i].content_type == 2){
+				$("#b" + i).attr("checked",'checked');
+			}else{
+				$("#c" + i).attr("checked",'checked');
+			}
+			if (data[i].title_type == 1){
+				$("#d" + i).attr("checked",'checked');
+			}else if(data[i].title_type == 2){
+				$("#e" + i).attr("checked",'checked');
+			}else{
+				$("#f" + i).attr("checked",'checked');
+			}
+		}
+	});
+
+
+	$(document).on('click','.delete_data',function(){
+		var index = $(this).attr('id');
+		data.splice(index , 1);
+		$($(this)).parent().parent().remove();
+	});
+
+
+	$(document).on('click','.delete_new_data',function(){
+		var data = allData.items;
+		var index = $(this).attr('id');
+		data.splice(index, 1);
+		$($(this)).parent().parent().remove();
+	});
+
+	$(document).on('blur','.sort',function(){
+		var sort = $(this).val();
+		var index = $(this).data('id');
+		data[index].sort = sort;
+	});
+
+	$(document).on('blur','.title_master',function(){
+		var title_master = $(this).val();
+		var index = $(this).data('id');
+		data[index].title = title_master;
+	});
+	$(document).on('blur','.title_slaver',function(){
+		var title_slaver = $(this).val();
+		var index = $(this).data('id');
+		data[index].title_slaver = title_slaver;
+	});
+	$(document).on('blur','.title_type',function(){
+		var title_type = $(this).val();
+		var index = $(this).data('id');
+		data[index].title_type = title_type;
+	});
+	$(document).on('blur','.title_link',function(){
+		var title_link = $(this).val();
+		var index = $(this).data('id');
+		data[index].title_link = title_link;
+	});
+
+	$(document).on('blur','.input-file',function(){
+		var pic = $(this).val();
+		formatData($(this).data('id'),pic,'pic');
+	});
+
+	$(document).on('blur','.pic_link',function(){
+		var pic_link = $(this).val();
+		var index = $(this).data('id');
+		data[index].pic_link = pic_link;
+	});
+
+	$(document).on('blur','.content',function(){
+		var content = $(this).val();
+		var index = $(this).data('id');
+		data[index].content = content;
+	});
+
+	$(document).on('blur','.content_type',function(){
+		var content_type = $(this).val();
+		var index = $(this).data('id');
+		data[index].content_type = content_type;
+	});
+
+	$(document).on('blur','.content_link',function(){
+		var content_link = $(this).val();
+		var index = $(this).data('id');
+		data[index].content_link = content_link;
+	});
+
+	$(document).on('blur','.content_pro',function(){
+		var content_pro = $(this).val();
+		var index = $(this).data('id');
+		data[index].content_pro = content_pro;
+	});
+
+	$(document).on('blur','.title_pro',function(){
+		var title_pro = $(this).val();
+		var index = $(this).data('id');
+		data[index].title_pro = title_pro;
+	});
+
+
+	$(document).on('blur','.movie_show',function(){
+		var movie_show = $(this).val();
+		var index = $(this).data('id');
+		data[index].movie_show = movie_show;
+	});
+
+
+	function formatData (index,val,type){
+		allData.items.forEach(v=>{
+			if(v.id == index) {
+			v[type] = val;
+		}
+		return v;
+	});
+	}
+
+	$(document).on('change','.select-common',function(){
+		if ($(this).val() == 'options_value'){
+			$($(this)).parent().next().children().show();
+		}else{
+			$($(this)).parent().next().children().hide();
+		}
+		if ($(this).val() == '商品详情页'){
+			$($(this)).parent().next().children().next().show();
+		}else{
+			$($(this)).parent().next().children().next().hide();
+		}
+	});
+
+
+	function validation(){
+		var title=$("#title");								//专题标题
+		if(title.val() == ""){
+			title.next().css("display","inline-block");
+			title.focus();
+			return false;
+		}
+		return true;
+	}
+
+	var flag = false;//防止重复提交
+	function save(type){
+        if(type==1){
+			var status=0;
+		}else{
+			var status=1;
+		}
+        allData['status'] = status;
+        allData['pic'] = $("#logo").val();
+        allData['icon_link'] = $("#logo_icon").val();
+        allData['title'] = $("#title").val();
+        allData['master_sort'] = $("#master_sort").val();
+        allData['is_show'] = $('#blank_type input[name="is_show"]:checked ').val();
+
+		if(!validation()){
+			return;
+		}
+		if(flag){
+			return;
+		}
+		flag = true;
+		$.ajax({
+			type:"post",
+			url:"{:__URL('ADMIN_MAIN/cms/updatetopic')}",
+			data:allData,
+			success:function(data){
+				if (data["code"] > 0) {
+					showMessage('success', data["message"]);
+					location.href=__URL("ADMIN_MAIN/cms/topiclist");
+				}else{
+					showMessage('error', data["message"]);
+					flag = false;
+				}
+			}
+		});
+	}
+
+
+	/**
+	 *图片上传
+	 */
+	function imgUpload(event) {
+		var fileid = $(event).attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#imglogo").attr("src",__IMG(res.data));
+				$("#logo").val(res.data);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+
+	/**
+	 *图片上传
+	 */
+	function imgUpload_icon(event) {
+		var fileid = $(event).attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#imglogo_icon").attr("src",__IMG(res.data));
+				$("#logo_icon").val(res.data);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	//图片上传
+	function imgUpload1(event) {
+		var fileid = $(event).attr("id");
+		var id = $(event).data('id');
+		var imgDom = $(event).parent().parent().prev().children().children();
+		var data_img = { 'file_path' : UPLOADCOMMON }
+		uploadFile(fileid,data_img,function(res){
+			if(res.code){
+				imgDom.attr("src",__IMG(res.data));
+				$(event).next().val(res.data);
+				data[id].pic = res.data;
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+
+	//图片上传
+	function imgUpload2(event) {
+		var fileid = $(event).attr("id");
+		var id = $(event).data('id');
+		var imgDom = $(event).parent().parent().prev().children().children();
+		var data_img = { 'file_path' : UPLOADCOMMON }
+		new_uploadFile(fileid,data_img,function(res){
+			if(res.code){
+				imgDom.attr("src",__IMG(res.data));
+				$(event).parent().next().val(res.data);
+				data[id].pic_pro = res.data;
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	$(document).on('click','#show_div0',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			sid:newId,
+			id:newId,
+			title_pro:'',
+			content_pro:'',
+			sort:'',
+			pic_pro:'',
+			pid:'',
+			price: '',
+			goods_name: '',
+			material_code: '',
+			stock: '',
+		});
+		$("#selecter").append(
+				'<div id="div0">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加商品'+'</dt>'+
+				'<dt class="delete_data" id="'+newId+'"><span>'+'删除'+'</span></dt>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'标题'+'</dt>'+
+				'<dd>'+'<input name="title_pro" data-id='+newId+' class="title_pro" >'+'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'介绍'+'</dt>'+
+				'<dd>'+'<textarea name="content_pro" data-id='+newId+' class="content_pro" cols="30" rows="20" style="resize:none;">'+'</textarea>'+'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'icon图片'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img class="imglogo1">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test'+newId+'" data-id='+newId+' type="file" onchange="imgUpload2(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'<p class="hint">'+
+				'<br>'+'<span style="color: orange;">'+'建议使用宽1200像素-高300像素内的GIF或PNG透明图片;'+'</span>'+
+				'</p>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl>'+
+				'<dt>'+'排序'+'</dt>'+
+				'<dd>'+'<input  type="number" name="sort" data-id='+newId+' min="0" class="input-common sort" />'+'</dd>'+
+				'</dl>'+
+
+				'<dl>'+
+				'<dt>'+'选择商品'+'</dt>'+
+				'<dd>'+
+				'<button class="btn-common js-select-goods" data-id='+newId+'>'+'选择商品'+'</button>'+
+				'</dd>'+
+				'</dl>'+
+				'<dl>'+
+				'<dd class="goods-list">'+
+				'<table class="table-class">'+
+				'<colgroup>'+
+				'<col width="40%">'+
+				'<col width="30%">'+
+				'<col width="10%">'+
+				'<col width="10%">'+
+				'<col width="10%">'+
+				'</colgroup>'+
+				'<thead>'+
+				'<tr>'+
+				'<th>'+'商品名称'+'</th>'+
+				'<th>'+'SHOPAL编码'+'</th>'+
+				'<th>'+'价格'+'</th>'+
+				'<th>'+'库存'+'</th>'+
+				'<th>'+'操作'+'</th>'+
+				'</tr>'+
+				'</thead>'+
+				'<tbody>'+'</tbody>'+
+				'</table>'+
+				'</dd>'+
+				'</dl>'+
+				'<div class="combo-package-mask-layer">'+'</div>'+
+				'<div class="goods-list-mask-layer">'+
+				'<table class="mytable">'+
+				'<tr>'+
+				'<th>'+
+				'SHOPAL编码：'+'<input id="material_code" class="input-medium input-common input-common-goods" type="text" placeholder="要搜索的SHOPAL编码">'+
+				'<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common">'+
+				'</th>'+
+				'<th>'+
+				'商品名称：'+'<input id="goods_name" class="input-medium input-common input-common-goods" type="text" placeholder="要搜索的商品名称">'+
+				'<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common">'+
+				'</th>'+
+				'</tr>'+
+				'</table>'+
+				'<table class="table-class">'+
+				'<colgroup>'+
+				'<col width="5%">'+
+				'<col width="60%">'+
+				'<col width="15%">'+
+				'<col width="15%">'+
+
+				'</colgroup>'+
+				'<thead>'+
+				'<tr>'+
+				'<th>'+' '+'</th>'+
+				'<th style="text-align: left;">'+'商品名称'+'</th>'+
+				'<th>'+'SHOPAL编码'+'</th>'+
+				'<th>'+'价格'+'</th>'+
+				'<th>'+'库存'+'</th>'+
+				'</tr>'+
+				'</thead>'+
+				'<tbody>'+'</tbody>'+
+				'</table>'+
+				'<button class="btn-common" style="margin: 20px auto 10px auto !important;display: block;" data-id='+newId+' id="determine">'+'确定'+'</button>'+
+				'</div>'+
+
+				'</div>'
+		)
+	});
+
+	$(document).on('click','#show_div1',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			sid:newId,
+			pic:'',
+			sort:''
+		});
+		$("#selecter").append(
+				'<div id="div1">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;margin-top: 60px;">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加图片'+'</dt>'+
+				'<dt class="delete_new_data" id="new_'+newId+'">'+'删除'+'</dt>'+
+				'</dl>'+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'详情图片'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img class="imglogo1">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="'+newId+'" data-id='+newId+' type="file" onchange="imgUpload1(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'<p class="hint">'+
+				'<br>'+'<span style="color: orange;">'+'建议使用宽1200像素-高300像素内的GIF或PNG透明图片；点击下方"提交"按钮后生效。'+'</span>'+
+				'</p>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'链接'+'</dt>'+
+				'<dd>'+
+				'<div style="float: left">'+
+				'<select  class="select-common pic_link" data-id='+newId+' name="pic_link">'+
+				'<option value="无链接">'+'无链接'+'</option>'+
+				'<option value="主页">'+'主页'+'</option>'+
+				'<option value="全部商品">'+'全部商品'+'</option>'+
+				'<option value="礼品专区">'+'礼品专区'+'</option>'+
+				'<option value="会员专区">'+'会员专区'+'</option>'+
+				'<option value="商品详情页">'+'商品详情页'+'</option>'+
+				'<option value="options_value">'+'小程序路径'+'</option>'+
+				'</select>'+
+				'</div>'+
+				'<div style="float: left;margin-left: 20px">'+
+				'<div class="option4" style="display:none">'+
+				'<input type="text" class="pic_link" name="pic_link" data-id='+newId+' placeholder="请输入小程序路径,如：/pages/index/index" >'+
+				'</div>'+
+				'<div class="option4" style="display:none">'+
+				'<input type="number" class="pic_link" name="pic_link" data-id='+newId+' placeholder="请输入详情页id,如12" >'+
+				'</div>'+
+				'</div>'+
+				'<dt>'+'排序'+'</dt>'+
+				'<dd>'+'<input  type="number" name="sort" data-id='+newId+' class="input-common sort" />'+'</dd>'+
+				'</dd>'+
+				'</dl>'+
+				'</div>'
+		)
+	});
+
+	$(document).on('click','#show_div2',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			sid:newId,
+			title:'',
+			sort:'',
+			title_slaver:'',
+			title_link:'',
+			title_type:'1'
+		});
+		$("#selecter").append(
+				'<div id="div2">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加标题'+'</dt>'+
+				'<dt class="delete_new_data" id="new1_'+newId+'">'+'删除'+'</dt>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'主标题'+'</dt>'+
+				'<dd>'+'<input  type="text" name="title_master" data-id='+newId+' class="input-common title_master" />'+'</dd>'+
+				'<dt>'+'副标题'+'</dt>'+
+				'<dd>'+'<input  type="text" name="title_slaver" data-id='+newId+' class="input-common title_slaver" />'+'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'所在位置'+'</dt>'+
+				'<dd>'+
+				'<div id="position_type">'+
+				'<label for="d'+newId+'" class="line-label"><input type="radio" value="1" data-id='+newId+' class="title_type" name="title_type" id="d'+newId+'" checked="checked"/>'+' 左对齐'+'</label>'+
+				'<label for="e'+newId+'" class="line-label"><input type="radio" value="2" data-id='+newId+' class="title_type" name="title_type" id="e'+newId+'"/>'+' 居中对齐'+'</label>'+
+				'<label for="f'+newId+'" class="line-label"><input type="radio" value="3" data-id='+newId+' class="title_type" name="title_type" id="f'+newId+'" />'+' 右对齐'+'</label>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl>'+
+				'<dt>'+'链接'+'</dt>'+
+				'<dd>'+
+				'<div style="float: left">'+
+				'<select  class="select-common title_link" name="title_link" data-id='+newId+' >'+
+				'<option value="无链接">'+'无链接'+'</option>'+
+				'<option value="主页">'+'主页'+'</option>'+
+				'<option value="全部商品">'+'全部商品'+'</option>'+
+				'<option value="礼品专区">'+'礼品专区'+'</option>'+
+				'<option value="会员专区">'+'会员专区'+'</option>'+
+				'<option value="商品详情页">'+'商品详情页'+'</option>'+
+				'<option value="options_value">'+'小程序路径'+'</option>'+
+				'</select>'+
+				'</div>'+
+				'<div style="float: left;margin-left: 20px">'+
+				'<div class="option4" style="display: none;">'+
+				'<input type="text" class="title_link" data-id='+newId+' name="title_link" placeholder="请输入小程序路径,如/pages/index/index" >'+
+				'</div>'+
+				'<div class="option4" style="display:none">'+
+				'<input type="number" class="pic_link" name="pic_link" data-id='+newId+' placeholder="请输入详情页id,如12" >'+
+				'</div>'+
+				'</div>'+
+				'<dt>'+'排序'+'</dt>'+
+				'<dd>'+'<input  type="number" name="sort" data-id='+newId+' class="input-common sort" />'+'</dd>'+
+				'</dd>'+
+				'</dl>'+
+				'</div>'
+		);
+	});
+
+	$(document).on('click','#show_div3',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			sid:newId,
+			content:'',
+			sort:'',
+			content_type:'1',
+			content_link:''
+		});
+		$("#selecter").append(
+				'<div id="div3">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加文本'+'</dt>'+
+				'<dt class="delete_new_data" id="new2_'+newId+'">'+'删除'+'</dt>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'内容'+'</dt>'+
+				'<dd>'+'<textarea name="content" data-id='+newId+'  class="content" cols="30" rows="20" style="resize:none;">'+'</textarea>'+'</dd>'+
+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'所在位置'+'</dt>'+
+				'<dd>'+
+				'<div id="position_type">'+
+				'<label for="a'+newId+'" class="line-label"><input type="radio" value="1" data-id='+newId+' class="content_type" name="content_type" id="a'+newId+'" checked="checked"/>'+' 左对齐'+'</label>'+
+				'<label for="b'+newId+'" class="line-label"><input type="radio" value="2" data-id='+newId+' class="content_type" name="content_type" id="b'+newId+'"/>'+' 居中对齐'+'</label>'+
+				'<label for="c'+newId+'" class="line-label"><input type="radio" value="3" data-id='+newId+' class="content_type" name="content_type" id="c'+newId+'" />'+' 右对齐'+'</label>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+
+
+				'<dl>'+
+				'<dt>'+'链接'+'</dt>'+
+				'<dd>'+
+				'<div style="float: left">'+
+				'<select class="select-common content_link" name="content_link" data-id='+newId+'>'+
+				'<option value="无链接">'+'无链接'+'</option>'+
+				'<option value="主页">'+'主页'+'</option>'+
+				'<option value="全部商品">'+'全部商品'+'</option>'+
+				'<option value="礼品专区">'+'礼品专区'+'</option>'+
+				'<option value="会员专区">'+'会员专区'+'</option>'+
+				'<option value="商品详情页">'+'商品详情页'+'</option>'+
+				'<option value="options_value">'+'小程序路径'+'</option>'+
+				'</select>'+
+				'</div>'+
+				'<div style="float: left;margin-left: 20px">'+
+				'<div class="option4" style="display:none">'+
+				'<input type="text" class="content_link" data-id='+newId+' name="content_link" placeholder="请输入小程序路径,如/pages/index/index" >'+
+				'</div>'+
+				'<div class="option4" style="display:none">'+
+				'<input type="number" class="pic_link" name="pic_link" data-id='+newId+' placeholder="请输入详情页id,如12" >'+
+				'</div>'+
+				'</div>'+
+				'<dt>'+'排序'+'</dt>'+
+				'<dd>'+'<input  type="number" name="sort" data-id='+newId+' class="input-common sort" />'+'</dd>'+
+				'</dd>'+
+				'</dl>'+
+				'</div>'
+		)
+	});
+
+
+
+    $(document).on('click','#show_div4',function(){
+        var newId = allData.items.length;
+        allData.items.push({
+            sid:newId,
+            movie_link:'',
+            sort:'',
+            movie_show:'1'
+        });
+        $("#selecter").append(
+            '<div id="div4">'+
+            '<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+            '<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加视频'+'</dt>'+
+            '<dt class="delete_data" id="'+newId+'"><span>'+'删除'+'</span></dt>'+
+            '</dl>'+
+
+            '<dl style="border-bottom: none;">'+
+            '<dl>'+
+            '<dd style="margin-left: 10%">'+
+            '<div class="controls" style="background-color:#FFF;border: 1px solid #E9E9E9;">'+
+            '<div class="ncsc-goods-default-pic">'+
+            '<div class="goodspic-uplaod" style="padding: 15px;">'+
+            '<div style="min-height:120px;">'+
+            '<div class="video-thumb" >'+
+            '<video id="my-video'+newId+'" controls poster="__STATIC__/blue/img/vs.png" preload="auto"  style="max-width:50%;max-height:100%;width:auto;height:auto;">'+
+            '<source src="" type="video/mp4" id="video-source">'+
+            '</video>'+
+            '<span class="del-video hide" data-id='+newId+' onclick="del_video(this)"></span>'+
+            '</div>'+
+            '</div>'+
+            '<div class="clear"></div>'+
+            '<div class="handle">'+
+            '<div class="ncsc-upload-btn">'+
+            '<a href="javascript:void(0);">'+
+            '<span>'+
+            '<input class="input-file" name="file_upload" id="test'+newId+'" data-id='+newId+' type="file" onchange="fileUpload_video(this);"  value="">'+
+            '</span>'+
+            '<p>视频上传</p>'+
+            '<input type="hidden" id="video_url'+newId+'" value="">'+
+            '</a>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</dd>'+
+            '</dl>'+
+            '</dl>'+
+            '<dl style="border-bottom: none;">'+
+            '<dt>'+'<span style="color:red;margin-left:15px;">'+'</span>'+'是否显示'+'</dt>'+
+            '<dd>'+
+            '<div id="position_type">'+
+            '<label for="navigationtype1" class="line-label"><input type="radio" value="1" data-id='+newId+' class="movie_show" name="movie_show'+newId+'" id="navigationtype1" checked="checked"/>'+' 显示'+'</label>'+
+            '<label for="navigationtype2" class="line-label"><input type="radio" value="0" data-id='+newId+' class="movie_show" name="movie_show'+newId+'" id="navigationtype2"/>'+' 隐藏'+'</label>'+
+            '</div>'+
+            '</dd>'+
+            '</dl>'+
+            '<dl>'+
+            '<dt>'+'排序'+'</dt>'+
+            '<dd>'+'<input  type="number" name="sort" data-id='+newId+' min="0" class="input-common sort" />'+'</dd>'+
+            '<dd>'+
+
+            '</dl>'+
+            '</div>'
+        )
+    });
+
+    //新增 js
+	var BatchSend = new Array();
+	$(function(){
+		if($("#goods_id_array").val().length > 0){
+			BatchSend = $("#goods_id_array").val().split(",");
+		}
+		refreshSelectGoods();
+	});
+
+	$(document).on('click','.js-select-goods',function(){
+		goods_name = '';
+		material_code = '';
+		$(".input-common-goods").attr("value","");
+		record = $($(this)).data('id')
+		record_dom = $(this);
+		LoadingInfo(1);
+		modal("show");
+	});
+
+	//点击遮罩隐藏商品选择框
+	$(document).on('click','.combo-package-mask-layer',function(){
+		modal("hide");
+	});
+
+	//全选
+	function CheckAll(obj){
+		var checked = obj.checked;
+		$(".table-class tbody tr input:checkbox").prop("checked",checked);
+	}
+
+
+
+	function LoadingInfo(page_index) {
+		var _goods_name = goods_name;
+		var _material_code = material_code;
+		if(typeof(_goods_name) == 'object'){
+			var _goods_name = $('#goods_name').val();
+		}
+		if(typeof(_material_code) == 'object'){
+			var _material_code = $('#material_code').val();
+		}
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/goods/getSelectGoodslist')}",
+			data : {
+				"page_index" : page_index,
+				"page_size" : $("#showNumber").val(),
+				"goods_name":_goods_name,
+				"material_code":_material_code,
+				"type" : "select"
+			},
+			success : function(data) {
+				var html = '';
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+
+						html += '<tr>';
+						html += '<td>';
+						html += '<input value="' + data["data"][i]["goods_id"] + '" name="sub" data-state="'+data["data"][i]["state"]+'" type="radio">';
+						html += '</td>';
+
+						html += '<td style="text-align:left;">' + data["data"][i]["goods_name"] + '</td>';
+
+						html += '<td>' + data["data"][i]["material_code"] + '</td>';
+
+
+						html += '<td>' + data["data"][i]["price"] + '</td>';
+
+						html += '<td>' + data["data"][i]["stock"]  + '</td>';
+
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr align="center"><td colspan="9" style="text-align: center;font-weight: normal;color: #999;">暂无符合条件的数据记录</td></tr>';
+				}
+				$(".goods-list-mask-layer .table-class tbody").html(html);
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+				if($(".goods-list-mask-layer #turn-ul").length == 0){
+					$(".goods-list-mask-layer").append($("#turn-ul").clone(true).show());
+				}
+				$(".ns-main>#turn-ul").remove();
+			}
+		});
+	}
+	//点击确定
+	$(document).on('click','#determine',function(){
+		$('#goods_id_array').val($("input[name='sub']:checked").val());
+		var id = $("input[name='sub']:checked").val();
+		var index = record;
+		formatData(allData['items'][index].id,id,'pid');
+		if(id > 0){
+			$.ajax({
+				type : "post",
+				url : "{:__URL('ADMIN_MAIN/goods/getGoodsFieldInfo')}",
+				data : {
+					"id" : id,
+				},
+				async : false,
+				success : function(data) {
+					formatData(allData['items'][index].id,data['goods_name'],'goods_name');
+					formatData(allData['items'][index].id,data['material_code'],'material_code');
+					formatData(allData['items'][index].id,data['price'],'price');
+					formatData(allData['items'][index].id,data['stock'],'stock');
+				}
+			})
+		}
+		refreshSelectGoods(index);
+		modal("hide");
+	})
+	//模态框隐藏显示
+	function modal(type){
+		if(type == "show"){
+			$(".combo-package-mask-layer").show();
+			$(".goods-list-mask-layer").show();
+		}else if(type == "hide"){
+			$(".combo-package-mask-layer").hide();
+			$(".goods-list-mask-layer").hide();
+		}
+	}
+
+	//商品取消选择
+	function cancelSelect(goods_id){
+		for(var i = 0; i < BatchSend.length; i++){
+			if(BatchSend[i] == goods_id){
+				BatchSend.splice(i,1);
+			}
+		}
+		$("#goods_id_array").val(BatchSend.toString());
+		refreshSelectGoods();
+	}
+
+	//刷新选择的商品
+	function refreshSelectGoods(index){
+		if(typeof(allData['items'][index]) != 'undefined'){
+			var goods_id_array = $("#goods_id_array").val();
+			var html = '';
+
+			html += '<tr>';
+			html += '<input value="' + allData['items'][index]["pid"] + '"  type="hidden">';
+
+			html += '<td>' + allData['items'][index]["goods_name"] + '</td>';
+
+			html += '<td>' + allData['items'][index]["material_code"] + '</td>';
+
+			html += '<td class="goods_price">' + allData['items'][index]["price"] + '</td>';
+
+			html += '<td>' + allData['items'][index]["stock"]  + '</td>';
+
+			html += '<td><label for=""><i class="fa fa-times" aria-hidden="true fa-2x" onclick="cancelSelect('+index+')"></i></label></td>';
+
+			html += '</tr>';
+
+			$(record_dom).parent().parent().next().children().children().children('tbody:last-child').html(html);
+		}else{
+			$(".goods-list .table-class tbody").html("");
+
+		}
+		calculate_original_price(); //计算原价
+	}
+
+	//价格
+	$("#combo_package_price").change(function(){
+		var price = parseFloat(parseFloat($(this).val()).toFixed(2));
+		var original_price = parseFloat(parseFloat($("#original_price").text()).toFixed(2)); //原价
+		if(price < 0){
+			price = 0;
+		}else if(price > original_price){
+			price = original_price;
+		}
+		$(this).val(price);
+		calculate_original_price();
+	})
+
+	//重置
+	function click_reset(){
+		BatchSend = Array();
+		$("#goods_id_array").val("");
+		$(".goods-list .table-class tbody").html("");
+	}
+
+	function calculate_original_price(){
+		var original_price = 0;
+		$(".goods-list .table-class tbody tr td.goods_price").each(function(i,e){
+			var price = parseFloat($(e).text());
+			original_price += price;
+		})
+		var combo_package_price = parseFloat($("#combo_package_price").val());
+		$("#original_price").text(original_price.toFixed(2)); //原价
+		if(combo_package_price > 0){
+			if(combo_package_price > original_price){
+				combo_package_price = original_price;
+				$("#combo_package_price").val(combo_package_price);
+			}
+			$("#save_the_price").text((original_price - combo_package_price).toFixed(2)); //节省价
+		}
+	}
+
+
+	//查看商品
+	$(document).on('click','#ceshi',function(){
+		var index = $(this).data('id');
+		var dom = $(this);
+		var id = allData['items'][index]['pid'];
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/goods/getGoodsFieldInfo')}",
+			data : {
+				"id" : id,
+			},
+			async : false,
+			success : function(data) {
+				var html = '';
+
+				html += '<tr>';
+				html += '<input value="' + id + '"  type="hidden">';
+
+				html += '<td>' + data.goods_name + '</td>';
+
+				html += '<td>' + data.material_code + '</td>';
+
+
+				html += '<td class="goods_price">' + data.price + '</td>';
+
+				html += '<td>' + data.stock  + '</td>';
+
+				html += '<td><label for=""><i class="fa fa-times" aria-hidden="true fa-2x" onclick="cancelSelect('+index+')"></i></label></td>';
+
+				html += '</tr>';
+
+				$(dom).parent().parent().next().children().children().children('tbody:last-child').html(html);
+			}
+		})
+		calculate_original_price(); //计算原价
+	})
+
+
+    /**
+     * 文件上传（视频、音频）
+     */
+    function fileUpload_video(event) {
+        var fileid = $(event).attr("id");
+        var id = $(event).data('id');
+        var data_id = $(event).attr("data-id");
+        var data_video = { 'file_path' : UPLOADGOODSVIDEO };
+        var dom = document.getElementById(fileid);
+        var file = dom.files[0];//File对象;
+        var fileTypeArr = ['video/mp4', 'video/3gp', 'video/avi', 'video/rmvb', 'video/rm'];
+        var flag = false;
+        if (file != null) {
+            for (var i = 0; i < fileTypeArr.length; i++) {
+                if (file.type == fileTypeArr[i]) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        if (!flag) {
+            showTip("文件类型不合法", "warning");
+        } else {
+            uploadFile(fileid, data_video, function (res) {
+                if (res.code) {
+                    $("#video_url"+data_id).val(res['data']);
+                    $("#my-video"+data_id).attr('poster','');
+                    $("#my-video"+data_id).attr('src',__IMG(res['data']));
+                    data[id].movie_link = res.data;
+                    $(".del-video").show();
+                    showTip(res.message, "success");
+                } else {
+                    showTip(res.message, "error");
+                }
+            });
+        }
+    }
+
+
+    /**
+     * 删除已选择的视频
+     */
+    function del_video(event) {
+        // 通过ajax用php删除文件
+        var data_id = $(event).attr("data-id");
+        var src 	= $("#video_url"+data_id).val();
+        if (src != "") {
+            $("#my-video"+data_id).attr('src', "");
+            $("#my-video"+data_id).attr('poster', '__STATIC__/blue/img/vs.png');
+            $("#videoupload").val('');
+            $(".del-video").hide();
+            $("#video_url"+data_id).val('');
+        }
+    }
+
+
+</script>
+{/block}
+
+
+

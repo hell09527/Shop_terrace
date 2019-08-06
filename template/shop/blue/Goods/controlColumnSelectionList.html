@@ -1,0 +1,192 @@
+{extend name="shop/blue/base" /}
+{block name="resources"}
+<style>
+    .listBox{
+        max-width: 800px;
+        margin:20px auto;
+    }
+    .listBoxItem{
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        height:162px;
+        overflow: hidden;
+    }
+    .listBoxItem:hover{
+        color:#333;
+    }
+    .listBoxItem-left{
+        height:162px;
+        overflow: hidden;
+    }
+    .listBoxItem-left img{
+        width:100%
+    }
+    .listBoxItem-right p{
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .listBoxItem-right h4{
+        font-size: 24px;
+        line-height: 30px;
+        margin-bottom: 10px;
+        color:#000;
+    }
+</style>
+{/block}
+{block name="main"}
+<div class="listBox">
+
+    <a class="listBoxItem" name="1" target="_blank">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList1.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>女人脑海中每5秒浮现的事</h4>
+            <p style="color:#ddd;font-size: 12px;">11月10日</p>
+            <p>法式高盘发髻，Givenchy 黑礼服，咬着面包，看着 Tiffany 珠宝橱窗里她的精神早餐时优雅而固执的背影。</p>
+            <p>女人的购物欲，无关时代。</p>
+        </div>
+    </a>
+
+    <a name="2" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList2.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>女人吸烟，惹了谁？</h4>
+            <p style="color:#ddd;font-size: 12px;">10月14日</p>
+            <p>作为护肤健康领域里打破常规、追求极致的 Bonnie&Clyde，我们一向不提倡吸烟，的确有损健康的身体。但是现在越来越多的人说女人「吸烟不雅」，女人「吸烟很痞气」，这些帽子，实在不能忍下去。</p>
+            <p>几分轻佻，些许慵懒......女人吸烟，明明是一门艺术。</p>
+        </div>
+    </a>
+
+    <a name="3" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList3.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>女人，需要不怕你发光的男人</h4>
+            <p style="color:#ddd;font-size: 12px;">10月11日</p>
+            <p>强大，不是他赚钱比我多，职位比我高，而是他的爱可以无视六界生物对他的眼光而存在。在别人眼里，我有一些光环，我自己知道，如果我和他换位，作为男人我的这些光环，会让他在别人眼中转化为压力，我做不到他如此的从容。尤其，是那种，让我感觉不到一丝他在承受的从容。</p>
+        </div>
+    </a>
+
+    <a name="4" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList4.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>防晒霜使用的重要性以及如何使用！</h4>
+            <p style="color:#ddd;font-size: 12px;">7月5日</p>
+            <p>这几天全国的天气越来越热，又到了 “愿我白成一道光” 的季节。</p>
+            <p>对于大多数的小仙女来说，囤防晒霜已经是迫在眉睫的事儿，但很多防晒上脸又油又闷，而且还会有假白、致敏的现象，面对着几百种防晒霜，全球黑科技极选平台Bonnie&Clyde携手评测师六六来告诉你该如何选择。进入正题前，惊喜的化身Bonnie先为大家发个福利。</p>
+        </div>
+    </a>
+
+    <a name="5" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList5.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>最适合你的眉形都在这里啦！</h4>
+            <p style="color:#ddd;font-size: 12px;">7月10日 AA老师</p>
+            <p>这两天的热搜，让我觉得十分神奇。</p>
+            <p>虽然很让人尴尬，但我觉得她有一方面很值得称赞，就是她化妆的时候，特别注重眉形与妆容的搭配，简直是“眉毛精”的最佳代言人了！</p>
+        </div>
+    </a>
+
+    <a name="6" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList6.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>这些被2.8亿敏感星人点赞的精华，真的好用吗？</h4>
+            <p style="color:#ddd;font-size: 12px;">7月19日 AA老师</p>
+            <p>最近刷各大社交平台，看到最多的话题，就是“8102年已经过去了大半，你最糟心的事是什么？”</p>
+            <p>其中有一位小仙女答曰：“敏感皮素颜时遇到前男友，结果他以为我脸红是因为害羞，其实那是泛红+红血丝！”</p>
+        </div>
+    </a>
+
+    <a name="7" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList7.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>30+岁的“金秘书”朴敏英，为何重回荧幕时这样美？</h4>
+            <p style="color:#ddd;font-size: 12px;">7月5日 AA老师</p>
+            <p>这几天后台有很多小仙女问我：“AA，怎么样才能有朴敏英小姐姐那样水嫩的皮肤呀？”</p>
+            <p>然后当我打开微博的时候，发现还出现了话题……</p>
+        </div>
+    </a>
+
+    <a name="8" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList8.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>深度评测丨你的清洁面膜，正在让你毁容！</h4>
+            <p style="color:#ddd;font-size: 12px;">11月13日</p>
+            <p>前一阵，大家都被哈里王子婚礼上的名媛们惊艳到了吧？美丽优雅的姿容与细腻的肌肤，不知让多少小仙女儿艳羡</p>
+            <p>俗话说一白遮三丑，但毛孔里堆满黑头和油脂粒，不仅再贵的美白精华都无法产生效果，还会引起爆痘，所以除了日常清洁护肤，每周的清洁面膜也必不可少。</p>
+        </div>
+    </a>
+
+    <a name="9" target="_blank" class="listBoxItem">
+        <div class="listBoxItem-left" style="width:30%;padding-right: 20px;">
+            <img src="__TEMP__/{$style}/public/images/selectList9.jpeg" alt="">
+        </div>
+        <div class="listBoxItem-right" style="width:70%" >
+            <h4>深度测评|眼霜看这一篇就不会踩雷！</h4>
+            <p style="color:#ddd;font-size: 12px;">7月6日</p>
+            <p>Alex Lai 时尚品牌总监，纽约时装周后台大总管，跑遍全球，品味过硬的资深买手，Ivanka Trump与Paris Hilton等明星的私人造型师，多本时尚杂志大片御用造型师。</p>
+            <p>然后当我打开微博的时候，发现还出现了话题……</p>
+        </div>
+    </a>
+
+
+</div>
+
+<div class="showModel showMask" style="position: fixed;background: rgba(0,0,0,0.6);width:100%;height:100%;display: none;top:0;left:0;z-index: 100000"></div>
+<div class="showModel" style="background:#fff;position: fixed;top:50%;left:50%;transform: translateX(-50%) translateY(-50%);min-width:250px;display: none;z-index: 100000">
+    <p style="color:#F33A42;background:#333;font-weight: bold;font-size: 20px;text-align: center;line-height: 40px;">提示</p>
+    <p id="contain" style="padding:40px 60px;font-size: 16px;solor:#333;text-align: center;"></p>
+</div>
+
+<script>
+    $('.showMask').click(function(){
+        $('.showModel').css('display','none')
+    })
+    var list=$('.listBoxItem');
+    for(var i=0;i<list.length;i++){
+        if(!window.sessionStorage["name"]) {
+            if (i > 4) {
+                $(list[i]).click(function(){
+                    $('.showModel').css('display','block')
+                    $('#contain').text('想要了解更多内容请登录会员!');
+                })
+            }else{
+                $(list[i]).click(function(){
+                    console.log(this.name);
+                    var index=this.name;
+                    window.location.href = "{:__URL('SHOP_MAIN/goods/controlColumnSelection"+index+"')}";
+                })
+            }
+        }else{
+            $(list[i]).click(function(){
+                console.log(this.name);
+                var index=this.name;
+                window.location.href = "{:__URL('SHOP_MAIN/goods/controlColumnSelection"+index+"')}";
+            })
+        }
+
+    }
+</script>
+
+{/block}

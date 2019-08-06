@@ -1,0 +1,104 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+    #code_show{width: 200px;height: 200px;position: fixed;left: 45%;top: 30%;display: none}
+</style>
+{/block}
+
+{block name="main"}
+<div class="options-btn">
+    <button class="btn-common btn-small" onclick="location.href='{:__URL('ADMIN_MAIN/store/addStore')}';">添加门店</button>
+</div>
+<div id="code_show"></div>
+<table class="table-class">
+    <colgroup>
+        <col width="15%">
+        <col width="15%">
+        <col width="10%">
+        <col width="20%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+    </colgroup>
+    <thead>
+    <tr align="center">
+        <th align="left">门店名称</th>
+        <th align="left">门店组</th>
+        <th>门店编码</th>
+        <th align="left">门店地址</th>
+        <th>门店联系人</th>
+        <th>门店手机号</th>
+        <th>固定电话</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="productTbody"></tbody>
+</table>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    function LoadingInfo(page_index) {
+        var levelid = $("#level_name").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/store/storeList')}",
+            data : {
+                "page_index" : page_index, "page_size" : $("#showNumber").val()},
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr align="center">';
+                        html += '<td align="left">' + data["data"][i]["store_name"]+ '</td>';
+                        html += '<td align="left">' + data["data"][i]["store_group_name"]+ '</td>';
+                        html += '<td>' + data["data"][i]["store_code"]+ '</td>';
+                        html += '<td align="left">' + data["data"][i]["province_name"]+ '-'+ data["data"][i]["city_name"]+ '-' + data["data"][i]["dictrict_name"]+ '-'+ data["data"][i]["address"]+'</td>';
+                        html += '<td>' + data["data"][i]["linkman"]+ '</td>';
+                        html += '<td>' + data["data"][i]["phone_number"]+ '</td>';
+                        html += '<td>' + data["data"][i]["seat_number"]+ '</td>';
+                        html += '<td><a href="'+__URL('ADMIN_MAIN/store/updateStore?store_id='+ data['data'][i]['store_id'])+'">修改</a><a href="' + __URL('ADMIN_MAIN/Store/getStoreWxCode?store_id=' + data['data'][i]['store_id'] ) + '" title="小程序码" style="padding-right:10px;">小程序码</a></td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="9">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".table-class tbody").html(html);
+                initPageData(data["page_count"],data['data'].length,data['total_count']);
+                $("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+            }
+        });
+    }
+
+    function showCode(store_id){
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/store/getWxCode')}",
+            data : {
+                "store_id" : store_id.toString()
+            },
+            dataType : "json",
+            success : function(data) {
+                if (data["code"] = 1) {
+                    $("#code_show").show();
+                    $("#code_show").append(
+                            '<image id="code_img" src="'+data.url+'">'
+                    );
+                } else {
+
+                }
+            }
+        })
+    }
+
+    $("body").click(function(){
+        $("#code_show").hide();
+        $('#code_img').remove();
+    });
+
+    //添加门店页面跳转
+    function add_user(){
+        window.location.href = __URL('ADMIN_MAIN/store/addStore');
+    }
+</script>
+{/block}

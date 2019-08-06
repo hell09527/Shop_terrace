@@ -1,0 +1,16 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+    .code_store{width:200px; height:200px}
+</style>
+{/block}
+
+{block name="main"}
+<div>
+    <h5>首页门店码:</h5>
+    <div class="code_store"><image id="code_img" src="{$code_index}" /></div>
+    <br/>
+    <h5>手机绑定门店码:</h5>
+    <div class="code_store"><image id="code_img" src="{$data_mobile}" /></div>
+</div>
+{/block}

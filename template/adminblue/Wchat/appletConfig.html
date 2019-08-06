@@ -1,0 +1,130 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+/* .input-append .add-on, .input-prepend .add-on{height:22px;} */
+.input-append, .input-prepend {
+    font-size: 1px;
+}
+.help-inline {
+    padding-top: 5px;
+}
+.binding{
+	margin-top: 10px;
+}
+.input-prepend .add-on{
+    margin-right: -4px;
+}
+</style>
+{/block}
+{block name="main"}
+<div style="padding:30px;">
+	<div class="smallTitle mt30">
+		<span class="text">绑定微信小程序开发者账号</span><span class="muted">（必填）</span>
+	</div>
+	<div class="binding">
+		<div class="input-prepend control-group">
+			<span class="add-on"><i class="icon-user"></i></span>
+			<input class="span2 input-common" id="appid" placeholder="AppID" value="{$applet_config.appid}" type="text" style="width:270px;">
+			<span class="help-inline" id="appiderror" style="color:red;"></span>
+		</div>
+		<div class="mt8"></div>
+		<div class="input-prepend control-group">
+			<span class="add-on"><i class="icon-lock"></i></span>
+			<input class="span2 input-common" id="appsecret" type="text" placeholder="Appsecret" value="{$applet_config.appsecret}" style="width:270px;">
+			<span class="help-inline" id="appsecreterror" style="color:red;"></span>
+		</div>
+		<p class="muted mt8">
+			AppID以及Appsecret来自于您申请开发接口时提供的账号和密码。
+		</p>
+	</div>
+
+	<div class="smallTitle mt30">
+		<span class="text">设置业务域名</span><span class="muted"></span>
+	</div>
+	
+	<div class="setdomain">
+		<p class="titlestep">
+			<a href="https://mp.weixin.qq.com/" target="_blank">登录微信小程序</a>点击设置&gt;开发设置&gt;业务域名设置：
+		</p>
+		<p class="text-success">
+			<span class="muted">域名1：</span>https://{$url}
+		</p>
+		<p>业务域名设置完毕！</p>
+	</div>
+	
+	<div class="smallTitle mt30">
+		<span class="text">设置服务器域名</span><span class="muted"></span>
+	</div>
+	
+	<div class="setdomain">
+		<p class="titlestep">
+			<a href="https://mp.weixin.qq.com/" target="_blank">登录微信小程序</a>点击设置&gt;开发设置&gt;服务器域名设置：
+		</p>
+		<p class="text-success">
+			<span class="muted">request合法域名：</span>https://{$url}
+		</p>
+		<p class="text-success">
+			<span class="muted">uploadFile合法域名：</span>https://{$url}
+		</p>
+		<p class="text-success">
+			<span class="muted">downloadFile合法域名：</span>https://{$url}
+		</p>
+		<p>服务器域名设置完毕！</p>
+	</div>
+	
+	<p class="button mt20">
+		<button class="btn-common btn-big" onclick="save();">保存</button>
+		<input type="hidden" id="IsChange" value="true">
+	</p>
+</div>
+<script>
+$(function(){
+	$("#appid").keyup(function(){
+		if($("#appid").val().length > 100){
+			$("#appiderror").text('AppID长度不能超过100');
+			$("#appiderror").show();
+			$("#apppid").focus();
+			return false;
+		}else{
+			$("#appiderror").text('');
+		}
+	})
+	$("#appsecret").keyup(function(){
+		if($("#appsecret").val().length > 100){
+			$("#appsecreterror").text('Appsecret长度不能超过100');
+			$("#appsecreterror").show();
+			$("#appsecret").focus();
+			return false;
+		}else{
+			$("#appsecreterror").text('');
+		}
+	});
+});
+
+	
+function save() {
+	var appid = $("#appid").val();
+	var appsecret = $("#appsecret").val();
+	if(appid.length < 100 && appsecret.length < 100){
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/wchat/setInstanceAppletConfig')}",
+			data : { "appid" : appid, "appsecret" : appsecret},
+			success : function(res) {
+				if (res.code > 0) {
+					showMessage('success', res["message"]);
+				} else {
+					showMessage('error', res["message"]);
+				}
+			}
+		});
+	}
+}
+
+function JScopy(obj){
+	var url = document.getElementById(obj);
+	url.select();
+	document.execCommand("Copy");
+}
+</script>
+{/block}

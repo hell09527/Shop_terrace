@@ -1,0 +1,545 @@
+<style>
+    * {
+        box-sizing:border-box;
+        font-size: 13px;
+        color: #8f8f8f;
+    }
+    body {
+        margin:0;
+        padding:0;
+        background-image:url(ydrzimages/p3.jpg);
+        font-weight:500;
+        font-family:"Microsoft YaHei","宋体","Segoe UI","Lucida Grande",Helvetica,Arial,sans-serif,FreeSans,Arimo;
+    }
+    #container {
+        width:300px;
+        height:820px;
+        margin:0 auto;
+    }
+    div.search {
+        padding:10px 0;
+    }
+    form {
+        position:relative;
+        width:300px;
+        margin:0 auto;
+    }
+    input,button {
+        border:none;
+        outline:none;
+    }
+    input {
+        width:100%;
+        height:30px;
+        padding-left:13px;
+    }
+    button {
+        height:30px;
+        width:42px;
+        cursor:pointer;
+        position:absolute;
+    }
+    /*搜索框*/
+    .bar6 input {
+        border:2px solid #5bc0de;
+        border-radius:5px;
+        background:transparent;
+        top:0;
+        right:0;
+    }
+    .bar6 button {
+        background:#5bc0de;
+        border-radius:0 5px 5px 0;
+        width:60px;
+        top:0;
+        right:0;
+    }
+    .bar6 button:before {
+        content:"搜索";
+        font-size:13px;
+        color:#F9F0DA;
+    }
+    .btn-info {
+        color: #fff;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+    }
+
+    .order-top{
+        height: 30px;text-align: center;padding: 5px;background-color: gainsboro;
+    }
+
+    .order-mid{
+        margin-left: 10px;
+        padding: 5px;
+        text-align:center;float: left
+    }
+
+    .order-xia{
+        float: right;
+        padding: 5px;
+    }
+    .order-mid-1{
+        float: left;
+        padding: 10px;
+    }
+    .span-1{
+        width: 40px;
+        padding: 5px;
+    }
+    .span-2{
+        margin-left: 40px;
+        padding: 5px;
+    }
+    .order-mid-2 span{
+        padding: 10px;
+    }
+    .border-bottom{
+        min-height: 60px;border: 1px solid gainsboro;
+    }
+    .border-bottom-1{
+        text-align: center;
+        display: inline-block;
+        padding: 6px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        margin-left: 20px;
+        float: left;
+        width: 70px;
+        background-color: #5bc0de;
+        color: #fff;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .border-bottom-2{
+        text-align: center;
+        display: inline-block;
+        padding: 6px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        margin-left: 20px;
+        float: left;
+        width: 70px;
+        background-color: #5bc0de;
+        color: #fff;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .border-bottom-3{
+        text-align: center;
+        display: inline-block;
+        padding: 6px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        margin-left: 20px;
+        float: left;
+        width: 70px;
+        background-color: #5bc0de;
+        color: #fff;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .beizhu{
+        text-align: center;
+        display: inline-block;
+        padding: 6px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        width: 70px;
+        background-color: #5bc0de;
+        color: #fff;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        margin: 10px;
+    }
+    .show-1{
+        display:none;
+        margin-top: 20%;
+        padding-left: 20px;
+        text-align: left;
+    }
+    .show-2{
+        display:none;
+        margin-top: 20%;
+        margin-bottom: 10%;
+        padding-left: 20px;
+        text-align: left;
+    }
+    .show-3{
+        display:none;
+        margin-top: 20%;
+        text-align: center;
+    }
+    .order-info{
+        text-align: center;
+        margin-bottom: 10px;
+        padding: 5px;
+        background-color: #5bc0de;
+        color: white;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    #on-show{
+        position: absolute;
+        background-color: #730e0e;
+        border: 1px solid black;
+        right: 65px;
+        display: none;
+        color: white;
+        padding: 5px;
+    }
+    .btn5 {
+        border: 0;
+        width:130px;
+        height:30px;
+        line-height: 30px;
+        float:left;
+        color: white;
+        margin-left: 20px;
+        background-color: #08c;
+        border-radius: 20px;
+        text-align: center;
+        text-decoration: none;
+    }
+    .btn-n1{
+        margin-top: 30px;
+        margin: 30px auto;
+    }
+    .code-text{
+        float: left;
+        padding: 10px;
+        border: 1px solid #5bc0de;
+        width: 100px;
+    }
+</style>
+<div id="container">
+    <div class="search bar6">
+        <form>
+            <input type="text" id="order_no" placeholder="请输入订单编号" autocomplete="off">
+            <button onclick="searchData()" type="button"></button>
+        </form>
+    </div>
+    <span hidden id="user_id">{$user_id}</span>
+    <span hidden id="http_referer">{$http_referer}</span>
+    <span hidden id="current_user_phone">{$current_user_phone}</span>
+    <span hidden id="request_ip">{$request_ip}</span>
+    <div class="table-class">
+        <div id="order-div">
+
+        </div>
+    </div>
+
+</div>
+
+{block name="script"}
+<script src="/public/admin/js/jquery-1.8.0.min.js"></script>
+<script src="/public/static/js/common.js"></script>
+<script type="text/javascript">
+    function searchData(){
+        LoadingInfo();
+    }
+
+    window.onload = function () {
+        LoadingInfo();
+    }
+    function LoadingInfo() {
+        var order_no            = $("#order_no").val();
+        var user_id             = $("#user_id").html();
+        var http_referer        = $("#http_referer").html();
+        var current_user_phone  = $("#current_user_phone").html();
+        var request_ip          = $("#request_ip").html();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/Kf/kfOrderInfo')}",
+            data : {order_no:order_no,user_id:user_id,http_referer:http_referer,'current_user_phone':current_user_phone,'request_ip':request_ip},
+            success : function(data) {
+                var html = '';
+                if(data == 1 ){
+                    html += '<div style="padding: 20px">';
+                    html += '<input type="text" id="mobile-code" class="code-text" placeholder="请输入验证码">';
+                    html += '<input type="button" class="btn5" id="code" value="获取验证码" onclick="codeButton()">';
+                    html += '<input type="button" class="btn5 btn-n1" value="提交" onclick="sendInput()">';
+                    html += '</div>';
+                    $("#order-div").html(html);
+                    $('.search').hide();
+                }else{
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var order_id         = data[i]["order_id"];//订单id
+                            var order_no         = data[i]["order_no"];//订单号
+                            var create_time      = timeStampTurnTime(data[i]["create_time"]);//下单时间
+                            var pay_time         = timeStampTurnTime(data[i]["pay_time"]);//付款时间
+                            var receiver_name    = data[i]["receiver_name"];//收货人姓名
+                            var receiver_mobile  = data[i]["receiver_mobile"];//收货人手机
+                            var province_name    = data[i]["province_name"];//省
+                            var city_name        = data[i]["city_name"];//市
+                            var district_name    = data[i]["district_name"];//区
+                            var receiver_address = data[i]["receiver_address"];//详细地址
+                            var buyer_message    = data[i]["buyer_message"];//买家留言
+                            var order_status     = data[i]["order_status"];//订单状态
+                            var pay_money        = data[i]["pay_money"];//实付金额
+                            var promotion_money  = data[i]["promotion_money"];//优惠金额
+                            var shipping_money   = data[i]["shipping_money"];//运费
+                            var seller_memo      = data[i]["seller_memo"];//卖家备注
+                            html += '<div style="margin-bottom: 5px">';
+                            html += '<div class="order-top">';
+                            html += '<span style="float: left">订单编号:'+order_no+'</span>';
+                            if(order_status == '待付款'){
+                                html += '<span style="float: right">'+order_status+'</span>';
+                            }else if(order_status == '待发货'){
+                                html += '<span style="float: right;color: darkorange">'+order_status+'</span>';
+                            }else if(order_status == '退款中'){
+                                html += '<span style="float: right;color: firebrick">'+order_status+'</span>';
+                            }else{
+                                html += '<span style="float: right;color: #5bc0de">'+order_status+'</span>';
+                            }
+                            html += '</div>';
+                            if (data[i]["goods_info"].length > 0){
+                                for (var j = 0; j < data[i]["goods_info"].length; j++) {
+                                    var pic_cover          = data[i]["goods_info"][j]["pic_cover"];//商品图片
+                                    var goods_name         = data[i]["goods_info"][j]["goods_name"];//商品名称
+                                    var price              = data[i]["goods_info"][j]["price"];//商品价格
+                                    var num                = data[i]["goods_info"][j]["num"];//商品数量
+                                    var refund_status      = data[i]["goods_info"][j]["refund_status"];//子订单退款状态
+                                    html += '<div style="min-height: 80px;width:300px;border: 1px solid gainsboro;display: table">';
+                                    html += '<span class="a-pro-view-img order-mid" >';
+                                    html += '<img width="80px" style="max-height:80px" class="thumbnail-img" src="'+pic_cover+'">';
+                                    html += '</span>';
+                                    html += '<span style="line-height: inherit;float:left;max-width: 120px;min-height:80px;">';
+                                    html += '<span class="div-pro-view-name" style="line-height: inherit;float:left;min-height:50px;padding: 6px;">'+goods_name+'</span><br>';
+                                    html += '<span style="padding: 6px;display: block;">X '+num+'</span>';
+                                    html += '</span>';
+                                    html += "<span class='order-xia'>";
+                                    html += '<span>￥'+price+'</span><br>';
+                                    html += '<div hidden id="on-show"></div>';
+                                    if(refund_status){
+                                        html += '<span style="float: right;cursor: pointer;" onmouseover="overShow('+refund_status+',this)" onmouseout="outHide(this)">退款详情</span>';
+                                    }
+                                    html += "</span>";
+                                    html += "</div>";
+                                }
+                                html += "<div onclick='putAll(this)' class='order-info'>查看订单详情</div>";
+                            }
+                            html += "<div hidden>";
+                            html += "<div style='min-height: 110px;border: 1px solid gainsboro'>";
+                            html += "<span class='order-mid-1'>";
+                            html += '<span class="span-1">优惠金额</span><span class="span-2">￥ '+promotion_money+'</span><br>';
+                            html += '<span class="span-1">邮费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="span-2">￥ '+shipping_money+'</span><br>';
+                            html += '<span class="span-1" style="color: #FF0000">实付金额</span><span class="span-2" style="color: #FF0000">￥ '+pay_money+'</span><br>';
+                            html += '<span class="span-1">下单时间</span><span class="span-2">'+create_time+'</span><br>';
+                            html += '<span class="span-1">付款时间</span><span class="span-2">'+pay_time+'</span><br>';
+                            html += "</span>";
+                            html += "</div>";
+                            html += "<div class='border-bottom'>";
+                            html += '<span class="border-bottom-1" onclick="clickMessage(this)">买家留言</span>';
+                            html += '<span class="border-bottom-2"onclick="clickAddress(this)">地址</span>';
+                            html += '<span class="border-bottom-3" onclick="clickMsg(this)">备注</span>';
+                            html += '<div class="show-1">';
+                            html += '<span>买家留言：</span>';
+                            html += '<span>'+buyer_message+'</span>';
+                            html += '</div>';
+                            html += '<div class="show-2">';
+                            html += '<span>'+receiver_name+'</span><br>';
+                            html += '<span>'+receiver_mobile+'</span><br>';
+                            html += '<span>'+province_name+city_name+district_name+receiver_address+'</span><br>';
+                            html += '</div>';
+                            html += '<div class="show-3">';
+                            html += '<span><textarea cols="2" rows="6" style="resize:none;width: 84%;">'+seller_memo+'</textarea><span onclick="sendMsg(this)" class="beizhu">添加备注</span><span hidden>'+order_id+'</span></span>';
+                            html += '</div>';
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                        }
+
+                    } else {
+                        html += '<tr align="center"><td colspan="9">暂无符合条件的订单</td></tr>';
+                    }
+                    $("#order-div").html(html);
+                }
+            }
+
+        });
+    }
+
+    function timeStampTurnTime(timeStamp){
+        if(timeStamp > 0){
+            var date = new Date();
+            date.setTime(timeStamp * 1000);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+        }else{
+            return "";
+        }
+    }
+
+    function clickMessage(event){
+        $(event).next().next().next().toggle();
+        $(event).next().next().next().next().hide();
+        $(event).next().next().next().next().next().hide();
+
+    }
+    function clickAddress(event){
+        $(event).next().next().next().toggle();
+        $(event).next().next().hide();
+        $(event).next().next().next().next().hide();
+    }
+    function clickMsg(event){
+        $(event).next().next().next().toggle();
+        $(event).next().hide();
+        $(event).next().next().hide();
+    }
+    /**
+     * 添加备注
+     */
+    function sendMsg(event){
+        var seller_memo   = $(event).prev().val();
+        var seller_memo_1 = $(event).prev().html();
+        var order_id      = $(event).next().html();
+        if(seller_memo.length == 0){
+            seller_memo = seller_memo_1;
+        }
+
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/Kf/sendMsg')}",
+            data: {seller_memo: seller_memo,order_id:order_id},
+            success: function (data) {
+                if (data["code"] > 0) {
+                    $(event).parent().parent().hide();
+                    showTip('提交成功', "success");
+                } else {
+                    $(event).parent().parent().hide();
+                    showTip('提交失败', "error");
+                }
+            }
+        })
+    }
+
+    function putAll(event){
+        $(event).next().toggle();
+        var cssValue = $(event).next().css('display');
+        if(cssValue == 'block'){
+            $(event).html('收起');
+        }else{
+            $(event).html('查看订单详情');
+        }
+
+    }
+
+    function overShow(type,event) {
+        $(event).prev().show();
+        if(type == 1){
+            $(event).prev().html('买家申请退款');
+        }else if (type == 2){
+            $(event).prev().html('等待买家退货');
+        }else if (type == 3){
+            $(event).prev().html('等待卖家确认收货');
+        }else if (type == 4){
+            $(event).prev().html('等待卖家确认退款');
+        }else if (type == 5){
+            $(event).prev().html('退款已成功');
+        }else if (type == '-1'){
+            $(event).prev().html('买家拒绝退款');
+        }else if (type == '-2'){
+            $(event).prev().html('买家撤销退款');
+        }else if (type == '-3'){
+            $(event).prev().html('退款申请不通过');
+        }
+    }
+
+    function outHide(event) {
+        $(event).prev().hide();
+    }
+
+
+    function codeButton(){
+        var code   = $("#code");
+        var mobile = $('#current_user_phone').html();
+        code.attr("disabled","disabled");
+        setTimeout(function(){
+            code.css("opacity","0.8");
+        },1000)
+        var time = 60;
+        var set=setInterval(function(){
+            code.val("("+--time+")秒后重新获取");
+        }, 1000);
+        setTimeout(function(){
+            code.attr("disabled",false).val("重新获取验证码");
+            clearInterval(set);
+        }, 60000);
+
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/kf/sendMobileCode')}",
+            data: {mobile: mobile},
+            success: function (data) {
+                if (data["code"] > 0) {
+                    showTip('发送成功', "success");
+                } else {
+                    showTip('发送失败', "error");
+                }
+            }
+        })
+    }
+
+    function sendInput(){
+        var sms_captcha = $('#mobile-code').val();
+        var mobile      = $('#current_user_phone').html();
+        var ip          = $('#request_ip').html();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/kf/checkPhoneCode')}",
+            data: {"sms_captcha" : sms_captcha,"mobile" : mobile , "ip" : ip},
+            success: function (data) {
+                if (data["code"] > 0) {
+                    LoadingInfo();
+                } else {
+
+                }
+            }
+        })
+    }
+
+</script>
+{/block}

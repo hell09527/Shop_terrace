@@ -1,0 +1,65 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+    .code{width:200px; height:250px; float:left; margin:10px 0px 10px 10px; border:1px solid}
+    .code .code_store{width:200px; height:200px; border-bottom:1px solid}
+    .code .store_name{width:200px; height:50px; padding:10px 0px 10px 10px}
+    .code_bc{width:200px; height:200px; float:left; margin:10px; border:1px solid}
+</style>
+{/block}
+
+{block name="main"}
+<br/>
+<table class="modal-tab">
+    <tr>
+        <th align="right">商品名称:&nbsp;&nbsp;</th>
+        <td>{$goods_detail.goods_name}</td>
+    </tr>
+    <tr>
+        <th align="right">Shopal编码:&nbsp;&nbsp;</th>
+        <td>{$goods_detail.material_code}</td>
+    </tr>
+</table>
+<hr/>
+<div id="test">
+    <h5>门店:</h5>
+    {foreach name="store_list" item="item"}
+    <div class="code">
+        <div class="code_store"><image id="code_img" src="{$item.code_store}" /></div>
+        <p class="store_name">{$item.store_name}</p>
+    </div>
+    {/foreach}
+</div>
+<div style="clear:both"></div>
+<div>
+    <h5>线上推广:</h5>
+    <div class="code_bc"><image id="code_img" src="{$code_bc}"/></div>
+</div>
+
+<!--<div style="clear:both"></div>-->
+<!--<div>-->
+    <!--<h5>KOL:</h5>-->
+    <!--{foreach name="kol_list" item="item"}-->
+    <!--<div class="code">-->
+        <!--<div class="code_store"><image id="code_img" src="{$item.code_kol}" /></div>-->
+        <!--<p class="store_name">{$item.nick_name}</p>-->
+    <!--</div>-->
+    <!--{/foreach}-->
+<!--</div>-->
+<script>
+//    var color = 'red';
+//    var i = 0;
+//    setInterval(function(){
+//        if(i%3 == 0){
+//            color = 'green';
+//        }else if(i%3 == 1){
+//            color = 'yellow';
+//        }else{
+//            color = 'red';
+//        }
+//
+//        $('.code').css('background-color',color);
+//        i++;
+//    },50);
+</script>
+{/block}

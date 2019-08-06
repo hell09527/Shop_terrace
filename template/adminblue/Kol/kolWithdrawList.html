@@ -1,0 +1,279 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style>
+.modal-infp-style{width:90%;margin:10px auto;}
+.modal-infp-style table{width:100%;}
+.modal-infp-style table tr td{border: 1px solid #e5e5e5;padding: 10px;}
+.modal{width:614px;}
+</style>
+{/block}
+{block name="main"}
+<table class="mytable">
+	<tr>
+		<td>
+			手机号：<input id="userTel" class="input-small input-common" type="text">
+			<input type="button" onclick="searchData()" value="搜索" class="btn-common" />
+		</td>
+	</tr>
+</table>
+
+<!-- 通过提现申请 -->
+<div class="modal fade hide" id="agree" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>通过提现申请</h3>
+			</div>
+			<div class="modal-body">
+				<div class="modal-infp-style">
+					<table>
+						<tr>
+							<td>转账类型</td>
+							<td>
+								<select onchange="choose()" id="choose-type">
+									<option value="2" >线上转账</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>转账方式</td>
+							<td>
+								<select id="online_type">
+									{if condition="$wechat['is_use'] != 1"}
+									<option value="0">未开启转账方式</option>
+									{else/}
+									<option value="1">微信转账</option>
+									{/if}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>转账金额</td>
+							<td><input type="text" name="transfer_money" id="transfer_money" placeholder="请输入转账金额" value="" onkeyup="this.value=this.value.replace(/[^\d+(\.\d+)?]/g,'')"/>
+								<input type="hidden" name="post-id" id="post-id" value="">
+							</td>
+						</tr>
+						<tr>
+							<td>备注</td>
+							<td><textarea name="transfer_remark" id="transfer_remark" disabled></textarea></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="audit()">确定</button>
+				<button class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 拒绝提现申请 -->
+<div class="modal fade hide" id="recharge_balance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<input type="hidden" id="balance_id">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>拒绝提现申请</h3>
+			</div>
+			<div class="modal-body">
+				<div class="modal-infp-style">
+					<table>
+						<tr>
+							<td>备注</td>
+							<td colspan='3' id="time"><textarea id="remark" class="input-common"></textarea></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="refusetrue()">确定</button>
+				<button class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<table class="table-class">
+	<colgroup>
+		<col style="width: 10%;">
+		<col style="width: 10%;">
+		<col style="width: 10%;">
+		<col style="width: 10%;">
+		<col style="width: 10%;">
+		<col style="width: 15%;">
+		<col style="width: 10%;">
+		<col style="width: 15%;">
+		<col style="width: 10%;">
+		<!--<col style="width: 8%;">-->
+		<!--<col style="width: 8%;">-->
+	</colgroup>
+	<thead>
+		<tr>
+			<th>姓名</th>
+			<th>手机</th>
+			<th>提现流水号</th>
+			<th>账户类型</th>
+			<th align="right">申请金额</th>
+			<th>提现时间</th>
+			<th align="right">到账金额</th>
+			<th>转账时间</th>
+			<th align="right">余额</th>
+			<!--<th>状态</th>-->
+			<!--<th>操作</th>-->
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<input type="hidden" id="uid"/>
+<input type="hidden" id="status"/>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+function searchData(){
+	LoadingInfo(1);
+}
+//加载数据
+function LoadingInfo(pageIndex) {
+	var user_phone = $("#userTel").val();
+		$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/Distributor/kolWithdrawList')}",
+		data : {
+			"pageIndex" : pageIndex,
+			"user_phone":user_phone
+		},
+		success : function(data) {
+			$("#page_count").val(data["page_count"]);
+			$("#pageNumber a").remove();
+			var html = '';
+			if (data["data"].length > 0) {
+				for (var i = 0; i < data["data"].length; i++) {
+//					var status = "";
+//					if(data["data"][i]["status"] == 0){
+//						status = "审核中";
+//					}else if(data["data"][i]["status"] == 1){
+//						status = "已通过";
+//					}else{
+//						status = "已拒绝";
+//					}
+					html += '<tr align="center">';
+					html += '<td><a href="' + __URL('dira/distributor/accountDetail?kol_id=' + data["data"][i]["uid"]) + '">' + data["data"][i]["realname"] + '</a></td>';
+					html += '<td>' + data["data"][i]["mobile"] + '</td>';
+					html += '<td>' + data["data"][i]["withdraw_no"] + '</td>';
+					html += '<td id="memo-'+ data["data"][i]["id"] +'" data-transfer-remark="' + data["data"][i]["memo"] + '">' + data["data"][i]["memo"] + '</td>';
+					html += '<td  align="right" id="cash-'+ data["data"][i]["id"] +'" data-transfer-money="' + data["data"][i]["cash"] + '">￥' + data["data"][i]["cash"] + '</td>';
+					html += '<td>' + timeStampTurnTime(data["data"][i]["ask_for_date"]) + '</td>';
+					if(data["data"][i]["transfer_money"] != 0){
+						html += '<td  align="right">￥' + data["data"][i]["transfer_money"] + '</td>';
+					}else{
+						html += '<td  align="right"></td>';
+					}
+					html += '<td>' + timeStampTurnTime(data["data"][i]["payment_date"]) + '</td>';
+					html += '<td align="right">￥' + data["data"][i]["account"] + '</td>';
+//					if(data["data"][i]["status"] == 0){
+//						html += '<td>' + status + '</td>';
+//					}else if(data["data"][i]["status"] == 1){
+//						html += '<td style="color:#4CAF50">' + status + '</td>';
+//					}else{
+//						html += '<td style="color:red">' + status + '</td>';
+//					}
+//					html += '<td>';
+//					if(data["data"][i]["status"] == 0 && data["data"][i]["show_type"] == 1){
+//						html += '<a style="display:block;margin-bottom:5px; color:#4CAF50; href="javascript:void(0);" onclick="goNext('+ data["data"][i]["id"] +', 1);">通过</a>';
+//						html += '<a style="display:block;margin-bottom:5px; color:red; href="javascript:void(0);" onclick="refuse('+ data["data"][i]["id"] +', -1);">拒绝</a>';
+//					}
+//					html += '</td> ';
+					html += '</tr>';
+				}
+			} else {
+				html += '<tr align="center"><td colspan="10">暂无符合条件的数据记录</td></tr>';
+			}
+			
+			$(".table-class tbody").html(html);
+			var totalpage = $("#page_count").val();
+			if (totalpage == 1) {
+				changeClass("all");
+			}
+			var $html = pagenumShow(jumpNumber,totalpage,{$pageshow})
+			$("#pageNumber").append($html);
+			initPageData(data["page_count"],data['data'].length,data['total_count']);
+			$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+		}
+	});
+}
+
+//拒绝提现申请
+function refuse(id,status){
+	$("#recharge_balance").modal("show");
+	$('#uid').val(id);
+	$('#status').val(status);
+}
+
+function refusetrue(){
+	var uid = $('#uid').val();
+	var status = $('#status').val();
+	var remark = $('#remark').val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/Distributor/kolWithdrawRefuse')}",
+		data : {
+			"id" : uid,
+			"status":status,
+			'remark':remark
+		},
+		success : function(data) {
+			if (data["code"] > 0) {
+				showMessage('success', data["message"],"{:__URL('ADMIN_MAIN/Distributor/kolWithdrawList')}");
+			}else{
+				showMessage('error', data["message"]);
+			}
+			$("#recharge_balance").modal("hide");
+		}
+	})
+}
+
+//通过提现弹框显示
+function goNext(id){
+	var transfer_money = $("#cash-"+id).data("transfer-money");
+	var memo = $("#memo-"+id).data("transfer-remark");
+	$("#transfer_money").val(transfer_money);
+	$("#transfer_remark").val(memo);
+	$("#post-id").val(id);
+	$("#agree").modal("show");
+}
+
+//通过提现申请请求
+function audit(){
+	var id = $("#post-id").val();
+	var online_type = $("#online_type").val();
+	if(online_type == 0){
+		showTip($("#online_type option:selected").text(),"warning");
+		return;
+	}
+	var transfer_money = $("#transfer_money").val();
+	var transfer_remark = $("#transfer_remark").val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/Distributor/kolWithdrawAudit')}",
+		data : {
+			"id" : id,
+			"status":1,
+			"transfer_type":2,
+			"transfer_name":'微信',
+			"transfer_money":transfer_money,
+			"transfer_remark":transfer_remark
+		},
+		success : function(data) {
+			if (data["code"] > 0) {
+				showMessage('success', data["message"],"{:__URL('ADMIN_MAIN/Distributor/kolWithdrawList')}");
+			}else{
+				showMessage('error', data["message"]);
+			}
+		}
+	})
+}
+</script>
+{/block}

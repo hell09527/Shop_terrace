@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+.pro-form .help-inline {
+	display: none;
+	color: red;
+}
+.add_ladder_preference{
+	width: 180px;
+	height: 30px;
+	border:1px solid #ddd;
+	text-align: center;
+	background: #f5f5f5;
+	color: #555;
+	margin-top: 10px;
+}
+.add_ladder_preference:hover{
+	cursor: pointer;
+}
+.ladder_preference_content .ladder_preference{
+	width: 230px;
+	margin-bottom: 8px;
+} 
+.ladder_preference_content .ladder_preference .input-common{
+	width: 60px;
+}
+.ladder_preference_content .ladder_preference .ladder{
+	margin-right: 34px!important;
+}
+.ladder_preference_content .ladder_preference .delete_preference{
+	margin-left: 10px;
+}
+.ladder_preference_content div .label-title{
+	display: inline-block;
+	width: 75px;
+	text-align: left;
+	color: #555;
+	height: 25px;
+}
+.ladder_preference_content .ladder_preference .input-error,.ladder_preference_content .ladder_preference .input-error:focus{
+	border: 1px solid rgba(234, 14, 14, 0.8)!important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(232, 0, 0, 0.6);
+}

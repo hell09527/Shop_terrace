@@ -1,0 +1,47 @@
+	{volist name="promotion_list['data']" id="vo"}
+		<div class="quan-type01">
+			<div class="q-img">
+			<img data-lazy-img="done" width="100" height="100" src="__TEMP__/{$style}/public/images/coupnt_default_pic.jpg"></div>
+			<div class="q-type" tabindex="0">
+				<div class="q-price">
+				<em>¥</em>
+				<strong>{$vo['money']}</strong>
+				<span class="q-limit" data-tips="">满{$vo['at_least']}可用</span>
+				</div>
+				<div class="q-range">
+					<span>【{eq name="$vo['coupon_name']" value="1"}全场产品使用{else/}全场产品使用{/eq}】</span>
+					<span title="{$vo['coupon_name']}">{$vo['coupon_name']}</span>
+				</div>
+				
+				<div class="q-progress">
+					<span class="txt">未领{$vo['surplus_percentage']} %</span>
+					<span class="progress-wrap"><span class="progress-bg"></span>
+					<span class="progress" style="width:{$vo['surplus_percentage']}%"></span>
+					</span>
+				</div>
+
+			</div>
+			<div class="q-circle">
+				<i class="i1"></i>
+				<i class="i2"></i>
+			</div>
+			
+			<div class="">
+				<div class="q-opbtns {elt name="$vo['max_fetch']" value="$vo['received_num']"}q-opbtns_ash{/elt}">
+					<a href="javascript:;" class="btn" {gt name="$vo['max_fetch']" value="$vo['received_num']"}onclick="coupon_receive(this,{$vo.coupon_type_id})"{/gt}>
+					<b></b>
+					<span class="txt">{elt name="$vo['max_fetch']" value="$vo['received_num']"}您已领取{else/}立即领取{/elt}</span>
+					</a>
+					<div class="q-ops-jump hide">
+						<div class="q-site geted-site"></div>
+					</div>
+				</div>
+			</div>
+			
+
+		</div>	
+	{/volist}
+
+	</div>	
+
+</div>

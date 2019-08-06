@@ -1,0 +1,123 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/product.css">
+<style type="text/css">
+	.table-class tbody td a{margin-left: 8px;}
+	#code_show{width: 200px;height: 200px;position: fixed;left: 45%;top: 30%;display: none}
+</style>
+{/block}
+{block name="main"}
+<div class="options-btn">
+	<table class="mytable">
+		<tr>
+			<th width="50%" style="text-align: left;">
+				<button class="btn-common btn-small" onclick="location.href='{:__URL('ADMIN_MAIN/store/addStoreActivity')}';" style="margin:0 5px 0 0 !important;">添加门店活动</button>
+			</th>
+			<th width="20%">
+				<input type="text" id='search_text' placeholder="请输入门店活动名称" class="input-common" />
+				<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common"/>
+			</th>
+		</tr>
+	</table>
+</div>
+<div id="code_show"></div>
+<table class="table-class">
+	<colgroup>
+		<col style="width: 25%;">
+		<col style="width: 25%;">
+		<col style="width: 30%;">
+		<col style="width: 10%;">
+		<col style="width: 10%;">
+	</colgroup>
+	<thead>
+	<tr align="center">
+		<th>名称</th>
+		<th>门店</th>
+		<th>活动时间</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+	function LoadingInfo(page_index) {
+		var search_text = $("#search_text").val();
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/store/storeActivityList')}",
+			data : {
+				"page_index" : page_index,
+				"page_size" : $("#showNumber").val(),
+				"search_text" : search_text
+			},
+			success : function(data) {
+				var html = '';
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+						html += '<tr align="center">';
+						html += '<td class="tal" title="'+data["data"][i]["activity_name"]+'">' + data["data"][i]["activity_name"]+ '</td>';
+						html += '<td>' + data["data"][i]["store_name"] + '</td>';
+						html += '<td>' + timeStampTurnTime(data["data"][i]["start_time"])+ ' - ' + timeStampTurnTime(data["data"][i]["end_time"]) + '</td>';
+						if(data["data"][i]["is_show"]==0){
+							html += '<td>未发布</td>';
+						}else{
+							html += '<td>已发布</td>';
+						}
+						html += '<td>';
+//						html += '<a href="'+__URL('ADMIN_MAIN/store/updateStoreActivity?id='+ data['data'][i]['id'])+'">修改</a>';
+						html += '<a style="cursor: pointer;" onclick="deleteStoreActivity('+data['data'][i]['id']+')">删除</a>';
+						html += '</td>';
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr align="center"><td colspan="5">暂无门店活动</td></tr>';
+				}
+				$(".table-class tbody").html(html);
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+//				load();
+			}
+		});
+	}
+
+	var flag = false;
+
+	//删除
+	function deleteStoreActivity(id){
+		$( "#dialog" ).dialog({
+			buttons: {
+				"确定": function() {
+					$(this).dialog('close');
+					if(!flag){
+						flag = true;
+						$.ajax({
+							type : "post",
+							url : "{:__URL('ADMIN_MAIN/store/deleteStoreActivity')}",
+							data : {
+								"id" : id.toString()
+							},
+							dataType : "json",
+							success : function(data) {
+								if (data["code"] > 0) {
+									showMessage('success', data["message"]);
+									LoadingInfo(getCurrentIndex(id,'.table-class tbody'));
+								}else{
+									showMessage('error', data["message"]);
+									flag = false;
+								}
+							}
+						})
+					}
+				},
+				"取消,#e57373": function() {
+					$(this).dialog('close');
+				}
+			},
+			contentText:"是否删除？",
+		});
+	}
+</script>
+{/block}

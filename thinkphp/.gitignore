@@ -1,0 +1,8 @@
+.idea
+composer.lock
+*.log
+/runtime/*
+/application/database.php
+/upload/*
+.DS_Store
+*.pyc

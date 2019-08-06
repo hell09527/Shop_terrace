@@ -1,0 +1,74 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/product.css">
+<style type="text/css">
+    table{
+        font-size: 13px;
+    }
+    .num{
+        width: 40px;
+        text-align: center;
+    }
+    .text-p{
+        width: 80%;
+        margin-right: 20px;
+    }
+    .text-p>p{
+        text-align: left;
+    }
+    #code_show{
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        left: 45%;
+        top: 30%;
+        display: none
+    }
+</style>
+{/block}
+{block name="main"}
+<div id="code_show"></div>
+<table class="table-class">
+    <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 10%;">
+        <col style="width: 70%;">
+    </colgroup>
+    <thead>
+    <tr align="center">
+        <th align="center">创建时间</th>
+        <th align="center">cmd</th>
+        <th align="center">body</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    function LoadingInfo(page_index) {
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/pospal/ticketPush')}",
+            data : { "page_index" : page_index, "page_size" : $("#showNumber").val() },
+            success : function(data) {
+                var html = '';
+                if (data['data'].length > 0) {
+                    for (var i = 0; i < data['data'].length; i++) {
+                        html += '<tr align="center">';
+                        html += '<td align="center">' + timeStampTurnTime(data['data'][i]["created"]) + '</td>';
+                        html += '<td align="center">' + data['data'][i]['cmd'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['body'] + '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="3">暂无记录</td></tr>';
+                }
+                $(".table-class tbody").html(html);
+                initPageData(data["page_count"],data['data'].length,data['total_count']);
+                $("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+            }
+        });
+    }
+</script>
+{/block}

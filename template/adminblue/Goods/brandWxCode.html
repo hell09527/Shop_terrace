@@ -1,0 +1,28 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+    .code{width:200px; height:250px; float:left; margin:10px 0px 10px 10px; border:1px solid}
+    .code .code_store{width:200px; height:200px; border-bottom:1px solid}
+    .code .store_name{width:200px; height:50px; padding:10px 0px 10px 10px}
+</style>
+{/block}
+
+{block name="main"}
+<br/>
+<table class="modal-tab">
+    <tr>
+        <th align="right">品牌名称:&nbsp;&nbsp;</th>
+        <td>{$brand_detail.brand_name}</td>
+    </tr>
+</table>
+<hr/>
+<div>
+    <h5>门店码:</h5>
+    {foreach name="store_list" item="item"}
+    <div class="code">
+        <div class="code_store"><image id="code_img" src="{$item.code_store}" /></div>
+        <p class="store_name">{$item.store_name}</p>
+    </div>
+    {/foreach}
+</div>
+{/block}

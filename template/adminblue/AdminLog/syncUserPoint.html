@@ -1,0 +1,126 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/product.css">
+<style type="text/css">
+    table{
+        font-size: 13px;
+    }
+    .num{
+        width: 40px;
+        text-align: center;
+    }
+    .text-p{
+        width: 80%;
+        margin-right: 20px;
+    }
+    .text-p>p{
+        text-align: left;
+    }
+    #code_show{
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        left: 45%;
+        top: 30%;
+        display: none
+    }
+</style>
+{/block}
+{block name="main"}
+<div id="code_show"></div>
+<table class="mytable">
+    <tr>
+        <th width="20%">
+            <input type="text" id='search_text' placeholder="输入用户昵称/会员号" class="input-common" />
+            <input type="button" onclick="searchData()" value="搜索" class="btn-common" />
+        </th>
+    </tr>
+</table>
+<table class="table-class">
+    <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+    </colgroup>
+    <thead>
+    <tr align="center">
+        <th align="center">创建时间</th>
+        <th align="center">用户昵称</th>
+        <th align="center">手机号</th>
+        <th align="center">会员号</th>
+        <th align="center">积分变动</th>
+        <th align="center">来源</th>
+        <th align="center">总积分</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    //分页数据
+    function LoadingInfo(page_index) {
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/pospal/syncUserPoint')}",
+            data : { "page_index" : page_index, "page_size" : $("#showNumber").val(), "search_text" : search_text },
+            success : function(data) {
+                var html = '';
+                if (data['data'].length > 0) {
+                    for (var i = 0; i < data['data'].length; i++) {
+                        html += '<tr align="center">';
+                        html += '<td align="center">' + data['data'][i]['create_time'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['member_name'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['user_tel'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['customer_num'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['gaintPoint'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['origin'] + '</td>';
+                        html += '<td align="center">' + data['data'][i]['afterGaintPoint'] + '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="7">暂无记录</td></tr>';
+                }
+                $(".table-class tbody").html(html);
+                initPageData(data["page_count"],data['data'].length,data['total_count']);
+                $("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+            }
+        });
+    }
+
+
+
+    //全选
+    function CheckAll(event){
+        var checked = event.checked;
+        $(".table-class tbody input[type = 'checkbox']").prop("checked",checked);
+    }
+
+    //搜索
+    function searchData(){
+        LoadingInfo(1);
+    }
+
+
+    function statusUp(id){
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/AdminLog/statusUp')}",
+            data : {
+                "id" : id
+            },
+            success : function(data) {
+                if (data["code"] = 1) {
+                    LoadingInfo();
+                    showMessage('success', '操作成功');
+                }
+            }
+        })
+    }
+</script>
+{/block}

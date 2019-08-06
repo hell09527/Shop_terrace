@@ -1,0 +1,211 @@
+	{extend name="adminblue/base" /}
+{block name="resources"/}
+<style type="text/css">
+	.count-view{
+		margin-left: 10px;
+		padding: 15px;
+		background-color: gainsboro;
+	}
+	.goods-fields-sort {
+		cursor: pointer;
+	}
+
+	.goods-fields-sort span {
+		background: url('ADMIN_IMG/goods_sort.png') no-repeat;
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+		margin-left: 5px;
+		vertical-align: middle;
+		position: absolute;
+	}
+
+	.goods-fields-sort span.asc {
+		background-position: 0 5px;
+	}
+
+	.goods-fields-sort span.selected.asc {
+		background-position: -30px 5px;
+	}
+
+	.goods-fields-sort span.desc {
+		background-position: 0 -24px;
+	}
+
+	.goods-fields-sort span.selected.desc {
+		background-position: -30px -24px;
+	}
+</style>
+{/block}
+{block name="main"}
+<div style="border:1px solid #e5e5e5;">
+	<table class="mytable select">
+		<div style="margin-top: 30px;">
+			<span class="count-view">今日总数 : <span style="color: green">{$count_day}</span></span>
+			<span class="count-view">本月总数 : <span style="color: green">{$count_month}</span></span>
+			<span class="count-view">本季度总数 : <span style="color: green">{$count_quarter}</span></span>
+			<span class="count-view">累计总数 : <span style="color: green">{$count_all}</span></span>
+		</div>
+		<tr>
+			<td>
+				<div>
+					<!--<span>选择时间：</span>-->
+					<!--<select id="year" class="select-common w100">-->
+						<!--<option value="2017" {if condition="$year eq 2017"}selected="selected"{/if}>2017</option>-->
+						<!--<option value="2018" {if condition="$year eq 2018"}selected="selected"{/if}>2018</option>-->
+						<!--<option value="2019" {if condition="$year eq 2019"}selected="selected"{/if}>2019</option>-->
+						<!--<option value="2020" {if condition="$year eq 2020"}selected="selected"{/if}>2020</option>-->
+					<!--</select>-->
+					<!--<select id="quarter" class="select-common w100">-->
+						<!--<option value="1" {if condition="$quarter eq 1"}selected="selected"{/if}>一季度</option>-->
+						<!--<option value="2" {if condition="$quarter eq 2"}selected="selected"{/if}>二季度</option>-->
+						<!--<option value="3" {if condition="$quarter eq 3"}selected="selected"{/if}>三季度</option>-->
+						<!--<option value="4" {if condition="$quarter eq 4"}selected="selected"{/if}>四季度</option>-->
+					<!--</select>-->
+					<span>极选师：</span>
+					<!--<select id="source_distribution" class="select-common w100">-->
+						<!--<option value="">全部</option>-->
+						<!--{volist name="$kolList" id="vo"}-->
+						<!--<option value="{$vo.uid}">{$vo.real_name}</option>-->
+						<!--{/volist}-->
+					<!--</select>-->
+					<input type="text" id="searchClick" placeholder="请输入极选师姓名">
+
+					<!--<input class="btn-common" type="button" onclick="searchData()" value="搜索"/>-->
+				</div>
+			</td>
+		</tr>
+	</table>
+	<table class="table-class">
+		<colgroup>
+			<col width="20%">
+			<col width="17%">
+			<col width="17%">
+			<col width="17%">
+			<col width="17%">
+			<col width="17%">
+		</colgroup>
+		<thead>
+		<tr align="center">
+			<th>极选师</th>
+			<th class="goods-fields-sort"  data-field="count_last_day">昨日邀请人数<span class="desc"></span></th>
+			<th class="goods-fields-sort"  data-field="count_day">今日邀请人数<span class="desc"></span></th>
+			<th align="center" data-field="count_month" class="goods-fields-sort">本月邀请人数<span class="desc"></span></th>
+			<th align="center" data-field="count_quarter" class="goods-fields-sort">本季度邀请人数<span class="desc"></span></th>
+			<th align="center" data-field="count_all" class="goods-fields-sort">累计邀请人数<span class="desc"></span></th>
+			<input type="hidden" id="hidden_sort_rule"/>
+		</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+
+	<div class="modal hide fade" id="checkout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="left:32%">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3>分润出账</h3>
+				</div>
+				<div class="modal-body">
+					<!-- 主要内容 -->
+					<div>待出账(<span id="order_num"></span>)，已选<span id="checkedbox">0</span></div>
+					<table class="table table-hover" style="margin-bottom:10px;">
+						<thead>
+						<tr>
+							<td>
+								<label class="checkbox-inline">
+									<input type="checkbox" id="inlineCheckbox1" onclick="checkoutCheckAll(this)">
+								</label>
+							</td>
+							<td>订单号</td>
+							<td>分润</td>
+							<td>出账时间</td>
+							<td>状态</td>
+						</tr>
+						</thead>
+						<colgroup>
+							<col width="20%">
+							<col width="17%">
+							<col width="17%">
+							<col width="17%">
+							<col width="17%">
+							<col width="17%">
+						<colgroup>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="checkoutSubmit()">确定出账</button>
+					<button class="btn" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+	$('#searchClick').keyup(function () {
+		LoadingInfo(1);
+	});
+
+	function LoadingInfo(page_index) {
+		var year = $("#year").val();
+		var quarter = $("#quarter").val();
+		var source_distribution = $("#source_distribution").val();
+		var search_text = $('#searchClick').val();
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/Distributor/invitationStatistics')}",
+			data : {
+				"page_index" : page_index,
+				"page_size" : $("#showNumber").val(),
+				"year" : year,
+				"quarter" : quarter,
+				"source_distribution" : source_distribution,
+				'sort_rule': $("#hidden_sort_rule").val(),
+				'search_text': search_text
+			},
+			success : function(data) {
+				var html = '';
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+						html += '<tr align="center">';
+						html += '<td>' + data["data"][i]["real_name"]+ '</td>';
+						html += '<td>' + data["data"][i]["count_last_day"]+ '</td>';
+						html += '<td>' + data["data"][i]["count_day"]+ '</td>';
+						html += '<td align="center">' + data["data"][i]["count_month"]+ '</td>';
+						html += '<td align="center">' + data["data"][i]["count_quarter"]+ '</td>';
+						html += '<td align="center">' + data["data"][i]["count_all"]+ '</td>';
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr align="center"><td colspan="7">暂无符合条件的数据</td></tr>';
+				}
+				$(".table-class tbody").html(html);
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+			}
+		});
+	}
+
+	//排序规则
+	$(".goods-fields-sort").click(function () {
+		var field = $(this).attr("data-field");
+		var sort_rule = $(this).attr("data-field");
+		$(this).siblings().css("color", "#333333").find("span").removeClass("desc selected").addClass("desc");
+		$(this).css("color", "#0072D2");
+		if ($(this).find("span").hasClass("desc") && $(this).find("span").hasClass("selected")) {
+			$(this).find("span").removeClass("desc").addClass("selected asc");
+			sort_rule += ",a";
+		} else if (($(this).find("span").hasClass("asc") && $(this).find("span").hasClass("selected")) || $(this).find("span").hasClass("desc")) {
+			$(this).find("span").removeClass("asc").addClass("selected desc");
+			sort_rule += ",d";
+		}
+		$("#hidden_sort_rule").val(sort_rule);
+		LoadingInfo(1);
+	});
+
+
+</script>
+{/block}

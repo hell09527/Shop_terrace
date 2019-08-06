@@ -1,0 +1,178 @@
+{extend name="shop/blue/Login/registerBase"}
+{block name="main"}
+<script>
+$(document).ready(function(){
+	$("#btn_submit").click(function(){
+		var phone=$('#mobile').val();
+		var pwd=$('#password').val();
+		var repass=$('#repass').val();
+		console.log(phone,pwd,repass)
+		if(phone==''){
+			$('.showModel').css('display','block')
+			$('#contain').text('请填写用户名!');
+		}else if(pwd==''){
+			$('.showModel').css('display','block')
+			$('#contain').text('请填写密码!');
+		}else if(repass==''){
+			$('.showModel').css('display','block')
+			$('#contain').text('请填写确认密码!');
+		}else if(repass!=pwd){
+			$('.showModel').css('display','block')
+			$('#contain').text('两次填写密码不一致!');
+		}else{
+			window.sessionStorage["name"] = phone;
+			window.sessionStorage["pwd"] = pwd;
+			window.location.href = "index.php";
+		}
+	})
+	$('.showMask').click(function(){
+		$('.showModel').css('display','none')
+	})
+});
+var wait=120; 
+function time() { 
+	if (wait == 0) {
+		$("#sendOutCode").removeAttr("disabled");
+		$("#sendOutCode").val("{:lang('get_validation_code')}"); 
+		wait = 120;
+	} else { 
+		$("#sendOutCode").attr("disabled", 'disabled');
+		$("#sendOutCode").val(wait+"s{:lang('post_resend')}"); 
+		wait--; 
+		setTimeout(function() { 
+			time() 
+		},1000);
+	}
+}
+</script>
+<input type="hidden" value="false" id="isset_mobile"/>
+<div class="header w990">
+	<div class="logo-info">
+		<a href="{:__URL('SHOP_MAIN')}" class="web-logo-a" style="margin:0;height: 100px;">
+			<img alt="logo" src="__TEMP__/{$style}/public/images/logo.jpeg" class="weblogo"/>
+		</a>
+	</div>
+</div>
+<div class="reg-content">
+	<div class="w990">
+		<div class="reg-form">
+			<div class="reg-con">
+				{include file='shop/blue/loginTopNav'/}
+				<div class="reg-wrap">
+					<div class="reg-wrap-con" style="background: url(__TEMP__/{$style}/public/images/logo.jpeg) no-repeat right 70px;">
+					<!-- 手机注册 start -->
+						<form id="MobileRegisterModel" class="form-horizontal" name="MobileRegisterModel" action="{:__URL('SHOP_MAIN/login/mobile')}" method="post">
+							<input type="hidden" name="_csrf" value="eXVLd2ExOFMhBiocM0N.Eh0.Mg0nY2BiOxkaRAwBVxUgDQcQGQVWKw==" />
+							<!-- 手机号 -->
+							<div class="form-group form-group-spe">
+								<label for="mobileregistermodel-mobile" class="input-left">
+									<span class="spark">*</span>
+									<span>用户名</span>
+								</label>
+								<div class="form-control-box">
+									<input type="text" id="mobile" class="form-control" name="mobile" placeholder="用户名" />
+									<!-- <span class='state1'>请输入手机号</span> -->
+									<span id="mobileyz"></span>
+								</div>
+								<div class="invalid"></div>
+							</div>
+				
+							<!-- 密码 -->
+							<div class="form-group form-group-spe">
+								<label for="mobileregistermodel-password" class="input-left">
+									<span class="spark">*</span>
+									<span>{:lang('password')}：</span>
+								</label>
+								<div class="form-control-box">
+									<input type="password" id="password" class="form-control" name="password" autocomplete="off" placeholder="{:lang('please_input_password')}">
+									<span id="yzpassword"></span>
+									<!-- <span class='state1'>请输入密码</span>-->
+									<!--  <i class="fa fa-eye-slash pwd-toggle" data-id="password"></i>	-->	
+								</div>
+								<div class="invalid"></div>
+							</div>
+			
+							<!-- 确认密码 -->
+							<div class="form-group form-group-spe">
+								<label for="mobileregistermodel-password" class="input-left">
+									<span class="spark">*</span>
+									<span>{:lang('member_confirm_password')}：</span>
+								</label>
+								<div class="form-control-box">
+									<input type="password" id="repass" class="form-control" name="repass" autocomplete="off" placeholder="{:lang('confirm_the_password')}">
+									<!-- <span class='state1'>请确认密码</span> -->
+									<!--  <i class="fa fa-eye-slash pwd-toggle" data-id="password"></i>	-->	
+									<span id="qrrepass"></span>
+								</div>
+								<div class="invalid"></div>
+							</div>
+				
+							<!-- 验证码 -->
+							<!--{if condition = "$login_verify_code['pc'] == 1"}
+							<div class="form-group form-group-spe">
+								<label for="mobileregistermodel-captcha" class="input-left">
+									<span>{:lang('member_verification_code')}：</span>
+								</label>
+								<div class="form-control-box" style="width: 450px;">
+									<input type="text" id="captcha" name="captcha" tabindex="2" placeholder="{:lang('please_enter_verification_code')}" autocomplete="off" class="text text-te" style="width: 100px;"/>
+									<label class="img" style="margin-left: 5px">
+										<img class="verifyimg" src="{:__URL('SHOP_MAIN/captcha')}" onclick="this.src='{:__URL('SHOP_MAIN/captcha?tag=1')}'+'&send='+Math.random()"  alt="captcha" style="vertical-align: middle; cursor: pointer; height: 35px;" />
+									</label>
+									<span id="vertify" style="margin-left: 25px;"></span>
+								</div>
+							</div>
+							{/if}-->
+							
+							<!-- 短信校验码 -->	
+							<!--{if condition="$notice['noticeMobile'] eq 1"}
+			 				<div class="form-group form-group-spe">
+								<label for="mobileregistermodel-sms_captcha" class="input-left">
+									<span class="spark">*</span>
+									<span>{:lang('sms_check_code')}：</span>
+								</label>
+								<div class="form-control-box">
+									<input type="text" id="mobileregistermodel-sms_captcha" class="input-small" name="mobile_code" />
+									&lt;!&ndash;<a href="javascript:void(0);" class="phonecode" id="sendOutCode" name="code_mobile">获取短信校验码</a> &ndash;&gt;
+									<input type="button" class="phonecode" id="" name="code_mobile" value="{:lang('get_sms_check_code')}">
+									<span id="qryzm"></span>
+								</div>
+								<div class="invalid"></div>
+							</div>
+							{/if}-->
+
+							<div class="form-group m-10">
+								<label class="input-left">&nbsp;</label>
+								<div class="form-control-box">
+									<label for="remember1">
+										<input type="checkbox"  name="remember" id="agree" class="checkbox m-b-6" />
+										<span>{:lang('read_and_agreed')}<a href="{:__URL('SHOP_MAIN/helpcenter/index','id=17&class_id=6')}" class="user_protocol" target="_blank">《{:lang('user_registration_protocol')}》</a></span>
+										&nbsp;&nbsp;&nbsp;&nbsp;
+										<span id="is_agree" ></span>
+									</label>
+								</div>
+							</div>
+							<div class="reg-btn">
+								<div class="form-group form-group-spe">
+									<label for="" class="input-left"></label>
+									<div class="form-control-box">
+										<input type="button" class="btn-img btn-entry bg-color" id="btn_submit" name="btn_submit" value="{:lang('agreement_and_registrationr')}" title="{:lang('fill_in_accordance_requirements')}" />
+									</div>
+									<div class="invalid"></div>
+								</div>
+							</div>
+						</form>
+						<div id="message" style="color:red;width: 170px;height: 30px;margin-left: 160px;margin-top: -36px; display:none">{:lang('must_meet_rules_register')}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="showModel showMask" style="position: fixed;background: rgba(0,0,0,0.6);width:100%;height:100%;display: none;top:0;left:0;z-index: 100000"></div>
+<div class="showModel" style="background:#fff;position: absolute;top:50%;left:50%;transform: translateX(-50%) translateY(-50%);min-width:250px;display: none;z-index: 100000">
+	<p style="color:#F33A42;background:#333;font-weight: bold;font-size: 20px;text-align: center;line-height: 40px;">提示</p>
+	<p id="contain" style="padding:40px 60px;font-size: 16px;solor:#333;text-align: center;"></p>
+</div>
+{/block}
+{/extend}

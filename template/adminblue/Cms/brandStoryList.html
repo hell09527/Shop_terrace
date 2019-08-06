@@ -1,0 +1,198 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/product.css">
+<style type="text/css">
+	.table-class tbody td a{margin-left: 8px;}
+	#code_show{width: 200px;height: 200px;position: fixed;left: 45%;top: 30%;display: none}
+	.show_code{color: #00abe3;cursor:pointer;}
+</style>
+{/block}
+{block name="main"}
+<div class="options-btn">
+	<table class="mytable">
+		<tr>
+			<th width="50%" style="text-align: left;">
+				<button class="btn-common-delete btn-small" onclick="batchDelete()" style="margin:0 5px 0 0 !important;">批量删除</button>
+				<button class="btn-common btn-small" onclick="location.href='{:__URL('ADMIN_MAIN/cms/addtopic')}';" style="margin:0 5px 0 0 !important;">添加专题</button>
+			</th>
+			<th width="20%">
+				<input type="text" id='search_text' placeholder="请输入专题页标题" class="input-common" />
+				<input type="button" onclick="LoadingInfo(1)" value="搜索" class="btn-common"/>
+			</th>
+		</tr>
+	</table>
+</div>
+<div id="code_show"></div>
+<table class="table-class">
+	<colgroup>
+		<col style="width: 1%">
+		<!-- 	<col style="width: 5%;"> -->
+		<col style="width: 40%;">
+		<col style="width: 10%;">
+		<col style="width: 15%;">
+		<col style="width: 15%">
+	</colgroup>
+	<thead>
+	<tr align="center">
+		<th><input id="ckall" type="checkbox" onClick="CheckAll(this)"></th>
+		<th align="left">标题</th>
+		<th>id</th>
+		<th>排序</th>
+		<th>状态</th>
+		<th>发布时间</th>
+		<th>操作</th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+	function LoadingInfo(page_index) {
+		var search_text = $("#search_text").val();
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/cms/topiclist')}",
+			data : {
+				"page_index" : page_index, "page_size" : $("#showNumber").val(), "search_text" : search_text
+			},
+			success : function(data) {
+				var html = '';
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+						html += '<tr align="center">';
+						html += '<td><div class="cell"><label><input name="sub" type="checkbox" value="'+ data['data'][i]['id']+'" ></label></div></td>';
+						html += '<td  align="left" class="tal" title="'+data["data"][i]["title"]+'">' + data["data"][i]["title"]+ '</td>';
+						html += '<td>' + data["data"][i]["id"]+ '</td>';
+						html += '<td>' + data["data"][i]["sort"]+ '</td>';
+						if(data["data"][i]["status"]==0){
+							html += '<td>未发布</td>';
+						}else{
+							html += '<td>已发布</td>';
+						}
+						html += '<td>' + timeStampTurnTime(data["data"][i]["created_time"])+ '</td>';
+						html += '<td><span class="show_code" data-id='+data['data'][i]['id']+'>预览</span><a href="'+__URL('ADMIN_MAIN/cms/updatetopic?id='+ data['data'][i]['id'])+'">修改</a><a style="cursor: pointer;" onclick="deleteTopic('+data['data'][i]['id']+')">删除</a></td> ';
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr align="center"><td colspan="9">暂无专题</td></tr>';
+				}
+				$(".table-class tbody").html(html);
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+				load();
+			}
+		});
+	}
+
+
+	$(document).on('click','.show_code',function(){
+		var index = $(this).data('id');
+		$.ajax({
+			type: "post",
+			url: "{:__URL('ADMIN_MAIN/cms/getWxCode')}",
+			data: {
+				"master_id": index,
+			},
+			dataType: "json",
+			success: function (data) {
+				if (data["code"] = 1) {
+					$("#code_show").show();
+					$("#code_show").append(
+							'<image id="code_img" src="'+data.url+'">'
+					);
+				} else {
+
+				}
+			}
+		});
+	});
+
+	$("body").click(function(){
+		$("#code_show").hide();
+		$('#code_img').remove();
+	});
+
+
+	function batchDelete() {
+		var topic_id= new Array();
+		$(".table-class tbody input[type='checkbox']:checked").each(function() {
+			if (!isNaN($(this).val())) {
+				topic_id.push($(this).val());
+			}
+		});
+		if(topic_id.length ==0){
+			$( "#dialog" ).dialog({
+				buttons: {
+					"确定,#e57373": function() {
+						$(this).dialog('close');
+					}
+				},
+				contentText:"请选择需要操作的记录",
+				title:"消息提醒",
+			});
+			return false;
+		}
+		deleteTopic(topic_id);
+	}
+	var flag = false;
+	//删除
+	function deleteTopic(topic_id){
+		$( "#dialog" ).dialog({
+			buttons: {
+				"确定": function() {
+					$(this).dialog('close');
+					if(!flag){
+						flag = true;
+						$.ajax({
+							type : "post",
+							url : "{:__URL('ADMIN_MAIN/cms/deletetopic')}",
+							data : {
+								"topic_id" : topic_id.toString()
+							},
+							dataType : "json",
+							success : function(data) {
+								if (data["code"] > 0) {
+									showMessage('success', data["message"]);
+									LoadingInfo(getCurrentIndex(topic_id,'.table-class tbody'));
+								}else{
+									showMessage('error', data["message"]);
+									flag = false;
+								}
+							}
+						})
+					}
+				},
+				"取消,#e57373": function() {
+					$(this).dialog('close');
+				}
+			},
+			contentText:"是否删除专题？",
+		});
+	}
+
+	/*修改排序*/
+	function load(){
+		$('.num').change(function(){
+			var fieldid = $(this).attr('fieldid');
+			var sort = $(this).val();
+			$.ajax({
+				type:"post",
+				url:"{:__URL('ADMIN_MAIN/cms/modifyarticlefield')}",
+				data:{'fieldid':fieldid,'sort':sort},
+				success: function (data) {
+					if(data['code'] <= 0){
+						showMessage('error', data["message"]);
+					}
+				}
+			});
+		});
+	}
+	//全选
+	function CheckAll(event){
+		var checked = event.checked;
+		$(".table-class tbody input[type = 'checkbox']").prop("checked",checked);
+	}
+
+</script>
+{/block}

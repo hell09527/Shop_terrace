@@ -1,0 +1,70 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<script type="text/javascript" src="__STATIC__/My97DatePicker/WdatePicker.js"></script>
+{/block}
+{block name="main"}
+<table class="table-class">
+	<thead>
+		<tr align="center">
+			<th>账户类型</th>
+			<th>订单编号</th>
+			<th>金额</th>
+			<th>描述</th>
+			<th>时间</th>
+			<th>余额</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<input type="hidden" id="kol_id" value="{$kol_id}"/>
+<input type="hidden" id="from_type" value="{$type}" />
+<input type="hidden" id="kol_name" value="{$kol_name}" />
+{/block}
+{block name="script"}
+<script type="text/javascript">
+function LoadingInfo(page_index) {
+	var kol_name = $('#kol_name').val();
+	$('.breadcrumb-nav a:last-child').after('<span class="sep">&gt;</span><a href="javascript:;">'+ kol_name +'</a>');
+	var start_date = $("#startDate").val();
+	var end_date = $("#endDate").val();
+	var kol_id = $("#kol_id").val();
+	var from_type = $("#from_type").val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/Distributor/accountdetail')}",
+		data : {
+			"page_index" : page_index, "page_size" : $("#showNumber").val(), "kol_id":kol_id, "from_type":from_type, "start_date":start_date, "end_date":end_date
+		},
+		success : function(data) {
+			var html = '';
+			if (data["data"].length > 0) {
+				for (var i = 0; i < data["data"].length; i++) {
+					html += '<tr align="center">';
+					if(data["data"][i]["account_type"] == 1){
+						html += '<td align="center">分润</td>';
+					}else{
+						html += '<td align="center">奖金</td>';
+					}
+					html += '<td align="center">'+ data["data"][i]["order_no"] +'</td>';
+					html += '<td align="center">'+ data["data"][i]["money"] +'</td>';
+					html += '<td align="center">'+ data["data"][i]["text"] +'</td>';
+					html += '<td align="center">'+ timeStampTurnTime(data["data"][i]["settlement_time"]) +'</td>';
+					html += '<td align="center">'+ data["data"][i]["balance_record"] +'</td>';
+					html += '</tr>';
+					html += '<input type="hidden" id="member_id" value="{$member_id}"/>'
+				}
+			} else {
+				html += '<tr align="center"><td colspan="6">暂无符合条件的数据记录</td></tr>';
+			}
+			$(".table-class tbody").html(html);
+			initPageData(data["page_count"],data['data'].length,data['total_count']);
+			$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+		}
+	});
+}
+
+function searchData(){
+	LoadingInfo(1);
+}
+</script>
+{/block}

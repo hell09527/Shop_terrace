@@ -1,0 +1,97 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<link rel="stylesheet" type="text/css" href="ADMIN_CSS/member_list.css" />
+{/block}
+{block name="main"}
+<table class="mytable">
+    <tr>
+        <th>
+            <input type="text" id ='search_text' placeholder="姓名/电话/企业邮箱" class="input-common" />
+            <input type="button" onclick="searchData()" value="搜索" class="btn-common" />
+            <input type="button" onclick="updateEmployeeData()" value="更新员工信息" class="btn-common" />
+        </th>
+    </tr>
+</table>
+<table class="table-class">
+    <thead>
+    <tr align="center">
+        <th align="left" style="padding-left: 20px">头像</th>
+        <th>姓名</th>
+        <th>部门</th>
+        <th>电话</th>
+        <th>企业邮箱</th>
+        <th>入职时间</th>
+    </tr>
+    </thead>
+    <tbody id="productTbody"></tbody>
+</table>
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    function updateEmployeeData() {
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/member/updateEmployeeData')}",
+            data : {},
+            success : function(data) {
+                if (data['code'] > 0) {
+                    showTip(data['message'],'success');
+                    LoadingInfo(getCurrentIndex(1,'#productTbody'));
+                } else {
+                    showTip(data['message'],'error');
+                    flag = false;
+                }
+            }
+        });
+
+    }
+
+    function LoadingInfo(page_index) {
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/member/employeeList')}",
+            data: {
+                "page_index" : page_index, "page_size" : $("#showNumber").val(), "search_text" : search_text
+            },
+            success : function(data){
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr align="center">';
+                        if(data["data"][i]["avatar"]) {
+                            html += '<td align="right"><img src="' + __IMG(data["data"][i]["avatar"]) + '" class="head-portrait" /></td>';
+                        }else{
+                            html += '<td><img src="__STATIC__/images/default_user_portrait.gif" class="head-portrait" /></td>';
+                        }
+                        html += '<td>' + data["data"][i]["user_name"]+ '</td>';
+                        if(data["data"][i]["group_name"]) {
+                            html += '<td>' + data["data"][i]["group_name"] + '</td>';
+                        }else{
+                            html += '<td></td>';
+                        }
+                        html += '<td>' + data["data"][i]["mobile"]+ '</td>';
+                        html += '<td>' + data["data"][i]["org_email"]+ '</td>';
+                        if(data["data"][i]["hired_date"]) {
+                            html += '<td>' + timeStampTurnTime(data["data"][i]["hired_date"]) + '</td>';
+                        }else{
+                            html += '<td></td>';
+                        }
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="6">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".table-class tbody").html(html);
+                initPageData(data["page_count"],data['data'].length,data['total_count']);
+                $("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+            }
+        });
+    }
+
+    function searchData(){
+        LoadingInfo(1);
+    }
+</script>
+{/block}

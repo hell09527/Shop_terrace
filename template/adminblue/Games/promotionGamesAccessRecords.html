@@ -1,0 +1,85 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style>
+.table-class tbody td a{margin-right:8px;margin-left:0;}
+.access-records-nav {overflow: hidden;background: #ffffff;border-bottom: 1px solid #e5e5e5;}
+.access-records-nav ul {overflow: hidden;}
+.access-records-nav li {float: left;}
+.access-records-nav li:hover, .access-records-nav li.selected {border-bottom: 2px solid #0072D2;color: #0072D2;}
+.access-records-nav li a {color: #333333;padding: 15px 15px;display: block;}
+.access-records-nav li:hover a, .access-records-nav li.selected a {color: #0072D2;}
+</style>
+{/block}
+{block name="main"}
+<table class="mytable">
+	<tr>
+		<th width="10%">
+			<input type="text" id = 'search_text' placeholder="请输入会员昵称" class="input-common" />
+			<input type="button" onclick="searchData()" value="搜索" class="btn-common" />
+		</th>
+	</tr>
+</table>
+<div class="divider"></div>
+<nav class="access-records-nav">
+	<ul>
+		<li class="selected"><a href="javascript:;">全部</a></li>
+		<li data-is-winning="1"><a href="javascript:;">中奖的</a></li>
+		<li data-is-winning="0"><a href="javascript:;">未中奖</a></li>
+	</ul>
+</nav>
+<table class="table-class">
+	<thead>
+		<tr>
+			<th align="left">获奖信息</th>
+			<th>消耗积分</th>
+			<th align="left">参与时间</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<input type="hidden" value="{$game_id}" id="hidden_game_id"/>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+var is_winning = "";
+$(function(){
+	$(".access-records-nav ul li").click(function(){
+		$(this).addClass("selected").siblings().removeClass("selected");
+		is_winning = $(this).attr("data-is-winning");
+		searchData();
+	});
+})
+
+function LoadingInfo(page_index) {
+	var search_text = $("#search_text").val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/promotion/promotionGamesAccessRecords')}",
+		data : { "page_index" : page_index, "page_size" : $("#showNumber").val(), "search_text" : search_text, "is_winning" : is_winning, "game_id" : $("#hidden_game_id").val() },
+		success : function(data) {
+			var html = '';
+			if (data["data"].length > 0) {
+				for (var i = 0; i < data["data"].length; i++) {
+					var curr = data['data'][i];
+					console.log(curr);
+					html += '<tr>';
+						html += '<td align="left">' + curr.remark + '</td>';
+						html += '<td align="center">' + curr.consumption_integral + '</td>';
+						html += '<td>' + timeStampTurnTime(curr.add_time) + '</td>';
+					html += '</tr>';
+				}
+			} else {
+				html += '<tr align="center"><td colspan="9">暂无符合条件的数据记录</td></tr>';
+			}
+			$(".table-class tbody").html(html);
+			initPageData(data["page_count"],data['data'].length,data['total_count']);
+			$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+		}
+	});
+}
+
+function searchData(){
+	LoadingInfo(1);
+}
+</script>
+{/block}

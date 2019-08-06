@@ -1,0 +1,281 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style>
+    select{width:135px;}
+</style>
+{/block}
+{block name="main"}
+<div class="set-style">
+    <dl>
+        <dt>门店组：</dt>
+        <dd>
+            <select id="store_group">
+                <option value="0">请选择门店组</option>
+                {foreach name="store_group_list" item="group"}
+                <option value="{$group.store_group_id}">{$group.store_group_name}</option>
+                {/foreach}
+            </select>
+            <span class="error">门店组不能为空</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt>经营模式：</dt>
+        <dd>
+            <label class="radio inline normal"><input type="radio" name="store_type" value="1" checked="checked">自营</label>
+            <label class="radio inline normal"><input type="radio" name="store_type" value="2">加盟</label>
+            <label class="radio inline normal"><input type="radio" name="store_type" value="3">合营</label>
+            <label class="radio inline normal"><input type="radio" name="store_type" value="4">代理</label>
+            <label class="radio inline normal"><input type="radio" name="store_type" value="99">其他</label>
+        </dd>
+    </dl>
+    <dl>
+        <dt><span class="required">*</span>门店编号:</dt>
+        <dd>
+            <input type="text" id="store_code" class="input-common">
+            <span class="error">门店编号不能为空</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt><span class="required">*</span>门店名称:</dt>
+        <dd>
+            <input type="text" id="store_name" class="input-common">
+            <span class="error">门店名称不能为空</span>
+        </dd>
+    </dl>
+    </dl>
+    <dl>
+        <dt><span class="required">*</span>门店地址:</dt>
+        <dd>
+            <select name="province" id="seleAreaNext" onchange="GetProvince();getSelCity();" class="select-common">
+                <option value="">请选择省</option>
+            </select>
+            <select name="city" id="seleAreaThird" onchange="getSelCity();" class="select-common">
+                <option value="">请选择市</option>
+            </select>
+            <select name="district" id="seleAreaFouth" class="select-common">
+                <option value="-1">请选择区/县</option>
+            </select>
+            <span class="error">请选择门店完整地址</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt><span style="color:red;">*</span>&nbsp;&nbsp;详细地址:</dt>
+        <dd>
+            <input id="address" type="text" class="input-common">
+            <span class="error">详细地址不能为空</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt>邮政编码:</dt>
+        <dd>
+            <input type="text" id="postalcode" class="input-common">
+        </dd>
+    </dl>
+    <dl>
+        <dt><span class="required">*</span>联系人:</dt>
+        <dd>
+
+            <input type="text" id="linkman" class="input-common">
+            <span class="error">联系人不能为空</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt><span class="required">*</span>手机号:</dt>
+        <dd>
+            <input type="text" id="phone_number" class="input-common">
+            <span class="error">手机号不能为空</span>
+        </dd>
+    </dl>
+    <dl>
+        <dt>固定电话:</dt>
+        <dd>
+            <input type="text" id="seat_number" class="input-common">
+        </dd>
+    </dl>
+    <dl>
+        <dt></dt>
+        <dd><button class="btn-common btn-big" onclick="addReturnAjax();">提交</button></dd>
+    </dl>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+//添加门店
+function addReturnAjax() {
+    var store_group = $("#store_group").val();
+    var store_type= $("input[name='store_type']:checked").val();
+    var store_code = $("#store_code").val();
+    var store_name = $("#store_name").val();
+    var province = $("#seleAreaNext").val();
+    var city = $("#seleAreaThird").val();
+    var district = $("#seleAreaFouth").val();
+    var address = $("#address").val();
+    var postalcode = $("#postalcode").val();
+    var linkman = $("#linkman").val();
+    var phone_number = $("#phone_number").val();
+    var seat_number = $("#seat_number").val();
+    if (store_group == 0) {
+        $("#store_group").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if (store_code == '') {
+        $("#store_code").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if (store_name == '') {
+        $("#store_name").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if ($("#seleAreaFouth").val() < 0 || $("#seleAreaFouth").val() == "") {
+        $("#seleAreaFouth").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if (address == '') {
+        $("#address").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if (linkman == '') {
+        $("#linkman").next().show();
+        return false;
+    }else{
+        $(".error").hide();
+    }
+
+    if(phone_number.length == 0){
+        $("#phone_number").next().show();
+        return false;
+    } else {
+        $(".error").hide();
+    }
+
+    $.ajax({
+        type : "post",
+        url : "{:__URL('ADMIN_MAIN/store/addstore')}",
+        data : {
+            'store_group_id' : store_group,
+            'store_type' : store_type,
+            'store_code' : store_code,
+            'store_name' : store_name,
+            'province_id' : province,
+            'city_id' : city,
+            'district_id' : district,
+            'address' : address,
+            'postalcode' : postalcode,
+            'linkman' : linkman,
+            'phone_number' : phone_number,
+            'seat_number' : seat_number
+        },
+        success : function(data) {
+            if (data['code'] > 0) {
+                showMessage('success', data["message"],window.location.href=__URL("ADMIN_MAIN/store/storelist"));
+            } else {
+                showMessage('error', data["message"]);
+            }
+        }
+    });
+
+}
+//选择省份弹出市区
+function GetProvince() {
+    var id = $("#seleAreaNext").find("option:selected").val();
+    var selCity = $("#seleAreaThird")[0];
+    for (var i = selCity.length - 1; i >= 0; i--) {
+        selCity.options[i] = null;
+    }
+    var opt = new Option("请选择市", "-1");
+    selCity.options.add(opt);
+    $.ajax({
+        type : "post",
+        url : "{:__URL('ADMIN_MAIN/shop/getcity')}",
+        dataType : "json",
+        data : { "province_id" : id },
+        success : function(data) {
+            if (data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].city_name,data[i].city_id);
+                    selCity.options.add(opt);
+                }
+                if(typeof($("#cityid").val())!='undefined'){
+                    $("#seleAreaThird").val($("#cityid").val());
+                    getSelCity();
+                    $("#cityid").val('-1');
+                }
+            }
+        }
+    });
+};
+// 选择市区弹出区域
+function getSelCity() {
+    var id = $("#seleAreaThird").find("option:selected").val();
+    var selArea = $("#seleAreaFouth")[0];
+    for (var i = selArea.length - 1; i >= 0; i--) {
+        selArea.options[i] = null;
+    }
+    var opt = new Option("请选择区/县", "-1");
+    selArea.options.add(opt);
+    $.ajax({
+        type : "post",
+        url : "{:__URL('ADMIN_MAIN/shop/getdistrict')}",
+        dataType : "json",
+        data : { "city_id" : id },
+        success : function(data) {
+            if (data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].district_name,data[i].district_id);
+                    selArea.options.add(opt);
+                }
+                if(typeof($("#districtid").val())!='undefined'){
+                    $("#seleAreaFouth").val($("#districtid").val());
+                    $("#districtid").val('-1');
+                }
+            }
+        }
+    });
+}
+
+$(function() {
+    var selCity = $("#seleAreaNext")[0];
+    for (var i = selCity.length - 1; i >= 0; i--) {
+        selCity.options[i] = null;
+    }
+    var opt = new Option("请选择省", "-1");
+    selCity.options.add(opt);
+    // 添加省
+    $.ajax({
+        type : "post",
+        url : "{:__URL('ADMIN_MAIN/shop/getprovince')}",
+        dataType : "json",
+        success : function(data) {
+            if (data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].province_name,data[i].province_id);
+                    selCity.options.add(opt);
+                }
+                if(typeof($("#provinceid").val())!='undefined'){
+                    $("#seleAreaNext").val($("#provinceid").val());
+                    GetProvince();
+                    $("#provinceid").val('-1');
+                }
+            }
+        }
+    });
+});
+</script>
+
+{/block}

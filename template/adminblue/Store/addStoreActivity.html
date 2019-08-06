@@ -1,0 +1,722 @@
+{extend name="adminblue/base" /}
+{block name="resources"}
+<script src="ADMIN_JS/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+<style>
+	#position_type label {
+		float: left;
+		margin-left: 150px
+	}
+
+	#blank_type label {
+		float: left;
+		margin-left: 200px
+	}
+
+	#bottom_div div {
+		float: left;
+		margin-left: 50px;
+		cursor: pointer;
+		padding: 5px 20px 5px 20px;
+		border: 1px solid #000000
+	}
+
+	.table-class tr th {
+		padding: 5px;
+	}
+
+	.table-class tr td {
+		text-align: center;
+	}
+
+	#float-div {
+		position: fixed;
+		right: 0;
+		top: 60%;
+		padding: 10px;
+		border: 1px solid gray;
+		background-color: white
+	}
+
+	#float-div div {
+		cursor: pointer;
+		padding: 10px 16px 10px 16px;
+		text-align: center;
+		border: 1px solid gray;
+		margin: 10px;
+		text-align: center;
+	}
+</style>
+{/block}
+{block name="main"}
+<div class="set-style">
+	<dl style="border-bottom: none;">
+		<dt><span class="required">*</span>所属门店:</dt>
+		<dd>
+			<select id="store_id" style="width:410px">
+				{foreach name="store_list" item="v"}
+				<option value ="{$v.store_id}">{$v.store_name}</option>
+				{/foreach}
+			</select>
+			<span class="error">请选择门店</span>
+		</dd>
+	</dl>
+
+	<dl style="border-bottom: none;">
+		<dt><span class="required">*</span>活动名称:</dt>
+		<dd>
+			<input id="activity_name" type="text" name="activity_name" class="input-common" />
+			<span class="error">请输入活动名称</span>
+		</dd>
+	</dl>
+
+	<dl style="border-bottom: none;">
+		<dt><span style="color:red;">*</span>&nbsp;&nbsp;活动时间:</dt>
+		<dd>
+			<input class="input-medium input-common" autocomplete="off" type="text" id="start_time" style="width:185px;" onclick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+			<span class="mlr5">至</span>
+			<input class="input-medium input-common" autocomplete="off"  size="15" type="text" id="end_time" style="width:185px;" onclick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+			<p class="error">请填写活动时间</p>
+		</dd>
+	</dl>
+
+	<dl style="border-bottom: none;">
+		<dt><span class="required">*</span>活动地址:</dt>
+		<dd>
+			<select name="province" id="seleAreaNext" onchange="GetProvince();getSelCity();" class="select-common">
+				<option value="">请选择省</option>
+			</select>
+			<select name="city" id="seleAreaThird" onchange="getSelCity();" class="select-common">
+				<option value="">请选择市</option>
+			</select>
+			<select name="district" id="seleAreaFouth" class="select-common">
+				<option value="-1">请选择区/县</option>
+			</select>
+			<span class="error">请选择门店完整地址</span>
+		</dd>
+	</dl>
+
+	<dl style="border-bottom: none;">
+		<dt><span style="color:red;">*</span>&nbsp;&nbsp;详细地址:</dt>
+		<dd>
+			<input id="address" type="text" class="input-common">
+			<span class="error">详细地址不能为空</span>
+		</dd>
+	</dl>
+
+	<dl style="border-bottom: none;">
+		<dt>封面图</dt>
+		<dd>
+			<div class="class-logo"><p><img id="imgcover_pic"></p>
+			</div>
+			<div class="upload-btn">
+				<span>
+					<input class="input-file" name="file_upload" id="uploadImg" type="file" onchange="imgUpload(this)">
+					<input type="hidden" id="cover_pic" />
+				</span>
+				<p><i class="fa fa-cloud-upload"></i>上传图片</p>
+			</div>
+		</dd>
+	</dl>
+
+	<dl>
+		<dt>推广图</dt>
+		<dd>
+			<div class="class-logo"><p><img id="imgextension_pic"/></p></div>
+			<div class="upload-btn">
+				<span>
+					<input class="input-file" name="file_upload" id="uploadImg2" type="file" onchange="imgUpload(this);"/>
+					<input type="hidden" id="extension_pic" />
+				</span>
+				<p><i class="fa fa-cloud-upload"></i>上传图片</p>
+			</div>
+		</dd>
+	</dl>
+
+	<div id="float-div">
+		<div id="show_div0">图片</div>
+		<div id="show_div1">视频</div>
+		<div id="show_div2">预约服务</div>
+	</div>
+
+	<div id="selecter"></div>
+</div>
+
+<div style="margin:auto;width:30%;">
+	<button class="btn-common" onclick="addStoreActivity(1)" style="float:left;margin-right:15px;">存为草稿</button>
+	<button class="btn-common" onclick="addStoreActivity(2)" style="float:left;">发布专题</button>
+</div>
+
+<script src="__STATIC__/js/ajax_file_upload.js" type="text/javascript"></script>
+<script src="__STATIC__/js/file_upload.js" type="text/javascript"></script>
+<script>
+	//图片上传
+//	function imgUpload(event) {
+//		var fileid = $(event).attr("id");
+//		var imgDom = $(event).parent().parent().prev().children().children();
+//		alert(imgDom);
+//		var data = { 'file_path' : UPLOADCOMMON };
+//		uploadFile(fileid,data,function(res){
+//			if(res.code){
+//				imgDom.attr("src",__IMG(res.data));
+//				$("#logo").val(res.data);
+//				showTip(res.message,"success");
+//			}else{
+//				showTip(res.message,"error");
+//			}
+//		});
+//	}
+
+	function imgUpload(event) {
+		var fileid = $(event).attr("id");
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#img"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	//省份
+	$(function() {
+		var selCity = $("#seleAreaNext")[0];
+		for (var i = selCity.length - 1; i >= 0; i--) {
+			selCity.options[i] = null;
+		}
+		var opt = new Option("请选择省", "-1");
+		selCity.options.add(opt);
+		// 添加省
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/shop/getprovince')}",
+			dataType : "json",
+			success : function(data) {
+				if (data != null && data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						var opt = new Option(data[i].province_name,data[i].province_id);
+						selCity.options.add(opt);
+					}
+					if(typeof($("#provinceid").val())!='undefined'){
+						$("#seleAreaNext").val($("#provinceid").val());
+						GetProvince();
+						$("#provinceid").val('-1');
+					}
+				}
+			}
+		});
+	});
+
+	//选择省份弹出市区
+	function GetProvince() {
+		var id = $("#seleAreaNext").find("option:selected").val();
+		var selCity = $("#seleAreaThird")[0];
+		for (var i = selCity.length - 1; i >= 0; i--) {
+			selCity.options[i] = null;
+		}
+		var opt = new Option("请选择市", "-1");
+		selCity.options.add(opt);
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/shop/getcity')}",
+			dataType : "json",
+			data : { "province_id" : id },
+			success : function(data) {
+				if (data != null && data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						var opt = new Option(data[i].city_name,data[i].city_id);
+						selCity.options.add(opt);
+					}
+					if(typeof($("#cityid").val())!='undefined'){
+						$("#seleAreaThird").val($("#cityid").val());
+						getSelCity();
+						$("#cityid").val('-1');
+					}
+				}
+			}
+		});
+	};
+
+	// 选择市区弹出区域
+	function getSelCity() {
+		var id = $("#seleAreaThird").find("option:selected").val();
+		var selArea = $("#seleAreaFouth")[0];
+		for (var i = selArea.length - 1; i >= 0; i--) {
+			selArea.options[i] = null;
+		}
+		var opt = new Option("请选择区/县", "-1");
+		selArea.options.add(opt);
+		$.ajax({
+			type : "post",
+			url : "{:__URL('ADMIN_MAIN/shop/getdistrict')}",
+			dataType : "json",
+			data : { "city_id" : id },
+			success : function(data) {
+				if (data != null && data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						var opt = new Option(data[i].district_name,data[i].district_id);
+						selArea.options.add(opt);
+					}
+					if(typeof($("#districtid").val())!='undefined'){
+						$("#seleAreaFouth").val($("#districtid").val());
+						$("#districtid").val('-1');
+					}
+				}
+			}
+		});
+	}
+
+	var flag = false;//防止重复提交
+
+	let allData = {
+		items:[],
+	}
+
+	//图片
+	$(document).on('click','#show_div0',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			id:newId,
+			index_pic:'',
+			pic_link:''
+		});
+		$("#selecter").append(
+				'<div id="div0">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;margin-top: 60px;">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加图片'+'</dt>'+
+				'<dt class="delete_data" id="'+newId+'"><span>'+'删除'+'</span></dt>'+
+				'</dl>'+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'详情图片'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img id="index_pic'+newId+'">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test'+newId+'" data-id='+newId+' type="file" onchange="imgUpload1(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'小程序路径'+'</dt>'+
+				'<dd>'+
+				'<input type="text" class="pic_link" name="pic_link" data-id='+newId+' placeholder="请输入小程序路径,如/pages/index/index" >'+
+				'</dd>'+
+				'</dl>'+
+				'</div>'
+		)
+	});
+
+	function imgUpload1(event) {
+		var fileid = $(event).attr("id");
+		var id 		= $(event).data('id');
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#index_pic"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				formatData(id,res.data,'index_pic');
+				console.log(allData);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	//视频
+	$(document).on('click','#show_div1',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			id : newId,
+			index_video : '',
+			video_pic : ''
+		});
+		$("#selecter").append(
+				'<div id="div1">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;border-bottom: none">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'添加视频'+'</dt>'+
+				'<dt class="delete_data" id="'+newId+'"><span>'+'删除'+'</span></dt>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dl>'+
+				'<dd style="margin-left: 10%">'+
+				'<div class="controls" style="background-color:#FFF;border: 1px solid #E9E9E9;">'+
+				'<div class="ncsc-goods-default-pic">'+
+				'<div class="goodspic-uplaod" style="padding: 15px;">'+
+				'<div style="min-height:120px;">'+
+				'<div class="video-thumb" >'+
+				'<video id="my-video'+newId+'" controls poster="__STATIC__/blue/img/vs.png" preload="auto"  style="max-width:50%;max-height:100%;width:auto;height:auto;">'+
+				'<source src="" type="video/mp4" id="video-source">'+
+				'</video>'+
+				'<span class="del-video hide" data-id='+newId+' onclick="del_video(this)"></span>'+
+				'</div>'+
+				'</div>'+
+				'<div class="clear"></div>'+
+				'<div class="handle">'+
+				'<div class="ncsc-upload-btn">'+
+				'<a href="javascript:void(0);">'+
+				'<span>'+
+				'<input class="input-file video-file" name="file_upload" id="test'+newId+'" data-id='+newId+' type="file" onchange="fileUpload_video(this);"  value="">'+
+				'</span>'+
+				'<p>视频上传</p>'+
+				'<input type="hidden" class="video-file" id="video_url'+newId+'" value="">'+
+				'</a>'+
+				'</div>'+
+				'</div>'+
+				'</div>'+
+				'</div>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'视频封面'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img id="video_pic'+newId+'">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test1'+newId+'" data-id='+newId+' type="file" onchange="imgUpload2(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+				'</div>'
+		)
+	});
+
+	//文件上传（视频、音频）
+	function fileUpload_video(event) {
+		var fileid = $(event).attr("id");
+		var id = $(event).data('id');
+		var data_id = $(event).attr("data-id");
+		var data = { 'file_path' : UPLOADGOODSVIDEO };
+		var dom = document.getElementById(fileid);
+		var file = dom.files[0];//File对象;
+		var fileTypeArr = ['video/mp4', 'video/3gp', 'video/avi', 'video/rmvb', 'video/rm'];
+		var flag = false;
+		if (file != null) {
+			for (var i = 0; i < fileTypeArr.length; i++) {
+				if (file.type == fileTypeArr[i]) {
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (!flag) {
+			showTip("文件类型不合法", "warning");
+		} else {
+			uploadFile(fileid, data, function (res) {
+				if (res.code) {
+					$("#video_url"+data_id).val(res['data']);
+					$("#my-video"+data_id).attr('poster','');
+					$("#my-video"+data_id).attr('src',__IMG(res['data']));
+					formatData(id,res.data,'movie_link');
+					$(".del-video").show();
+					showTip(res.message, "success");
+				} else {
+					showTip(res.message, "error");
+				}
+			});
+		}
+	}
+
+	//删除已选择的视频
+	function del_video(event) {
+		// 通过ajax用php删除文件
+		var data_id = $(event).attr("data-id");
+		var src 	= $("#video_url"+data_id).val();
+		if (src != "") {
+			$("#my-video"+data_id).attr('src', "");
+			$("#my-video"+data_id).attr('poster', '__STATIC__/blue/img/vs.png');
+			$("#videoupload").val('');
+			$(".del-video").hide();
+			$("#video_url"+data_id).val('');
+		}
+	}
+
+	function imgUpload2(event) {
+		var fileid = $(event).attr("id");
+		var id 		= $(event).data('id');
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#video_pic"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				formatData(id,res.data,'video_pic');
+				console.log(allData);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	//预约服务
+	$(document).on('click','#show_div2',function(){
+		var newId = allData.items.length;
+		allData.items.push({
+			id:newId,
+			start_time:'',
+			end_time:'',
+			appointment_pic:'',
+			invite_pic:'',
+			coupon_pic:''
+		});
+		$("#selecter").append(
+				'<div id="div2">'+
+				'<dl style="height: 50px;background-color: #F5F6F5;margin-top: 60px;">'+
+				'<dt style="font-size: 15px;color: black;font-weight: bold">'+'预约服务'+'</dt>'+
+				'<dt class="delete_data" id="'+newId+'"><span>'+'删除'+'</span></dt>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>活动时间</dt>'+
+				'<dd>'+
+				'<input class="input-medium input-common" autocomplete="off" type="text" id="start_time" data-id='+newId+' style="width:185px;" onclick="WdatePicker({skin:\'twoer\',dateFmt:\'yyyy-MM-dd HH:mm:ss\'})" />'+
+				'<span class="mlr5">至</span>'+
+				'<input class="input-medium input-common" autocomplete="off"  size="15" type="text" id="end_time" data-id='+newId+' style="width:185px;" onclick="WdatePicker({skin:\'twoer\',dateFmt:\'yyyy-MM-dd HH:mm:ss\'})">'+
+				'<p class="error">请填写活动时间</p>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'预约图片'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img id="appointment_pic'+newId+'">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test2'+newId+'" data-id='+newId+' type="file" onchange="imgUpload3(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'邀请函'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img id="invite_pic'+newId+'">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test3'+newId+'" data-id='+newId+' type="file" onchange="imgUpload4(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+
+				'<dl style="border-bottom: none;">'+
+				'<dt>'+'电子券面'+'</dt>'+
+				'<dd>'+
+				'<div class="class-logo">'+
+				'<p>'+
+				'<img id="coupon_pic'+newId+'">'+
+				'</p>'+
+				'</div>'+
+				'<div class="upload-btn">'+
+				'<span>'+
+				'<input class="input-file" name="file_upload" id="test4'+newId+'" data-id='+newId+' type="file" onchange="imgUpload5(this)">'+
+				'<input type="hidden" id="'+newId+'"/>'+
+				'</span>'+
+				'<p>'+'<i class="fa fa-cloud-upload">'+'</i>'+'上传图片'+'</p>'+
+				'</div>'+
+				'</dd>'+
+				'</dl>'+
+
+				'</div>'
+		);
+	});
+
+	function imgUpload3(event) {
+		var fileid = $(event).attr("id");
+		var id 		= $(event).data('id');
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#appointment_pic"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				formatData(id,res.data,'appointment_pic');
+				console.log(allData);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	function imgUpload4(event) {
+		var fileid = $(event).attr("id");
+		var id 		= $(event).data('id');
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#invite_pic"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				formatData(id,res.data,'invite_pic');
+				console.log(allData);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	function imgUpload5(event) {
+		var fileid = $(event).attr("id");
+		var id 		= $(event).data('id');
+		var str = $(event).next().attr("id");
+		var data = { 'file_path' : UPLOADCOMMON };
+		uploadFile(fileid,data,function(res){
+			if(res.code){
+				$("#coupon_pic"+str).attr("src",__IMG(res.data));
+				$("#"+str).val(res.data);
+				formatData(id,res.data,'coupon_pic');
+				console.log(allData);
+				showTip(res.message,"success");
+			}else{
+				showTip(res.message,"error");
+			}
+		});
+	}
+
+	$(document).on('click','.delete_data',function(){
+		var data = allData.items;
+		console.log(data);
+		var index = $(this).attr('id') - 1;
+		data.splice(index, 1);
+		$($(this)).parent().parent().remove();
+	});
+
+	$(document).on('blur','.pic_link',function(){
+		var pic_link = $(this).val();
+		formatData($(this).data('id'),pic_link,'pic_link');
+		console.log(allData)
+	});
+
+	$(document).on('blur','#start_time',function(){
+		var start_time = $(this).val();
+		formatData($(this).data('id'), start_time, 'start_time');
+		console.log(allData)
+	});
+
+	$(document).on('blur','#end_time',function(){
+		var end_time = $(this).val();
+		formatData($(this).data('id'), end_time, 'end_time');
+		console.log(allData)
+	});
+
+	function formatData(index,val,type) {
+		allData.items.forEach(v => {
+			if(v.id == index)
+			{
+				v[type] = val;
+			}
+			return v;
+		});
+	}
+
+	function addStoreActivity(type){
+		if(type==1){
+			var is_show = 0;
+		}else{
+			var is_show = 1;
+		}
+
+		allData['store_id'] = $("#store_id").val();
+		allData['activity_name'] = $("#activity_name").val();
+		allData['start_time'] = $("#start_time").val();
+		allData['end_time'] = $("#end_time").val();
+		allData['province_id'] = $("#seleAreaNext").val();
+		allData['city_id'] = $("#seleAreaThird").val();
+		allData['district_id'] = $("#seleAreaFouth").val();
+		allData['address'] = $("#address").val();
+		allData['cover_pic'] = $("#cover_pic").val();
+		allData['extension_pic'] = $("#extension_pic").val();
+		allData['is_show'] = is_show;
+
+		if(!validation())return;
+		if(flag) return;
+		flag = true;
+
+		$.ajax({
+			type:"post",
+			url:"{:__URL('ADMIN_MAIN/store/addStoreActivity')}",
+			data:allData,
+			success:function(data){
+				if (data["code"] > 0) {
+					showMessage('success', data["message"]);
+					location.href=__URL("ADMIN_MAIN/store/storeActivityList");
+				}else{
+					showMessage('error', data["message"]);
+					flag = false;
+				}
+			}
+		});
+	}
+
+	function validation(){
+		var store_id=$("#store_id");		//门店
+		if(store_id.val() == ""){
+			store_id.next().css("display","inline-block");
+			store_id.focus();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+
+		var activity_name=$("#activity_name");		//活动名称
+		if(activity_name.val() == ""){
+			activity_name.next().css("display","inline-block");
+			activity_name.focus();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+
+		var start_time=$("#start_time");		//开始时间
+		var end_time=$("#end_time");		    //结束时间
+		if(start_time.val() == "" || end_time.val() == ""){
+			end_time.next().css("display","inline-block");
+			return false;
+		}else{
+			$(".error").hide();
+		}
+		return true;
+	}
+</script>
+{/block}
+
+

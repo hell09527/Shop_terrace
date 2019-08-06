@@ -1,0 +1,39 @@
+<style>
+    body{
+        overflow-x:hidden;
+        overflow-y:hidden;
+    }
+    #container {
+        width:300px;
+        min-height:300px;
+        margin:0 auto;
+        font-size: 13px;
+        color: #8f8f8f;
+    }
+    .border-header{
+        min-width: 310px;
+        min-height: 70px;
+        border: 1px solid #f0f0f0;
+        padding: 10px;
+    }
+</style>
+<body>
+    <div id="container" style="padding: 10px;min-height: 100px" >
+        <div class="border-header">
+          <span style="float: left;">
+            <img width="70px" style="border-radius: 70px;" src="{$user_info['avatarUrl']}" alt="">
+          </span>
+          <span style="float: left;margin-left: 20px;padding: 5px">
+            <span>微信昵称：{$user_info.nick_name}</span><br>
+            <span>真实姓名：{$user_info.real_name}</span><br>
+            <span>手机号：{$user_info.user_tel}</span>
+          </span>
+        </div>
+        <div style="margin-top: 10px">
+            <div>注册时间: {$user_info.reg_time}</div>
+            <div>最后登录: {$user_info.current_login_time}</div>
+        </div>
+    </div>
+</body>
+
+

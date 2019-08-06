@@ -1,0 +1,614 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<script src="ADMIN_JS/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<style  type="text/css">
+	#motai-div{min-width: 60%}
+	#myModal{min-width: 60%}
+	.modal{left: 42%}
+</style>
+{/block}
+{block name="main"}
+<div class="set-style">
+	<dl>
+		<dt>活动名称:</dt>
+		<dd><input type="text" id="discount_name" maxlength="10" value="{$info['discount_name']}" class="input-common"><p class="error">请输入活动名称</p></dd>
+
+	</dl>
+	<dl>
+		<dt>活动有效期:</dt>
+		<dd>
+			<input class="input-medium input-common" type="text" id="start_time" value="{$info['start_time'] | getTimeStampTurnTime}" style="width:250px;"onclick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+			<span class="mlr5">-</span>
+			<input class="input-medium input-common" size="15"type="text" id="end_time" value="{$info['end_time'] | getTimeStampTurnTime}" style="width:250px;"onclick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+			<p class="error">请输入活动有效期</p>
+			<p class="error">活动结束时间不能小于当前时间</p>
+			<p class="error">活动结束时间不能小于开始时间</p>
+		</dd>
+	</dl>
+	{include file="adminblue/Promotion/selectDiscountGoods" /}
+</div>
+<dl style="text-align: center;">
+	<button class="btn-common btn-big" id="save_button" onclick="saveGoods();">保存</button>
+	<button class="btn-common btn-big" id="submit_button" onclick="updateDiscount();" style="display: none">提交
+	</button>
+</dl>
+<input type="hidden" id="discount_id" value="{$info['discount_id']}">
+<script>
+	$(function(){
+		$("[name='range_type']").parents("dl").hide();
+		$('.type_dl dd').hide();
+		$(".ui-nav-tab").find('li:first').addClass('active');
+
+		select_goods($("ul.ui-nav-tab li.js-tab").eq(1));  // ++
+
+		$goods_selected_array 	 = {$info}.goods_list;
+		$goods_id_selected_array = {$info}.goods_id_array;
+		LoadingInfo(1);
+		$("#some_pro").show();
+		refresh_data();
+	});
+
+	$("[name='discount-button']").click(function () {
+		$(this).css({ "display": "none" });
+		$(this).next("div").css({ "display": "inline" });
+	});
+
+	$("#chose-confirm").click(function () {
+		var num = $(this).siblings().val();
+		if(num >10 || num <= 0 ){
+			showMessage('error', "折扣必须在0.01-10之间");
+			return false;
+		}
+		$("input:checkbox[name='goods-selected']:checked").each(function() {
+			var goods_id = parseInt($(this).val());
+			$("[name='discount'][goodsid="+goods_id+"]").each(function() {
+				$(this).val(num);
+			});
+		});
+		$(this).parent().css({ "display": "none" });
+		$(this).parent().prev().css({ "display": "inline" });
+	});
+	$("#cancel-chose,#cancel-all").click(function () {
+		$(this).parent().css({ "display": "none" });
+		$(this).parent().prev().css({ "display": "inline" });
+	});
+
+	$("#all-confirm").click(function () {
+		var num = $(this).siblings().val();
+		if(num >10 || num <= 0 ){
+			showMessage('error', "折扣必须在0.01-10之间");
+			return false;
+		}
+		$("input:checkbox[name='goods-selected']").each(function() {
+			$("[name='discount']").each(function() {
+				$(this).val(num);
+			});
+		});
+		$(this).parent().css({ "display": "none" });
+		$(this).parent().prev().css({ "display": "inline" });
+	});
+
+	function saveGoods() {
+		$("#save_button").css({ "display": "none" });
+		$("#submit_button").css({ "display": "inline" });
+		selected_goods($("#selected"))
+	}
+
+	//全选
+	function selectAll() {
+		if ($("#select_all").is(":checked")) {
+
+			$("[name='goods-select']").prop("checked", true);
+		} else {
+
+			$("[name='goods-select']").prop("checked", false);
+		}
+	}
+
+	//全选
+	function selectedAll() {
+		if ($("#selected_all").is(":checked")) {
+
+			$("[name='goods-selected']").prop("checked", true);
+		} else {
+
+			$("[name='goods-selected']").prop("checked", false);
+		}
+	}
+
+	function patchAdd() {
+		$("input:checkbox[name='goods-select']:checked").each(function() {
+			var goods_id = parseInt($(this).val());
+			var a = '<a href="javascript:;" class="btn btn-default js-remove-reward" onclick="cancel_join('+goods_id+',this)">取消参加</a>';
+			$("#select_"+goods_id).html(a);
+			for(var i=0; i<$data_array.length; i++){
+				if($data_array[i]['goods_id'] == goods_id){
+					for(var j=0; j<$data_array[i]['sku_list'].length; j++){
+						$data_array[i]['sku_list'][j]['discount'] = 10;
+					}
+					if($.inArray(goods_id,$goods_id_selected_array)==-1){
+						$goods_selected_array[$goods_selected_array.length] = $data_array[i];
+						$goods_id_selected_array[$goods_id_selected_array.length] = goods_id;
+					}
+					refresh_data();
+					break;
+				}
+			}
+		});
+	}
+
+	function patchDel() {
+		$("input:checkbox[name='goods-selected']:checked").each(function() {
+			var goods_id = parseInt($(this).val());
+			for(var i=0; i<$goods_selected_array.length; i++){
+				if($goods_selected_array[i]['goods_id'] == goods_id){
+					$goods_selected_array.splice(i,1);
+					$goods_id_selected_array.splice(i,1);
+					refresh_data();
+					break;
+				}
+			}
+			var a = '<a href="javascript:;" class="btn btn-primary js-add-reward" onclick="join('+goods_id+',this)">参加活动</a>';
+			$("#select_"+goods_id).html(a);
+		});
+	}
+
+	function LoadingInfo(page_index) {
+		var $goodsArr     = new Array();
+		var goods_name    = $("#goods_name").val();
+		var material_code = $("#material_code").val();
+		var category_id_1 = $("#category_id_1").val();
+		var category_id_2 = $("#category_id_2").val();
+		var category_id_3 = $("#category_id_3").val();
+
+		$.ajax({
+			type : "post",
+			url:"{:__URL('ADMIN_MAIN/goods/getDiscountGoodsList')}", // todo @陈 路由问题
+			data : {
+				"page_index"    : page_index,
+				"page_size"     : $("#showNumber").val(),
+				"goods_name"    : goods_name,
+				"material_code" : material_code,
+				"category_id_1" : category_id_1,
+				"category_id_2"	: category_id_2,
+				"category_id_3"	: category_id_3
+			},
+			success : function(data) {
+				var html = '';
+				if (data['data'].length > 0) {
+					$("#DiscountList").show();
+					$data_array = data['data'];
+					for (var i = 0; i < data['data'].length; i++) {
+						var curr = data['data'][i];
+
+						if($.inArray(curr["goods_id"], $goodsArr) == "-1"){
+							$goodsArr.push(curr["goods_id"]);
+						}else{
+							continue;
+						}
+
+						var row=1;//sku数量，用于设置跨行
+						if(data["data"][i]["sku_list"].length!=null)
+						{
+							row=data["data"][i]["sku_list"].length;
+						}
+
+						html +='<tr class="widget-list-item">';
+						//goods图片
+						html
+								+='<td rowspan="'+row+'" class="goods-image-td text-center"><div class="goods-image js-goods-image" style="width: 60px">';
+						//选择框
+						html +='<input type="checkbox" name="goods-select" value="'+curr["goods_id"]+'">&nbsp;&nbsp;';
+						if(curr["picture_info"] != null){
+							html +='<img src="'+__IMG(curr["picture_info"]['pic_cover_micro'])+'"></div></td>';
+						}else{
+							html +='<img src="__ROOT__/"></div></td>';
+						}
+
+						//goods名称
+						html +='<td rowspan="'+row+'" class="goods-meta"><p class="goods-title">';
+						html +='<a href="'+__URL('SHOP_MAIN/goods/goodsinfo?goodsid='+curr["goods_id"])+'" target="_blank" class="new-window" title="'+curr["goods_name"]+'">'+curr["goods_name"]+'</a></p>';
+						html +='</td>';
+						//商品分类名称
+						html +='<td class="text-center" rowspan="'+row+'">'+curr["category_name"]+'</td>';
+						//规格名称
+						html +='<td class="text-center">'+curr["sku_list"][0]["sku_name"]+'</td>';
+						//物料编码
+						html +='<td class="text-center">'+curr["sku_list"][0]["material_code"]+'</td>';
+						//sku库存
+						html +='<td class="text-center">'+curr["sku_list"][0]["stock"]+'</td>';
+						//原价
+						html +='<td class="text-center">'+curr["sku_list"][0]["price"]+'</td>';
+						//goods操作
+						if($goods_id_selected_array.length > 0){
+							if($.inArray(curr["goods_id"], $goods_id_selected_array) == "-1"){
+								html +='<td rowspan="'+row+'" class="text-center goods-opt" id="select_'+curr["goods_id"]+'"><a href="javascript:;" class="btn btn-primary js-add-reward" onclick="join('+curr["goods_id"]+',this)" >参加活动</a></td>';
+							}else{
+								html +='<td rowspan="'+row+'" class="text-center goods-opt" id="select_'+curr["goods_id"]+'"><a href="javascript:;" class="btn btn-default js-remove-reward" onclick="cancel_join('+curr["goods_id"]+',this)">取消参加</a></td>';
+							}
+						}else{
+							html +='<td rowspan="'+row+'" class="text-center goods-opt" id="select_'+curr["goods_id"]+'"><a href="javascript:;" class="btn btn-primary js-add-reward" onclick="join('+curr["goods_id"]+',this)">参加活动</a></td>';
+						}
+						html +='</tr>';
+						for(var j = 1; j < curr["sku_list"].length; j++){
+							html +='<tr class="widget-list-item">';
+							//规格名称
+							html +='<td class="text-center">'+curr["sku_list"][j]["sku_name"]+'</td>';
+							//物料编码
+							html +='<td class="text-center">'+curr["sku_list"][j]["material_code"]+'</td>';
+							//sku库存
+							html +='<td class="text-center">'+curr["sku_list"][j]["stock"]+'</td>';
+							//原价
+							html +='<td class="text-center">'+curr["sku_list"][j]["price"]+'</td>';
+							html +='</tr>';
+						}
+					}
+				} else {
+					html += '<tr align="center"><td colspan="6">暂无符合条件的数据记录</td></tr>';
+				}
+				$("tbody.goods-list").html(html);
+
+				initPageData(data["page_count"],data['data'].length,data['total_count']);
+				$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+			}
+		});
+	}
+
+	function refresh_data(){
+		var data = $goods_selected_array;
+		var html = "";
+		for (var i = 0; i < data.length; i++) {
+
+			var row=1;//订单数量，用于设置跨行
+			if(data[i]["sku_list"].length!=null)
+			{
+				row=data[i]["sku_list"].length;
+			}
+
+			html +='<tr class="widget-list-item">';
+
+			//goods图片
+			html
+					+='<td rowspan="'+row+'" class="goods-image-td text-center"><div class="goods-image js-goods-image" style="width: 60px">';
+			//选择框
+			html +='<input type="checkbox" name="goods-selected" value="'+data[i]['goods_id']+'">&nbsp;&nbsp;';
+			if(data[i]["picture_info"] != null){
+				html +='<img src="'+__IMG(data[i]["picture_info"]['pic_cover_micro'])+'"></div></td>';
+			}else{
+				html +='<img src="__ROOT__/"></div></td>';
+			}
+
+			//goods名称
+			html +='<td rowspan="'+row+'" class="goods-meta"><p class="goods-title">';
+			html +='<a href="'+__URL('SHOP_MAIN/goods/goodsinfo?goodsid='+data[i]['goods_id'])+'" target="_blank" class="new-window" title="'+data[i]["goods_name"]+'">'+data[i]["goods_name"]+data[i]["goods_id"]+'</a></p>';
+//			html +='<p class="goods-price">'+data[i]["price"]+'</p>';
+			html +='</td>';
+			//商品分类
+			html +='<td rowspan="'+row+'" class="text-center">'+data[i]["category_name"]+'</td>';
+			//规格名称
+			html +='<td class="text-center">'+data[i]["sku_list"][0]["sku_name"]+'</td>';
+			//物料编码
+			html +='<td class="text-center">'+data[i]["sku_list"][0]["material_code"]+'</td>';
+			//sku库存
+			html +='<td class="text-center">'+data[i]["sku_list"][0]["stock"]+'</td>';
+			//原价
+			html +='<td class="text-center">'+data[i]["sku_list"][0]["price"]+'</td>';
+			//sku折扣
+			html +=
+					'<td class="discount_'+data[i]["sku_list"][0]["sku_id"]+'" style="width:100px;"><input type="number" style="width:40px;text-align:center;margin-bottom:0;" name="discount" onchange="discount(this);" goodsid="'+data[i]["goods_id"]+'" skuid="'+data[i]["sku_list"][0]["sku_id"]+'" value="'+data[i]["sku_list"][0]["discount"]+'"/><span style="margin-left:3px;margin-top-3px;">折</span></td>';
+
+			//goods操作
+			html +='<td rowspan="'+row+'" class="text-center goods-opt" id="selected_'+data[i]["goods_id"]+'"><a href="javascript:;" class="btn btn-default js-remove-reward" onclick="cancel_join('+data[i]["goods_id"]+',this)">取消参加</a></td></tr>';
+			for(var j = 1; j < data[i]["sku_list"].length; j++){
+				html +='<tr class="widget-list-item">';
+//规格名称
+				html +='<td class="text-center">'+data[i]["sku_list"][j]["sku_name"]+'</td>';
+				//物料编码
+				html +='<td class="text-center">'+data[i]["sku_list"][j]["material_code"]+'</td>';
+				//sku库存
+				html +='<td class="text-center">'+data[i]["sku_list"][j]["stock"]+'</td>';
+				//原价
+				html +='<td class="text-center">'+data[i]["sku_list"][j]["price"]+'</td>';
+				//sku折扣
+				html +=
+						'<td class="discount_'+data[i]["sku_list"][j]["sku_id"]+'" style="width:100px;"><input type="number" style="width:40px;text-align:center;margin-bottom:0;" name="discount" onchange="discount(this);" goodsid="'+data[i]["goods_id"]+'" skuid="'+data[i]["sku_list"][j]["sku_id"]+'" value="'+data[i]["sku_list"][j]["discount"]+'"/><span style="margin-left:3px;margin-top-3px;">折</span></td>';
+
+				html +='</tr>';
+			}
+		}
+		$(".select-two tbody tr").remove();
+		$(".select-two tbody").append(html);
+	}
+
+	//参加折扣
+	function join(goods_id,e){
+		if($("#selected_"+goods_id).length > 0){
+			return false;
+		}else{
+			for(var i=0; i<$data_array.length; i++){
+				if($data_array[i]['goods_id'] == goods_id){
+					for(var j=0; j<$data_array[i]['sku_list'].length; j++){
+						$data_array[i]['sku_list'][j]['discount'] = 10;
+					}
+					$goods_selected_array[$goods_selected_array.length] = $data_array[i];
+					$goods_id_selected_array[$goods_id_selected_array.length] = goods_id;
+
+					refresh_data();
+					break;
+				}
+			}
+			var a = '<a href="javascript:;" class="btn btn-default js-remove-reward" onclick="cancel_join('+goods_id+',this)">取消参加</a>';
+			$(e).parent("td").html(a);
+			$("#selected_"+goods_id).html(a);
+		}
+	}
+
+	//撤销折扣
+	function cancel_join(goods_id,e){
+		if($("#selected_"+goods_id).length > 0){
+			for(var i=0; i<$goods_selected_array.length; i++){
+				if($goods_selected_array[i]['goods_id'] == goods_id){
+					$goods_selected_array.splice(i,1);
+					$goods_id_selected_array.splice(i,1);
+					refresh_data();
+					break;
+				}
+			}
+			var a = '<a href="javascript:;" class="btn btn-primary js-add-reward" onclick="join('+goods_id+',this)">参加活动</a>';
+			$(e).parent("td").html(a);
+//			setDiscount();
+			$(".discount_"+goods_id).children("input").val(10);
+			$("#select_"+goods_id).html(a);
+		}
+	}
+	function selected_goods(e){
+		$(e).parents("ul.ui-nav-tab").find(".js-tab").removeClass("active");
+		$(e).parents("li").addClass("active");
+		$(".select-two").show();
+		$(".select-one").hide();
+		$("#save_button").css({ "display": "none" });
+		$("#submit_button").css({ "display": "inline" });
+	}
+
+	function select_goods(e){
+		$(e).parents("ul.ui-nav-tab").find(".js-tab").removeClass("active");
+		$(e).parent("li").addClass("active");
+		$(".select-one").show();
+		$(".select-two").hide();
+		$("#save_button").css({ "display": "inline" });
+		$("#submit_button").css({ "display": "none" });
+	}
+
+	function setDiscount(){
+		$(".select-two input[type=number][name=discount]").each(function(i,d){
+			var discount = $(d).val();
+			var goodsid = $(d).attr("goodsid");
+			$(".discount_"+goodsid).children('input').val(discount);
+		})
+	}
+
+	//折扣
+	function discount(event){
+		var discount = parseFloat($(event).val()).toFixed(2);
+		if(discount <0.01){
+			$(event).val(0.01);
+			discount = 0.01;
+		}else if(discount >9.99){
+			$(event).val(9.99);
+			discount = 9.99;
+		}
+		var skuid = $(event).attr("skuid");
+		$(".discount_"+skuid).children("input").val(discount);
+	}
+
+	//保存
+	var flag = false;//防止重复提交
+	function updateDiscount(){
+		var discount_id    = $("#discount_id").val();
+		var discount_name  = $("#discount_name").val();
+		var start_time     = $("#start_time").val();
+		var end_time 	   = $("#end_time").val();
+		var obj			   = $(".select-two table input[type='number'][name='discount']");
+		var goods_sku_arr  = '';
+
+		if(!verify(discount_name, start_time, end_time)){
+			return false;
+		}
+
+		obj.each(function(i){
+			var gid = obj.eq(i).attr("goodsid");
+			var sid = obj.eq(i).attr("skuid");
+			var dis = obj.eq(i).val() ? obj.eq(i).val() : 10;
+			goods_sku_arr += ','+gid+':'+sid+':'+ dis;
+
+			if(dis >10 || dis <= 0 ){
+				showMessage('error', "折扣必须在0.01-10之间");
+				flag = true;
+				return false;
+			}else{
+				flag = false;
+			}
+		});
+
+		if(goods_sku_arr.length > 0){
+			goods_sku_arr = goods_sku_arr.substring(1);
+		}
+
+
+		if(verify(discount_name, start_time, end_time, goods_sku_arr)){
+			if(flag){
+				return;
+			}
+			flag = true;
+			$.ajax({
+				type : "post",
+				url : "{:__URL('ADMIN_MAIN/promotion/updatediscount')}",
+				data : {
+					'discount_id' 	: discount_id,
+					'discount_name' : discount_name,
+					'start_time' 	: start_time,
+					'end_time' 		: end_time,
+					'goods_sku_arr' : goods_sku_arr
+				},
+				success : function(data) {
+					if (data["code"] > 0) {
+						showMessage('success', data["message"],'{:__URL('ADMIN_MAIN/promotion/getdiscountlist')}');
+					}else{
+						showMessage('error', data["message"]);
+						flag = false;
+					}
+				}
+			});
+		}
+	}
+
+	function verify(discount_name, start_time, end_time, goods_sku_arr){
+		if(discount_name == ''){
+			$("#discount_name").parent().find('.error').show();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+		if(start_time == '' || end_time == ''){
+			$("#start_time").parent().find('.error').show();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+		var dataTime = nowDate();
+		var now = new Date(dataTime.replace("-", "/").replace("-", "/"));
+		var end = new Date(end_time.replace("-", "/").replace("-", "/"));
+		var start = new Date(start_time.replace("-", "/").replace("-", "/"));
+		if(end < now){
+			$("#end_time").next().next('.error').show();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+		if(end < start){
+			$("#end_time").next().next().next('.error').show();
+			return false;
+		}else{
+			$(".error").hide();
+		}
+		if(goods_sku_arr == ''){
+			showTip("请至少选择一件商品","warning");
+			return false;
+		}
+		return true;
+	}
+
+	//当前时间
+	function nowDate(){
+		var myDate = new Date();
+		//获取当前年
+		var year=myDate.getFullYear();
+		//获取当前月
+		var month=myDate.getMonth()+1;
+		//获取当前日
+		var date=myDate.getDate();
+		var h=myDate.getHours();//获取当前小时数(0-23)
+		var m=myDate.getMinutes();//获取当前分钟数(0-59)
+		var s=myDate.getSeconds();
+		var now=year+'-'+month+"-"+date+" "+h+':'+m+":"+s;
+		return now;
+	}
+
+
+	//查看规格
+	function skuDetail(goods_id,type,index){
+		var goods_id = goods_id;
+		var type     = type; //1:参加 2:取消
+		if(type == '1'){
+			var sku_arr  = $data_array[index].sku_arr;
+			var html 	 = '';
+			html += '<div class="modal-dialog modal-lg" role="document">';
+			html += '<div class="modal-content">';
+			html += '<div class="modal-header">';
+			html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+			html += '<h4 class="modal-title" id="myModalLabel">选择规格</h4>';
+			html += '</div>';
+			html += '<div class="modal-body">';
+			html += '<table class="table table-bordered table-class">';
+			html += '<thead>';
+			html += '<tr>';
+			html += '<th><input type="checkbox" onclick="CheckAll(this)"></th>';
+			html += '<th>规格名称</th>';
+			html += '<th>shopal编码</th>';
+			html += '<th>库存</th>';
+			html += '<th>价格</th>';
+			html += '<th style="text-align:center;">折扣</th>';
+			html += '</tr>';
+			html += '</thead>';
+			html += '<tbody>';
+			if (sku_arr.length > 0) {
+				for (var i = 0; i < sku_arr.length; i++) {
+					html += '<tr>';
+					html += '<td><input name="sub" type="checkbox" value="'+ sku_arr[i]["sku_id"]+'" ></th>';
+					html += '<td>'+ sku_arr[i]['sku_name'] +'</td>';
+					html += '<td>'+ sku_arr[i]['material_code'] +'</td>';
+					html += '<td>'+ sku_arr[i]['stock'] +'</td>';
+					html += '<td>'+ sku_arr[i]['price'] +'</td>';
+					html += '<td class="text-center discount_'+sku_arr[i]["sku_id"]+'" style="width:100px;text-align: center"><input type="number" style="width:40px;text-align:center;margin-bottom:0;" name="discount" onchange="discount(this);" skuid="'+sku_arr[i]["sku_id"]+'" value="10"  /><span style="margin-left:3px;margin-top-3px;">折</span></td>';
+					html += '</tr>';
+				}
+				html += '</tbody>';
+				html += '</table>';
+				html += '</div>';
+				html += '<div class="modal-footer">';
+				html += '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="join('+goods_id+')">参加活动</button>';
+				html += '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+				html += '</div>';
+				html += '</div>';
+			}else{
+				html += '<tr align="center"><td colspan="6" style="text-align: center">暂无可选规格</td></tr>';
+			}
+			$("#motai-div").html(html);
+		}else{
+			var select_sku_arr   = $goods_selected_array[index].select_sku_arr;
+			var html 		     = '';
+			if (select_sku_arr.length > 0) {
+				html += '<div class="modal-dialog" role="document">';
+				html += '<div class="modal-content">';
+				html += '<div class="modal-header">';
+				html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+				html += '<h4 class="modal-title" id="myModalLabel">已选规格</h4>';
+				html += '</div>';
+				html += '<div class="modal-body">';
+				html += '<table class="table table-bordered table-class-s">';
+				html += '<thead>';
+				html += '<tr>';
+				html += '<th><input type="checkbox" onclick="CheckAllS(this)"></th>';
+				html += '<th>规格名称</th>';
+				html += '<th>shopal编码</th>';
+				html += '<th>库存</th>';
+				html += '<th>价格</th>';
+				html += '<th style="text-align:center;">内购价格</th>';
+				html += '</tr>';
+				html += '</thead>';
+				html += '<tbody>';
+				for (var i = 0; i < select_sku_arr.length; i++) {
+					html += '<tr>';
+					html += '<td><input name="sub" type="checkbox" value="'+ select_sku_arr[i]["sku_id"]+'" ></th>';
+					html += '<td>'+ select_sku_arr[i]['sku_name'] +'</td>';
+					html += '<td>'+ select_sku_arr[i]['material_code'] +'</td>';
+					html += '<td>'+ select_sku_arr[i]['stock'] +'</td>';
+					html += '<td>'+ select_sku_arr[i]['price'] +'</td>';
+					html += '<td class="text-center discount_'+select_sku_arr[i]["sku_id"]+'" style="width:100px;text-align: center"><input type="number" style="width:40px;text-align:center;margin-bottom:0;" name="discount" onchange="discount(this);" skuid="'+select_sku_arr[i]["sku_id"]+'" value="'+select_sku_arr[i]["discount"]+'"  disabled="none" /><span style="margin-left:3px;margin-top-3px;">折</span></td>';
+					html += '</tr>';
+				}
+				html += '</tbody>';
+				html += '</table>';
+				html += '</div>';
+				html += '<div class="modal-footer">';
+				html += '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cancel_join('+goods_id+','+index+')">撤销</button>';
+				html += '<button type="button" class="btn btn-default" data-dismiss="modal">退出</button>';
+				html += '</div>';
+				html += '</div>';
+				html += '</div>';
+			}
+			$("#myModal").html(html);
+		}
+	}
+</script>
+{/block}

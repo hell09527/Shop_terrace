@@ -1,0 +1,200 @@
+{extend name="wap/default_new/base" /}
+{block name="resources"}
+<style>
+    .container{background: #fff;}
+    .content{
+        background: url('https://static.bonnieclyde.cn/bg-qcode-61.jpg') no-repeat;background-size: 100% auto;
+    }
+    .wx-code{position: relative;margin: 0 auto;top: 34%;width: 137px;height: 132px;background: #fff;text-align: center;box-shadow: 0 0 20px -1px;}
+    .wx-code img{width: 85%;padding: 7px;}
+    .get-coupon{position: relative;margin: 0 auto;width: 220px;top: 0%;text-align: center;}
+    .get-span{
+        text-align: center;
+        background: #000;
+        display: block;
+        border-radius: 0px;
+        /*margin-top: 237px;*/
+        font-size: 17px;
+        height: 45px;
+        line-height: 45px;
+        color: #fff;
+    }
+    #qcode_img{
+        position: relative;
+        display: block;
+        /*bottom:10px;*/
+        margin: 0 auto;
+        width: 200px;
+        text-align: center;
+        padding-bottom:3px;
+    }
+    .get-coupon i{position: absolute;left: 0;bottom: -25px;color:#a2a2a2;font-size: 12px;}
+    .nogetcoupon{background-color: #ccc !important;}
+
+    .hide{
+        display: none;
+    }
+
+    #main{
+        position: relative;
+            background: url('https://static.bonnieclyde.cn/youhuiquan-1.jpg') no-repeat;background-size: 100% auto;
+        /*background: url('https://static.bonnieclyde.cn/qcode-bg.jpg') no-repeat;background-size: 100% auto;*/
+    }
+    .vague-box{
+        width: 85%;
+        margin:0 auto;
+        height:65%;
+        /*background: #fffffff5;*/
+        background-color: rgba(255, 255, 255, 0.9);
+        position: absolute;
+        transform: translate(10%,-6%);
+        bottom:0;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .s-title{
+        margin-top: 10px;
+        font-size: 16px;
+        letter-spacing: 3px;
+        color:#717070;
+    }
+
+    .s-money{
+        font-size:35px;
+        font-weight:500;
+        margin:-5px 0;
+    }
+
+    .s-gray{
+        color:gray;
+    }
+    .s-btn{
+        text-align: center;
+        background: #000;
+        display: block;
+        border-radius: 0px;
+        /* margin-top: 237px; */
+        font-size: 17px;
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        width: 60%;
+        margin: 2px auto 5px;
+    }
+    .vague-box p{
+        font-size: 14px;
+    }
+    .coupon-title{
+        color:#999999;
+    }
+    #warn-text{
+        color:#cc9933;
+        font-size:17px;
+        margin-bottom:8px;
+    }
+</style>
+{/block}
+{block name="goodsHead"}{/block}
+{block name="main"}
+<section class="container">
+
+    <div id="main">
+        <div class="vague-box">
+
+            <h3 class="s-title">VIP尊享福利</h3>
+            <h2 class="s-money">¥ {$data['money']}</h2>
+
+            <span class="s-btn" onclick="getcoupon({$data['coupon_type_id']})">立 即 领 取</span>
+
+            <p class="coupon-title">满{$data['at_least']}元可用</p>
+
+            <p id="warn-text"> 长按屏幕识别</p>
+            <!--<p style="padding-bottom:3px;">点击右上角<span clas="s-gray">给更多宝宝</span>送红包</p>-->
+
+            <img src="https://static.bonnieclyde.cn/youhuiquan_03.png" alt="">
+
+            <!--<img id="qcode_img" src="https://static.bonnieclyde.cn/bg-qcode-61-new.jpg" alt="">-->
+            <img id="qcode_img" src="https://static.bonnieclyde.cn/254-25411.png" alt="">
+            <!--<p class="s-gray">宝宝辅食界的"米其林三星"</p>-->
+            <!--<p>马上扫码用红包</p>-->
+        </div>
+        <!--<img id="main-img" src="http://video.ushopal.com/WechatIMG84.jpeg" alt="">-->
+    </div>
+
+
+</section>
+{/block}
+{block name="bottom"}{/block}
+{block name="javascript"}
+<script>
+    $(document).ready(function(){
+// alert($(window).height()); //浏览器当前窗口可视区域高度
+        var mobileratio = $(window).height();
+        var mobileWidth =  $(window).width();
+//        var current_width = $('.content').width();
+        var current_width = $('#main').width();
+        var qcode_width = $('#qcode_img').width();
+        var new_img_width =  qcode_width * ( current_width / 640 )
+
+        $("#main-img").css({
+            height : mobileratio +'px',
+//            width: mobileWidth+'px',
+//        height : 1000 +'px',
+        });
+
+        $("#main").css({
+            height : mobileratio +'px',
+//        height : 1000 +'px',
+        });
+
+        $(".content").css({
+            height : mobileratio +'px',
+//        height : 1000 +'px',
+        });
+
+        setTimeout(function(){
+            $("#qcode_img").css({
+                width: new_img_width + 'px',
+//                'z-index':999,
+            }).removeClass('hide');
+
+            var new_height = mobileratio * 0.46;
+            $(".get-coupon").css({
+                top: new_height + 'px',
+            })
+
+//            $('#qcode_img').css({
+//                top: new_height + 60 + 'px',
+//            })
+        },200);
+
+    })
+
+    //领取优惠券
+    function getcoupon(coupon_type_id){
+        $.ajax({
+            type : "post",
+            url  : "{:__URL('APP_MAIN/index/getCoupon')}",
+            data : { 'coupon_type_id' : coupon_type_id },
+            success : function(data){
+                if(data["code"]>0){
+                    showBox("恭喜您，领取成功");
+                }else{
+                    if(data["code"] == "-2009"){
+                        location.href="{:__URL('APP_MAIN/login/index')}";
+                    }else if(data["code"] == "-2010"){
+                        showBox("您已领取过，请勿重复领取");
+                        $(".get-span").addClass("nogetcoupon");
+                        $(".get-span").text("您已领取过");
+                    }else{
+                        showBox(data["message"]);
+                        $(".get-span").addClass("nogetcoupon");
+                        $(".get-span").text(data["message"]);
+                    }
+                }
+            }
+        });
+    }
+</script>
+{/block}
